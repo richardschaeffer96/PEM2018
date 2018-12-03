@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="Edit profile"
+        android:id="@+id/settings"
+        />
+
+    <item
+        android:title="Contacts"
+        android:id="@+id/contacts"
+        />
+
+</menu>
