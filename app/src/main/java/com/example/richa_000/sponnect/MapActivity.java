@@ -20,9 +20,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,11 +43,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String TAG = "MapActivity";
     private static final float DEFAULT_ZOOM = 15f;
 
+    private List<Spot> spots;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_activity);
+
+        spots = new LinkedList<>();
+
+        Spot s1 = new Spot("Spot1","Josef-Retzer-Straße 29 81241 München", 48.142330, 11.463862);
+        Spot s2 = new Spot("Spot2","Weinbergerstraße 50A 81241 München", 48.140475, 11.465333);
+        Spot s3 = new Spot("Spot3","Georg-Jais-Straße 1 81241 München", 48.141349, 11.468042);
+
+        spots.addAll(Arrays.asList(s1,s2,s3));
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         initMap();
@@ -62,7 +74,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-
         mapFragment.getMapAsync(MapActivity.this);
     }
 
@@ -91,17 +102,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (location != null) {
                     LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
                     moveCamera(pos, DEFAULT_ZOOM);
-                   // mMap.addMarker(new MarkerOptions().position(pos).title("Marker in Sydney"));
 
                 } else if (location1 != null) {
                     LatLng pos = new LatLng(location1.getLatitude(), location1.getLongitude());
                     moveCamera(pos, DEFAULT_ZOOM);
-                    //mMap.addMarker(new MarkerOptions().position(pos).title("Marker in Sydney"));
 
                 } else if (location2 != null) {
                     LatLng pos = new LatLng(location2.getLatitude(), location2.getLongitude());
                     moveCamera(pos, DEFAULT_ZOOM);
-                    //mMap.addMarker(new MarkerOptions().position(pos).title("Marker in Sydney"));
 
                 } else {
                     Toast.makeText(this, "Unble to Trace your location\nTry again later", Toast.LENGTH_SHORT).show();
@@ -122,6 +130,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
+        getLocation();
+
+        for(int i=0; i<spots.size(); i++){
+            LatLng pos = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
+            mMap.addMarker(new MarkerOptions().position(pos).title(spots.get(i).getTitle()));
+        }
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                markerClicked(marker);
+                return true;
+            }
+        });
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -131,16 +153,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    private void markerClicked(Marker marker) {
+        Toast.makeText(MapActivity.this, "You clicked on Marker "+marker.getTitle(), Toast.LENGTH_SHORT).show();
+    }
+
     private void getLocationData(LatLng latLng) {
         geocoder = new Geocoder(this, Locale.getDefault());
         try {
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-
-
-
-
-            mMap.addMarker(new MarkerOptions().position(latLng).title(address));
         }
         catch (IOException e) {
             e.printStackTrace();
