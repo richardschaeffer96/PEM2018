@@ -16,34 +16,22 @@
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:id="@+id/relLayout1"
+        android:layout_width="367dp"
+        android:layout_height="54dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:elevation="10dp"
         android:background="@drawable/white_border"
-        android:id="@+id/relLayout1">
+        android:elevation="10dp"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:id="@+id/ic_magnify"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_magnify"
-            />
-        <EditText
+        <fragment
+            android:id="@+id/place_autocomplete"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@id/ic_magnify"
-            android:layout_centerVertical="true"
-            android:textSize="15sp"
-            android:textColor="#000"
-            android:id="@+id/et_seachBar"
-            android:background="@null"
-            android:hint="Enter Address, City or Zip Code"
-            />
+            android:layout_height="42dp"
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 
@@ -54,9 +42,9 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginTop="67dp"
+        android:layout_marginEnd="11dp"
+        android:layout_marginRight="11dp" />
 
 
 

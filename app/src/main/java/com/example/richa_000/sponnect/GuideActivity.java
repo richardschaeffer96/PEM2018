@@ -1,5 +1,6 @@
 package com.example.richa_000.sponnect;
 
+import android.*;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -7,24 +8,45 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,13 +55,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-public class GuideActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class GuideActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_LOCATION = 1;
     private LocationManager locationManager;
     private Button btnGetCurrentLocation;
     private GoogleMap mMap;
 
+    PlaceAutocompleteFragment placeAutoComplete;
 
     private Geocoder geocoder;
     private List<Address> addresses;
@@ -48,15 +71,26 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private List<Spot> spots;
 
-
-    //widgets
-    private EditText mSearchText;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide_activity);
-        mSearchText = (EditText) findViewById(R.id.et_seachBar);
+
+        placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
+        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                geoLocate(place);
+                System.out.println("TEST");
+                Log.d("Maps", "Place selected: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.d("Maps", "An error occurred: " + status);
+            }
+        });
+
         spots = new LinkedList<>();
 
         Spot s1 = new Spot("Spot1", "Josef-Retzer-Straße 29 81241 München", 48.142330, 11.463862);
@@ -67,7 +101,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         initMap();
-        init();
         btnGetCurrentLocation = findViewById(R.id.btn_guide_getCurrentLocation);
         btnGetCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,47 +108,15 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                 getLocation();
             }
         });
-
-
-
     }
 
-    private void init() {
-        Log.d(TAG, "INITIALIZING");
-
-        mSearchText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                if(count>=1) {
-                    if ((s.charAt(s.length() - 1)) == '\n') {
-                        geoLocate();
-                        mSearchText.setText( s.subSequence(0, s.length()-1));
-                        mSearchText.setSelection(mSearchText.getText().length());
-                    }
-                }
-
-
-            }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-    }
-
-
-    private void geoLocate() {
-        String searchString = mSearchText.getText().toString();
+    private void geoLocate(Place place) {
 
         Geocoder geocode = new Geocoder(GuideActivity.this);
         List<Address> list = new ArrayList<>();
 
         try {
-            list = geocode.getFromLocationName(searchString, 1);
+            list = geocode.getFromLocationName((String) place.getAddress(), 1);
         } catch (IOException e) {
             Toast.makeText(this, "There seems to have been a problem.\n Please try again or enter a different address.", Toast.LENGTH_SHORT).show();
         }
@@ -205,8 +206,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                 getLocationData(latLng);
             }
         });
-        init();
-
     }
 
     private void markerClicked(Marker marker) {
@@ -221,13 +220,16 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
 
