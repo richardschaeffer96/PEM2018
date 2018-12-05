@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -68,7 +67,10 @@ public class Menu extends AppCompatActivity {
     }
 
     public void guide(View view){
-
+        if(isServicesOK()){
+            Intent intent = new Intent(Menu.this, GuideActivity.class);
+            startActivity(intent);
+        }
     }
 
 
