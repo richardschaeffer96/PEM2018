@@ -33,34 +33,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        editTextLogInMail = findViewById(R.id.edit_email);
-        editTextLogInPassword = findViewById(R.id.edit_password);
+        editTextLogInMail = findViewById(R.id.edit_email_login);
+        editTextLogInPassword = findViewById(R.id.edit_password_login);
     }
 
     public void login(View view){
         String LogInMail = editTextLogInMail.getText().toString();
         String LogInPassword = editTextLogInPassword.getText().toString();
 
-        Map<String, Object> note = new HashMap<>();
-        note.put(KEY_MAILADDRESS, LogInMail);
-        note.put(KEY_PASSWORD, LogInPassword);
-
-        db.collection("Notebook").document("My first note").set(note)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //Logging in
-                        Toast.makeText(LoginActivity.this, "Data saved", Toast.LENGTH_SHORT).show();
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(LoginActivity.this, "ERROR!", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, e.toString());
-                    }
-                });
+        //Check if equal
     }
 
     public void sign_up(View view){
