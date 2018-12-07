@@ -22,10 +22,15 @@ public class SignUp extends AppCompatActivity {
 
     private static final String KEY_MAILADDRESS = "mailaddress";
     private static final String KEY_PASSWORD = "password";
+    private static final String KEY_NICKNAME = "nickname";
     private static final String KEY_AGE = "age";
+    private static final String KEY_GENDER = "gender";
+    private static final String KEY_SM_FACEBOOK = "SM-facebook";
 
     private EditText editTextSignUpMail;
     private EditText editTextSignUpPassword;
+    private EditText editTextSignUpNickname;
+    private EditText editTextSignUpAge;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -36,6 +41,8 @@ public class SignUp extends AppCompatActivity {
 
         editTextSignUpMail = findViewById(R.id.edit_email_signup);
         editTextSignUpPassword = findViewById(R.id.edit_password_signup);
+        editTextSignUpNickname = findViewById(R.id.edit_nickname);
+        editTextSignUpAge = findViewById(R.id.edit_age);
     }
 
     public void add_more(View view){
@@ -44,23 +51,26 @@ public class SignUp extends AppCompatActivity {
 
     public void save(View view){
 
-        int members = 0;
+        int members = (int) (Math.random()*100);
 
         String SignUpMail = editTextSignUpMail.getText().toString();
         String SignUpPassword = editTextSignUpPassword.getText().toString();
+        String SignUpNickname = editTextSignUpNickname.getText().toString();
+        String SignUpAge = editTextSignUpAge.getText().toString();
 
-        Map<String, Object> note = new HashMap<>();
-        note.put(KEY_MAILADDRESS, SignUpMail);
-        note.put(KEY_PASSWORD, SignUpPassword);
+        Map<String, Object> user = new HashMap<>();
+        user.put(KEY_MAILADDRESS, SignUpMail);
+        user.put(KEY_PASSWORD, SignUpPassword);
+        user.put(KEY_NICKNAME, SignUpNickname);
+        user.put(KEY_AGE, SignUpAge);
 
-        db.collection("users").document("user"+members).set(note)
+        db.collection("users").document("user"+members).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //Logging in
                         Toast.makeText(SignUp.this, "Data saved", Toast.LENGTH_SHORT).show();
                         Toast.makeText(SignUp.this, "Logged In!", Toast.LENGTH_LONG).show();
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

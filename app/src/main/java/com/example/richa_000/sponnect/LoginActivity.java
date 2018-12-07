@@ -11,7 +11,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.model.DocumentKey;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextLogInPassword;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference users = db.collection("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +47,17 @@ public class LoginActivity extends AppCompatActivity {
         String LogInMail = editTextLogInMail.getText().toString();
         String LogInPassword = editTextLogInPassword.getText().toString();
 
-        //Check if equal
+        //Query q = users.whereEqualTo(KEY_MAILADDRESS, LogInMail);
+        //QuerySnapshot qSnapshot = q.get();
+        if (LogInMail.equals("N@nni-s.de")){
+            if(LogInPassword.equals("test123")){
+                Toast.makeText(LoginActivity.this, "Welcome Nanni", Toast.LENGTH_LONG).show();
+            } else{
+                Toast.makeText(LoginActivity.this, "Wrong Password! Try again!", Toast.LENGTH_LONG).show();
+            }
+        } else{
+            Toast.makeText(LoginActivity.this, "Your Email does not exist. How about signing up?", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void sign_up(View view){
