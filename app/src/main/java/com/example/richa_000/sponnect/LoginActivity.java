@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         String LogInMail = editTextLogInMail.getText().toString();
         String LogInPassword = editTextLogInPassword.getText().toString();
 
+        //TODO NANNI: Understand how querying workd
         //Query q = users.whereEqualTo(KEY_MAILADDRESS, LogInMail);
         //QuerySnapshot qSnapshot = q.get();
         if (LogInMail.equals("N@nni-s.de")){
