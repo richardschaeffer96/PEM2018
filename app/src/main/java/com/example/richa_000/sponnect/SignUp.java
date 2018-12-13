@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class SignUp extends AppCompatActivity {
 
-    private static final String TAG = "SignUp";
+    private static final String TAG = "SignUpActivity";
 
     private EditText editTextSignUpMail;
     private EditText editTextSignUpPassword;
