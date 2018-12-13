@@ -44,8 +44,6 @@ public class LoginActivity extends AppCompatActivity {
         editTextLogInPassword = findViewById(R.id.edit_password_login);
     }
 
-
-
     public void login(View view){
         String LogInMail = editTextLogInMail.getText().toString();
         String LogInPassword = editTextLogInPassword.getText().toString();

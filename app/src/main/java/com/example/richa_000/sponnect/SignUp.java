@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,6 +33,7 @@ public class SignUp extends AppCompatActivity {
     private EditText editTextSignUpPassword;
     private EditText editTextSignUpNickname;
     private EditText editTextSignUpAge;
+    private RadioGroup radioGroupGender;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -56,13 +59,29 @@ public class SignUp extends AppCompatActivity {
         String SignUpMail = editTextSignUpMail.getText().toString();
         String SignUpPassword = editTextSignUpPassword.getText().toString();
         String SignUpNickname = editTextSignUpNickname.getText().toString();
-        String SignUpAge = editTextSignUpAge.getText().toString();
+        int SignUpAge = Integer.parseInt(editTextSignUpAge.getText().toString());
 
+        String SignUpGender = "undefined";
+        radioGroupGender = (RadioGroup) findViewById(R.id.radio_gender);
+        int genderId = radioGroupGender.getCheckedRadioButtonId();
+
+        switch(genderId){
+            //No fucking clue, why these numbers are that way...
+            case 2131165320: SignUpGender = "m"; break;
+            case 2131165319: SignUpGender = "f"; break;
+            case 2131165318: SignUpGender = "o"; break;
+            default: Toast.makeText(SignUp.this, "Your Gender ID is:"+genderId, Toast.LENGTH_LONG).show();
+        }
+
+        User user = new User(SignUpMail, SignUpNickname, SignUpPassword, SignUpGender, SignUpAge);
+        /*
         Map<String, Object> user = new HashMap<>();
         user.put(KEY_MAILADDRESS, SignUpMail);
         user.put(KEY_PASSWORD, SignUpPassword);
         user.put(KEY_NICKNAME, SignUpNickname);
         user.put(KEY_AGE, SignUpAge);
+        user.put(KEY_GENDER, SignUpGender);
+        */
 
         db.collection("users").document("user"+members).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
