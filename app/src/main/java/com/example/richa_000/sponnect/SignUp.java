@@ -24,20 +24,12 @@ public class SignUp extends AppCompatActivity {
 
     private static final String TAG = "SignUp";
 
-    /*
-    private static final String KEY_MAILADDRESS = "mailaddress";
-    private static final String KEY_PASSWORD = "password";
-    private static final String KEY_NICKNAME = "nickname";
-    private static final String KEY_AGE = "age";
-    private static final String KEY_GENDER = "gender";
-    private static final String KEY_SM_FACEBOOK = "SM-facebook";
-    */
-
     private EditText editTextSignUpMail;
     private EditText editTextSignUpPassword;
     private EditText editTextSignUpNickname;
     private EditText editTextSignUpAge;
     private RadioGroup radioGroupGender;
+    private RadioButton radioButtonGender;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("users");
@@ -59,69 +51,53 @@ public class SignUp extends AppCompatActivity {
 
     public void save(View view){
 
-        //int members = (int) (Math.random()*100);
-
+        Log.d(TAG, "Saving Data...");
         String SignUpMail = editTextSignUpMail.getText().toString();
         String SignUpPassword = editTextSignUpPassword.getText().toString();
         String SignUpNickname = editTextSignUpNickname.getText().toString();
-        int SignUpAge = Integer.parseInt(editTextSignUpAge.getText().toString());
+        int SignUpAge;
 
-        String SignUpGender = "undefined";
-        radioGroupGender = findViewById(R.id.radio_gender);
-        int genderId = radioGroupGender.getCheckedRadioButtonId();
+        if(SignUpMail.isEmpty() || SignUpNickname.isEmpty() || SignUpPassword.isEmpty()) {
+            Log.d(TAG, "Values were empty");
+            Toast.makeText(SignUp.this, "Please fill out EMail, Nickname and Password", Toast.LENGTH_LONG).show();
+        }
+        else {
+            if(editTextSignUpAge.getText().toString().isEmpty()){
+                SignUpAge = 0;
+            } else{
+                SignUpAge = Integer.parseInt(editTextSignUpAge.getText().toString());
+            };
 
-        switch(genderId){
-            //No fucking clue, why these numbers are that way...
-            case 2131165320: SignUpGender = "m"; break;
-            case 2131165319: SignUpGender = "f"; break;
-            case 2131165318: SignUpGender = "o"; break;
-            default: Toast.makeText(SignUp.this, "Your GenderID is:"+genderId, Toast.LENGTH_LONG).show();
+            radioGroupGender = findViewById(R.id.radio_gender);
+            int genderId = radioGroupGender.getCheckedRadioButtonId();
+            Log.d(TAG, "Not selecting a Gender results in ID: "+genderId);
+            radioButtonGender = findViewById(genderId);
+            String SignUpGender = "";
+            if(genderId < 0){
+                SignUpGender = "-";
+            } else {
+                SignUpGender = radioButtonGender.getText().toString();
+            }
+
+            Log.d(TAG, "Creating User Document");
+            final User user = new User(SignUpMail, SignUpNickname, SignUpPassword, SignUpGender, SignUpAge);
+
+            usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Toast.makeText(SignUp.this, "Data saved and logged in!\nHello "+user.getNickname(), Toast.LENGTH_LONG).show();
+                    Intent mIntent = new Intent(SignUp.this, Menu.class);
+                    startActivity(mIntent);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(SignUp.this, "ERROR!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
+                }
+            });
         }
 
-        User user = new User(SignUpMail, SignUpNickname, SignUpPassword, SignUpGender, SignUpAge);
-
-        usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Toast.makeText(SignUp.this, "Data saved and logged in!", Toast.LENGTH_LONG).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(SignUp.this, "ERROR!", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, e.toString());
-            }
-        });
-
-        /*
-        Map<String, Object> user = new HashMap<>();
-        user.put(KEY_MAILADDRESS, SignUpMail);
-        user.put(KEY_PASSWORD, SignUpPassword);
-        user.put(KEY_NICKNAME, SignUpNickname);
-        user.put(KEY_AGE, SignUpAge);
-        user.put(KEY_GENDER, SignUpGender);
-
-
-        db.collection("users").document("user").set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //Logging in
-                        Toast.makeText(SignUp.this, "Data saved", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(SignUp.this, "Logged In!", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SignUp.this, "ERROR!", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, e.toString());
-                    }
-                });
-        */
-
-        Intent mIntent = new Intent(SignUp.this, Menu.class);
-        startActivity(mIntent);
     }
 
 }
