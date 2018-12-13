@@ -1,14 +1,12 @@
 package com.example.richa_000.sponnect;
 
-import android.support.v7.app.AppCompatActivity;
-
-public class User extends AppCompatActivity {
+public class User {
 
     private String eMail;
     private String nickname;
     private String password;
     private String gender;
-    private int age;
+    int age;
 
     //optional
     private String socailMedia;
@@ -22,7 +20,7 @@ public class User extends AppCompatActivity {
         this.nickname = nickname;
         this.password = password;
         this.gender = gender;
-        this. age = age;
+        this.age = age;
     }
 
     public String geteMail() {

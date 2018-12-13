@@ -10,17 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.model.DocumentKey;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextLogInPassword;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference users = db.collection("users");
+    private CollectionReference usersRef = db.collection("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,21 +39,45 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view){
-        String LogInMail = editTextLogInMail.getText().toString();
-        String LogInPassword = editTextLogInPassword.getText().toString();
+        final String LogInMail = editTextLogInMail.getText().toString();
+        final String LogInPassword = editTextLogInPassword.getText().toString();
 
-        //TODO NANNI: Understand how querying workd
-        //Query q = users.whereEqualTo(KEY_MAILADDRESS, LogInMail);
-        //QuerySnapshot qSnapshot = q.get();
-        if (LogInMail.equals("N@nni-s.de")){
-            if(LogInPassword.equals("test123")){
-                Toast.makeText(LoginActivity.this, "Welcome Nanni", Toast.LENGTH_LONG).show();
-            } else{
-                Toast.makeText(LoginActivity.this, "Wrong Password! Try again!", Toast.LENGTH_LONG).show();
+        usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                    User user = documentSnapshot.toObject(User.class);
+
+                    String eMail = user.geteMail();
+                    String nickname = user.getNickname();
+                    String password = user.getPassword();
+
+                    Log.d(TAG, "Tried logging in: "+nickname);
+
+                    if (eMail.equals(LogInMail)){
+                        if(password.equals(LogInPassword)){
+                            String data = "Hello: " + nickname;
+                            Log.d(TAG,"Found User: "+nickname);
+                            Toast.makeText(LoginActivity.this, data, Toast.LENGTH_LONG).show();
+                            Intent mIntent = new Intent(LoginActivity.this, Menu.class);
+                            startActivity(mIntent);
+                            break;
+                        } else{
+                            Log.d(TAG, "Wrong Password");
+                            Toast.makeText(LoginActivity.this, "Wrong Password! Try again!", Toast.LENGTH_LONG).show();
+                        }
+
+                    } else{
+                        //Not a match
+                    }
+
+                }
+                //TODO NANNI:
+                //Did not find the mail address
+                //Toast.makeText(LoginActivity.this, "Your Email does not exist. How about signing up?", Toast.LENGTH_LONG).show();
             }
-        } else{
-            Toast.makeText(LoginActivity.this, "Your Email does not exist. How about signing up?", Toast.LENGTH_LONG).show();
-        }
+        });
+
     }
 
     public void sign_up(View view){

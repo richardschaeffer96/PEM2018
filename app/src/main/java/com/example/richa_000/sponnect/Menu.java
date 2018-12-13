@@ -36,7 +36,7 @@ public class Menu extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        //TODO NANNI
         ArrayList<SpotExample> exampleList = new ArrayList<>();
         exampleList.add(new SpotExample("Spot_Example", "01.01.2018", "00:00"));
         exampleList.add(new SpotExample("Spot_Example2", "01.01.2018", "00:00"));

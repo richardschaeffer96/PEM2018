@@ -2,12 +2,14 @@ package com.example.richa_000.sponnect;
 
 class Spot {
 
-
-
     private String title;
     private String address;
     private double latitude;
     private double longitude;
+
+    public Spot() {
+        //Need to be here for reasons...
+    }
 
     public Spot(String title, String address, double latitude, double longitude) {
         this.title = title;

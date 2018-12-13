@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -22,12 +24,14 @@ public class SignUp extends AppCompatActivity {
 
     private static final String TAG = "SignUp";
 
+    /*
     private static final String KEY_MAILADDRESS = "mailaddress";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_NICKNAME = "nickname";
     private static final String KEY_AGE = "age";
     private static final String KEY_GENDER = "gender";
     private static final String KEY_SM_FACEBOOK = "SM-facebook";
+    */
 
     private EditText editTextSignUpMail;
     private EditText editTextSignUpPassword;
@@ -36,6 +40,7 @@ public class SignUp extends AppCompatActivity {
     private RadioGroup radioGroupGender;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference usersRef = db.collection("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +59,7 @@ public class SignUp extends AppCompatActivity {
 
     public void save(View view){
 
-        int members = (int) (Math.random()*100);
+        //int members = (int) (Math.random()*100);
 
         String SignUpMail = editTextSignUpMail.getText().toString();
         String SignUpPassword = editTextSignUpPassword.getText().toString();
@@ -62,7 +67,7 @@ public class SignUp extends AppCompatActivity {
         int SignUpAge = Integer.parseInt(editTextSignUpAge.getText().toString());
 
         String SignUpGender = "undefined";
-        radioGroupGender = (RadioGroup) findViewById(R.id.radio_gender);
+        radioGroupGender = findViewById(R.id.radio_gender);
         int genderId = radioGroupGender.getCheckedRadioButtonId();
 
         switch(genderId){
@@ -70,10 +75,24 @@ public class SignUp extends AppCompatActivity {
             case 2131165320: SignUpGender = "m"; break;
             case 2131165319: SignUpGender = "f"; break;
             case 2131165318: SignUpGender = "o"; break;
-            default: Toast.makeText(SignUp.this, "Your Gender ID is:"+genderId, Toast.LENGTH_LONG).show();
+            default: Toast.makeText(SignUp.this, "Your GenderID is:"+genderId, Toast.LENGTH_LONG).show();
         }
 
         User user = new User(SignUpMail, SignUpNickname, SignUpPassword, SignUpGender, SignUpAge);
+
+        usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Toast.makeText(SignUp.this, "Data saved and logged in!", Toast.LENGTH_LONG).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(SignUp.this, "ERROR!", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, e.toString());
+            }
+        });
+
         /*
         Map<String, Object> user = new HashMap<>();
         user.put(KEY_MAILADDRESS, SignUpMail);
@@ -81,9 +100,9 @@ public class SignUp extends AppCompatActivity {
         user.put(KEY_NICKNAME, SignUpNickname);
         user.put(KEY_AGE, SignUpAge);
         user.put(KEY_GENDER, SignUpGender);
-        */
 
-        db.collection("users").document("user"+members).set(user)
+
+        db.collection("users").document("user").set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -99,6 +118,7 @@ public class SignUp extends AppCompatActivity {
                         Log.d(TAG, e.toString());
                     }
                 });
+        */
 
         Intent mIntent = new Intent(SignUp.this, Menu.class);
         startActivity(mIntent);
