@@ -12,21 +12,34 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/text_my_spots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="My spots" />
+            android:text="My spots"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300sp"
             android:padding="4dp"
-            android:scrollbars="vertical" >
+            android:scrollbars="vertical">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -38,18 +51,20 @@
             <Button
                 android:id="@+id/button_seek"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="100sp"
                 android:layout_weight="1"
-                android:text="Seek"
-                android:onClick="seek"/>
+                android:background="#BEF781"
+                android:onClick="seek"
+                android:text="Seek" />
 
             <Button
                 android:id="@+id/button_guide"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="100sp"
                 android:layout_weight="1"
-                android:text="Guide"
-                android:onClick="guide"/>
+                android:background="#A9F5F2"
+                android:onClick="guide"
+                android:text="Guide" />
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.richa_000.sponnect;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,11 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
             spot_name = itemView.findViewById(R.id.spot_name);
             spot_date = itemView.findViewById(R.id.spot_date);
             spot_time = itemView.findViewById(R.id.spot_time);
+
+            itemView.setOnClickListener((v) -> {
+                int position = getAdapterPosition();
+                Snackbar.make(v, "Click detected on item " + position, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            });
         }
     }
 

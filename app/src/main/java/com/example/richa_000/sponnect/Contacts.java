@@ -37,6 +37,9 @@ public class Contacts extends AppCompatActivity {
                 Intent mIntent2 = new Intent(Contacts.this, Contacts.class);
                 startActivity(mIntent2);
                 return true;
+            case R.id.home:
+                Intent mIntent3 = new Intent(Contacts.this, Menu.class);
+                startActivity(mIntent3);
             default:
                 return super.onOptionsItemSelected(item);
         }
