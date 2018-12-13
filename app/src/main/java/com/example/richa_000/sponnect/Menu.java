@@ -76,6 +76,9 @@ public class Menu extends AppCompatActivity {
                 Intent mIntent2 = new Intent(Menu.this, Contacts.class);
                 startActivity(mIntent2);
                 return true;
+            case R.id.home:
+                Intent mIntent3 = new Intent(Menu.this, Menu.class);
+                startActivity(mIntent3);
             default:
                 return super.onOptionsItemSelected(item);
         }

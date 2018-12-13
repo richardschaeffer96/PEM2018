@@ -3,18 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/settings"
-        android:icon="@drawable/ic_edit"
-        android:title="Edit settings"
-        app:showAsAction="ifRoom"
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home"
+        android:title="Home"
+        app:showAsAction="always"
         />
 
     <item
         android:id="@+id/contacts"
         android:icon="@drawable/ic_contacts"
         android:title="Show contacts"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
 
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_edit"
+        android:title="Edit settings"
+        app:showAsAction="always"
+        />
 
 </menu>
