@@ -38,9 +38,12 @@ public class Menu extends AppCompatActivity {
 
 
         ArrayList<SpotExample> exampleList = new ArrayList<>();
-        exampleList.add(new SpotExample("Spot_Example", "01.01.2018", "00:00"));
-        exampleList.add(new SpotExample("Spot_Example2", "01.01.2018", "00:00"));
-        exampleList.add(new SpotExample("Spot_Example3", "01.01.2018", "00:00"));
+        exampleList.add(new SpotExample("Weihnachtsmarkt", "15.12.2018", "12:30"));
+        exampleList.add(new SpotExample("Running Sushi", "15.12.2018", "17:45"));
+        exampleList.add(new SpotExample("Schlittschuhlaufen", "16.12.2018", "13:00"));
+        exampleList.add(new SpotExample("Kino", "16.12.2018", "18:00"));
+        exampleList.add(new SpotExample("Stadtführung Zentrum", "17.12.2018", "14:30"));
+        exampleList.add(new SpotExample("Asiatisches Buffet", "17.12.2018", "19:45"));
 
         mRecyclerView = findViewById(R.id.recyclerview);
         mRecyclerView.setHasFixedSize(true);

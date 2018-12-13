@@ -2,37 +2,57 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:cardCornerRadius="4dp">
+    android:layout_height="100sp"
+    android:id="@+id/card_view"
+    android:layout_margin="5dp"
+    card_view:cardBackgroundColor="#81C784"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="3dp"
+    card_view:contentPadding="4dp"
+    android:foreground="?selectableItemBackground"
+    android:clickable="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp">
+        android:layout_margin="16dp">
 
         <TextView
             android:id="@+id/spot_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Spot_name" />
+            android:text="Spot_name"
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/spot_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginStart="29dp"
+            android:layout_marginLeft="29dp"
+            android:layout_marginTop="0dp"
             android:layout_toEndOf="@+id/spot_name"
-            android:text="01.01.2018"
             android:layout_toRightOf="@+id/spot_name"
-            tools:ignore="RtlCompat" />
+            android:text="01.01.2018"
+            tools:ignore="RtlCompat"
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/spot_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/spot_name"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="14dp"
             android:text="00:00"
-            android:layout_below="@+id/spot_name"/>
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="1dp"
+            tools:ignore="RtlCompat"
+            android:textSize="15sp"/>
 
     </RelativeLayout>
 
