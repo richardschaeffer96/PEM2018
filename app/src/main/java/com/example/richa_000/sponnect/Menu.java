@@ -90,7 +90,7 @@ public class Menu extends AppCompatActivity {
     public void seek(View view){
 
         if(isServicesOK()){
-            Intent intent = new Intent(Menu.this, MapActivity.class);
+            Intent intent = new Intent(Menu.this, CreateSpotActivity.class);
             startActivity(intent);
         }
         // To do: Felix

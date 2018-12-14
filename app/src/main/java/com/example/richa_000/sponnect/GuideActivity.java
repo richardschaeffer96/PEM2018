@@ -3,6 +3,7 @@ package com.example.richa_000.sponnect;
 import android.*;
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -47,6 +48,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,6 +63,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private LocationManager locationManager;
     private Button btnGetCurrentLocation;
     private GoogleMap mMap;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     PlaceAutocompleteFragment placeAutoComplete;
 
@@ -109,6 +113,11 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
     }
+
+    private void onMapClicked(){
+
+    }
+
 
     private void geoLocate(Place place) {
 
@@ -203,7 +212,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                getLocationData(latLng);
+                onMapClicked(latLng);
             }
         });
     }
@@ -212,11 +221,17 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         Toast.makeText(GuideActivity.this, "You clicked on Marker " + marker.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
-    private void getLocationData(LatLng latLng) {
+    private void onMapClicked(LatLng latLng) {
         geocoder = new Geocoder(this, Locale.getDefault());
         try {
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            System.out.println("Addresse: "+address);
+            Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
+            intent.putExtra("Address", address);
+            intent.putExtra("LatLng", latLng);
+            startActivity(intent);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
