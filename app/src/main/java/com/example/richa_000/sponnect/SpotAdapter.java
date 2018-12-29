@@ -1,5 +1,6 @@
 package com.example.richa_000.sponnect;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +30,9 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
             itemView.setOnClickListener((v) -> {
                 int position = getAdapterPosition();
                 Snackbar.make(v, "Click detected on item " + position, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Intent intent = new Intent(itemView.getContext(), SpotInterface.class);
+                itemView.getContext().startActivity(intent);
+
             });
         }
     }

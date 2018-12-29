@@ -38,8 +38,9 @@
         <activity android:name=".Menu" />
         <activity android:name=".MapActivity" />
         <activity android:name=".GuideActivity" />
-        <activity android:name=".Contacts"/>
-        <activity android:name=".CreateSpotActivity"/>
+        <activity android:name=".Contacts" />
+        <activity android:name=".CreateSpotActivity" />
+        <activity android:name=".SpotInterface"></activity>
     </application>
 
 </manifest>
