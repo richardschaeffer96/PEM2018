@@ -52,9 +52,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         spots = new LinkedList<>();
 
-        Spot s1 = new Spot("Spot1","Josef-Retzer-Straße 29 81241 München", 48.142330, 11.463862);
-        Spot s2 = new Spot("Spot2","Weinbergerstraße 50A 81241 München", 48.140475, 11.465333);
-        Spot s3 = new Spot("Spot3","Georg-Jais-Straße 1 81241 München", 48.141349, 11.468042);
+        Spot s1 = new Spot("Spot1","Josef-Retzer-Straße 29 81241 München", "12.12.12", "12:12",48.142330, 11.463862);
+        Spot s2 = new Spot("Spot2","Weinbergerstraße 50A 81241 München", "12.12.12","12:12",48.140475, 11.465333);
+        Spot s3 = new Spot("Spot3","Georg-Jais-Straße 1 81241 München", "12.12.12", "12:12",48.141349, 11.468042);
 
         spots.addAll(Arrays.asList(s1,s2,s3));
 

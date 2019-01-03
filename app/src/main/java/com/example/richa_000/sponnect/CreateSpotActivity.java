@@ -14,10 +14,15 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -34,16 +39,25 @@ public class CreateSpotActivity extends AppCompatActivity {
     private PlaceAutocompleteFragment placeAutoComplete;
     private EditText date;
     private EditText time;
+    private EditText title;
     final Calendar myCalendar = Calendar.getInstance();
     private DatePickerDialog.OnDateSetListener datePicker;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private String spotLatLng;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference spotsRef = db.collection("spots");
+
+    private double lat;
+    private double lng;
+    private String adress;
 
     private static final String KEY_ADDRESS = "address";
     private static final String KEY_TIME = "time";
     private static final String KEY_DATE = "date";
     private static final String KEY_LATLNG= "latlng";
+
+
+    private Place selectedPlace;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +65,30 @@ public class CreateSpotActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_spot);
         Intent intent = getIntent();
 
-        spotLatLng = intent.getStringExtra("LatLong");
         placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.et_address);
+
+        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                System.out.println("PLACE SELECTED");
+                selectedPlace = place;
+            }
+
+            @Override
+            public void onError(Status status) {
+
+            }
+        });
+
 
         Bundle extras = intent.getExtras();
         if (extras != null) {
             if (extras.containsKey("Address")) {
+                System.out.println("THERE ARE EXTRAS");
                 placeAutoComplete.setText(getIntent().getStringExtra("Address"));
+                lat =  Double.parseDouble(getIntent().getStringExtra("Lat"));
+                lng =  Double.parseDouble(getIntent().getStringExtra("Lng"));
+                adress = getIntent().getStringExtra("Address");
             }
         }
 
@@ -101,7 +132,15 @@ public class CreateSpotActivity extends AppCompatActivity {
                 mTimePicker = new TimePickerDialog(CreateSpotActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        time.setText( selectedHour + ":" + selectedMinute);
+                        String min=""+selectedMinute;
+                        String h=""+selectedHour;
+                        if (selectedMinute<10){
+                            min = "0"+selectedMinute;
+                        }
+                        if (selectedHour<10){
+                            h = "0"+selectedHour;
+                        }
+                        time.setText( h + ":" + min);
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -109,6 +148,7 @@ public class CreateSpotActivity extends AppCompatActivity {
             }
         });
 
+        title = findViewById(R.id.et_title);
     }
 
     private void updateLabel() {
@@ -120,7 +160,31 @@ public class CreateSpotActivity extends AppCompatActivity {
 
 
     public void save(View view){
+        if(selectedPlace!=null){
+            lat = selectedPlace.getLatLng().latitude;
+            lng = selectedPlace.getLatLng().longitude;
+            adress = (String) selectedPlace.getAddress();
+        }
 
+        final Spot spot = new Spot(title.getText().toString(),adress, date.getText().toString(), time.getText().toString(), lat, lng);
+
+        spotsRef.add(spot).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Toast.makeText(CreateSpotActivity.this, "Spot saved", Toast.LENGTH_LONG).show();
+                Intent mIntent = new Intent(CreateSpotActivity.this, GuideActivity.class);
+                startActivity(mIntent);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(CreateSpotActivity.this, "ERROR!", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, e.toString());
+            }
+        });
+
+
+        /*
         int spots = (int) (Math.random()*100);
 
         String SpotAddress = placeAutoComplete.toString();
@@ -150,7 +214,7 @@ public class CreateSpotActivity extends AppCompatActivity {
                         Log.d(TAG, e.toString());
                     }
                 });
-
+*/
         Intent mIntent = new Intent(CreateSpotActivity.this, Menu.class);
         startActivity(mIntent);
     }

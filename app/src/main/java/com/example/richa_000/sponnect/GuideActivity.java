@@ -10,6 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -75,6 +76,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private List<Spot> spots;
 
+    private Place selectedPlace;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +89,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             public void onPlaceSelected(Place place) {
                 geoLocate(place);
                 System.out.println("TEST");
+                selectedPlace = place;
                 Log.d("Maps", "Place selected: " + place.getName());
             }
 
@@ -97,9 +101,9 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
         spots = new LinkedList<>();
 
-        Spot s1 = new Spot("Spot1", "Josef-Retzer-Straße 29 81241 München", 48.142330, 11.463862);
-        Spot s2 = new Spot("Spot2", "Weinbergerstraße 50A 81241 München", 48.140475, 11.465333);
-        Spot s3 = new Spot("Spot3", "Georg-Jais-Straße 1 81241 München", 48.141349, 11.468042);
+        Spot s1 = new Spot("Spot1","Josef-Retzer-Straße 29 81241 München", "12.12.12", "12:12",48.140475, 11.46543);
+        Spot s2 = new Spot("Spot2","Weinbergerstraße 50A 81241 München", "12.12.12","12:12",48.140475, 11.465333);
+        Spot s3 = new Spot("Spot3","Georg-Jais-Straße 1 81241 München", "12.12.12", "12:12",48.141349, 11.468042);
 
         spots.addAll(Arrays.asList(s1, s2, s3));
 
@@ -224,12 +228,13 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private void onMapClicked(LatLng latLng) {
         geocoder = new Geocoder(this, Locale.getDefault());
         try {
+
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            System.out.println("Addresse: "+address);
             Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
             intent.putExtra("Address", address);
-            intent.putExtra("LatLng", latLng);
+            intent.putExtra("Lat", Double.toString(latLng.latitude));
+            intent.putExtra("Lng", Double.toString(latLng.longitude));
             startActivity(intent);
 
         } catch (IOException e) {
