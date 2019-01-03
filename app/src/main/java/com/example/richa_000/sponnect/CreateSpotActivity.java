@@ -30,7 +30,8 @@ public class CreateSpotActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateSpotActivity";
 
-    private EditText address;
+    //private EditText address;
+    private PlaceAutocompleteFragment placeAutoComplete;
     private EditText date;
     private EditText time;
     final Calendar myCalendar = Calendar.getInstance();
@@ -48,11 +49,17 @@ public class CreateSpotActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_spot);
+        Intent intent = getIntent();
 
-        spotLatLng = getIntent().getStringExtra("LatLong");
+        spotLatLng = intent.getStringExtra("LatLong");
+        placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.et_address);
 
-        address = findViewById(R.id.et_address);
-        address.setText(getIntent().getStringExtra("Address"));
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if (extras.containsKey("Address")) {
+                placeAutoComplete.setText(getIntent().getStringExtra("Address"));
+            }
+        }
 
         date = findViewById(R.id.et_date);
 
@@ -116,7 +123,7 @@ public class CreateSpotActivity extends AppCompatActivity {
 
         int spots = (int) (Math.random()*100);
 
-        String SpotAddress = address.getText().toString();
+        String SpotAddress = placeAutoComplete.toString();
         String SpotDate = date.getText().toString();
         String SpotTime = time.getText().toString();
         String SpotLatLng = spotLatLng;

@@ -21,19 +21,22 @@
             android:textSize="15dp"
             android:gravity="center_vertical"/>
 
+
+        <!--
         <EditText
             android:id="@+id/et_address"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="15dp"
             android:gravity="center_vertical"/>
-        <!--
+            -->
+
         <fragment
             android:id="@+id/et_address"
             android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
             android:layout_width="match_parent"
             android:layout_height="42dp"
-            android:layout_centerVertical="true" /> -->
+            android:layout_centerVertical="true" />
     </LinearLayout>
 
     <LinearLayout

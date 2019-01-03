@@ -246,5 +246,13 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
+    public void addSpot(View view){
+        System.out.println("NEW");
+        Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
+        startActivity(intent);
+    }
+
 }
 
