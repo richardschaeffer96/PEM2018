@@ -3,12 +3,14 @@ package com.example.richa_000.sponnect;
 import android.*;
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -47,6 +49,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,6 +65,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private Button btnGetCurrentLocation;
     private GoogleMap mMap;
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     PlaceAutocompleteFragment placeAutoComplete;
 
     private Geocoder geocoder;
@@ -70,6 +75,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private static final float DEFAULT_ZOOM = 15f;
 
     private List<Spot> spots;
+
+    private Place selectedPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +89,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             public void onPlaceSelected(Place place) {
                 geoLocate(place);
                 System.out.println("TEST");
+                selectedPlace = place;
                 Log.d("Maps", "Place selected: " + place.getName());
             }
 
@@ -93,9 +101,9 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
         spots = new LinkedList<>();
 
-        Spot s1 = new Spot("Spot1", "Josef-Retzer-Straße 29 81241 München", 48.142330, 11.463862);
-        Spot s2 = new Spot("Spot2", "Weinbergerstraße 50A 81241 München", 48.140475, 11.465333);
-        Spot s3 = new Spot("Spot3", "Georg-Jais-Straße 1 81241 München", 48.141349, 11.468042);
+        Spot s1 = new Spot("Spot1","Josef-Retzer-Straße 29 81241 München", "12.12.12", "12:12",48.140475, 11.46543);
+        Spot s2 = new Spot("Spot2","Weinbergerstraße 50A 81241 München", "12.12.12","12:12",48.140475, 11.465333);
+        Spot s3 = new Spot("Spot3","Georg-Jais-Straße 1 81241 München", "12.12.12", "12:12",48.141349, 11.468042);
 
         spots.addAll(Arrays.asList(s1, s2, s3));
 
@@ -109,6 +117,11 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
     }
+
+    private void onMapClicked(){
+
+    }
+
 
     private void geoLocate(Place place) {
 
@@ -203,7 +216,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                getLocationData(latLng);
+                onMapClicked(latLng);
             }
         });
     }
@@ -212,11 +225,18 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         Toast.makeText(GuideActivity.this, "You clicked on Marker " + marker.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
-    private void getLocationData(LatLng latLng) {
+    private void onMapClicked(LatLng latLng) {
         geocoder = new Geocoder(this, Locale.getDefault());
         try {
+
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
+            intent.putExtra("Address", address);
+            intent.putExtra("Lat", Double.toString(latLng.latitude));
+            intent.putExtra("Lng", Double.toString(latLng.longitude));
+            startActivity(intent);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -231,5 +251,13 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
+    public void addSpot(View view){
+        System.out.println("NEW");
+        Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
+        startActivity(intent);
+    }
+
 }
 

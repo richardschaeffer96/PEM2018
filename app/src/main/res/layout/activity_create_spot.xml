@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateSpotActivity">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="Address: "
+            android:textSize="15dp"
+            android:gravity="center_vertical"/>
+
+
+        <!--
+        <EditText
+            android:id="@+id/et_address"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="15dp"
+            android:gravity="center_vertical"/>
+            -->
+
+        <fragment
+            android:id="@+id/et_address"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_centerVertical="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="Date: "
+            android:textSize="15dp"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:id="@+id/et_date"
+            android:clickable="true"
+            android:editable="false"
+            android:textSize="15dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="Time: "
+            android:textSize="15dp"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:id="@+id/et_time"
+            android:clickable="true"
+            android:editable="false"
+            android:textSize="15dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="Title: "
+            android:textSize="15dp"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:id="@+id/et_title"
+            android:clickable="true"
+            android:textSize="15dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="save"
+        android:text="Button" />
+
+
+</LinearLayout>
