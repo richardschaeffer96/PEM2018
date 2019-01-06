@@ -48,8 +48,12 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,6 +70,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private GoogleMap mMap;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference spotsRef = db.collection("spots");
 
     PlaceAutocompleteFragment placeAutoComplete;
 
@@ -101,11 +106,31 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
         spots = new LinkedList<>();
 
+        /*
         Spot s1 = new Spot("Spot1","Josef-Retzer-Straße 29 81241 München", "12.12.12", "12:12",48.140475, 11.46543);
         Spot s2 = new Spot("Spot2","Weinbergerstraße 50A 81241 München", "12.12.12","12:12",48.140475, 11.465333);
         Spot s3 = new Spot("Spot3","Georg-Jais-Straße 1 81241 München", "12.12.12", "12:12",48.141349, 11.468042);
+        */
 
-        spots.addAll(Arrays.asList(s1, s2, s3));
+        //spots.addAll(Arrays.asList(s1, s2, s3));
+
+        spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                    //TODO Range Query or Number restriction
+                    if(true){
+                        Spot spot = documentSnapshot.toObject(Spot.class);
+                        spots.add(spot);
+                        Log.d(TAG, "Spots loaded: "+spot.getTitle());
+                        //TODO Change marker setting in external function to call here
+                    }
+
+                }
+
+            }
+        });
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         initMap();

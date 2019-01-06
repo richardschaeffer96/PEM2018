@@ -9,6 +9,8 @@ class Spot {
     private double latitude;
     private double longitude;
 
+    private User[] participants;
+
     public Spot() {
         //Need to be here for reasons...
     }

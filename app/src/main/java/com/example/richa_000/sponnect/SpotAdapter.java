@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
 
-    private ArrayList<SpotExample> mSpotList;
+    private ArrayList<Spot> mSpotList;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView spot_name;
@@ -37,7 +37,7 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
         }
     }
 
-    public SpotAdapter(ArrayList<SpotExample> spotList){
+    public SpotAdapter(ArrayList<Spot> spotList){
         mSpotList = spotList;
     }
 
@@ -51,10 +51,10 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        SpotExample currentItem = mSpotList.get(i);
-        viewHolder.spot_name.setText(currentItem.getSpot_name());
-        viewHolder.spot_date.setText(currentItem.getSpot_date());
-        viewHolder.spot_time.setText(currentItem.getSpot_time());
+        Spot currentItem = mSpotList.get(i);
+        viewHolder.spot_name.setText(currentItem.getTitle());
+        viewHolder.spot_date.setText(currentItem.getDate());
+        viewHolder.spot_time.setText(currentItem.getTime());
     }
 
     @Override

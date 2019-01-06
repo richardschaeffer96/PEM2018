@@ -9,7 +9,7 @@ public class User {
     int age;
 
     //optional
-    private String socailMedia;
+    private String[] socailMedia;
 
     public User() {
         //public empty constructor needed for fireStore

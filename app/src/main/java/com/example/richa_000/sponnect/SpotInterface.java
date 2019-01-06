@@ -19,6 +19,7 @@ public class SpotInterface extends AppCompatActivity {
         setContentView(R.layout.activity_spot_interface);
 
         ArrayList<ParticipantsExample> exampleList = new ArrayList<>();
+        //Drawable images will not be pushed, need to be copied seprately. -Nanni
         exampleList.add(new ParticipantsExample("Heinz699", "male", "22", R.drawable.user1));
         exampleList.add(new ParticipantsExample("xXDragonfighterXx", "male", "19", R.drawable.user2));
         exampleList.add(new ParticipantsExample("Julia_N.", "female", "21", R.drawable.user3));

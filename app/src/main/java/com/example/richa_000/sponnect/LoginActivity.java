@@ -60,6 +60,9 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG,"Found User: "+nickname);
                             Toast.makeText(LoginActivity.this, data, Toast.LENGTH_LONG).show();
                             Intent mIntent = new Intent(LoginActivity.this, Menu.class);
+                            mIntent.putExtra("Me", nickname);
+                            mIntent.putExtra("gender", user.getGender().toString());
+                            mIntent.putExtra("age", user.getAge());
                             startActivity(mIntent);
                             break;
                         } else{
@@ -72,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                 }
-                //TODO NANNI:
+                //TODO NANNI: mail address is not found but Toast will be shown anyway, IF needed
                 //Did not find the mail address
                 //Toast.makeText(LoginActivity.this, "Your Email does not exist. How about signing up?", Toast.LENGTH_LONG).show();
             }
