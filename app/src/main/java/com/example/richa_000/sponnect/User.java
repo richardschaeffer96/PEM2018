@@ -7,6 +7,7 @@ public class User {
     private String password;
     private String gender;
     int age;
+    private String[] mySpots;
 
     //optional
     private String[] socailMedia;
@@ -62,4 +63,8 @@ public class User {
     public void setAge(int age) {
         this.age = age;
     }
+
+    public String[] getMySpots() { return mySpots; }
+
+    public void setMySpots(String[] mySpots) { this.mySpots = mySpots; }
 }

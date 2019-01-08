@@ -9,7 +9,7 @@ class Spot {
     private double latitude;
     private double longitude;
 
-    private User[] participants;
+    private String[] participants;
 
     public Spot() {
         //Need to be here for reasons...
@@ -71,4 +71,8 @@ class Spot {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    public String[] getParticipants() { return participants; }
+
+    public void setParticipants(String[] participants) { this.participants = participants; }
 }

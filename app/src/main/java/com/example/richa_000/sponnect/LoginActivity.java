@@ -20,14 +20,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
-    private static final String KEY_MAILADDRESS = "mailaddress";
-    private static final String KEY_PASSWORD = "password";
-
     private EditText editTextLogInMail;
     private EditText editTextLogInPassword;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("users");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                    String id = documentSnapshot.getId();
                     User user = documentSnapshot.toObject(User.class);
 
                     String eMail = user.geteMail();
@@ -60,9 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG,"Found User: "+nickname);
                             Toast.makeText(LoginActivity.this, data, Toast.LENGTH_LONG).show();
                             Intent mIntent = new Intent(LoginActivity.this, Menu.class);
-                            mIntent.putExtra("Me", nickname);
-                            mIntent.putExtra("gender", user.getGender().toString());
-                            mIntent.putExtra("age", user.getAge());
+                            mIntent.putExtra("id", id);
                             startActivity(mIntent);
                             break;
                         } else{

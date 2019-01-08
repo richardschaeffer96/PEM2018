@@ -31,6 +31,7 @@ import java.util.Locale;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{
 
+    //TODO: DELETE!?!?!?!?!?!
 
     private static final int REQUEST_LOCATION = 1;
     private LocationManager locationManager;

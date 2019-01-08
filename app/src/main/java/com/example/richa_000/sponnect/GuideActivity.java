@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -71,6 +72,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference spotsRef = db.collection("spots");
+    private String userID;
 
     PlaceAutocompleteFragment placeAutoComplete;
 
@@ -79,7 +81,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private static final String TAG = "GuideActivity";
     private static final float DEFAULT_ZOOM = 15f;
 
-    private List<Spot> spots;
+    //private LinkedList<> spots;
+    private ArrayList<Spot> spots = new ArrayList<>();
 
     private Place selectedPlace;
 
@@ -104,15 +107,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        spots = new LinkedList<>();
-
-        /*
-        Spot s1 = new Spot("Spot1","Josef-Retzer-Straße 29 81241 München", "12.12.12", "12:12",48.140475, 11.46543);
-        Spot s2 = new Spot("Spot2","Weinbergerstraße 50A 81241 München", "12.12.12","12:12",48.140475, 11.465333);
-        Spot s3 = new Spot("Spot3","Georg-Jais-Straße 1 81241 München", "12.12.12", "12:12",48.141349, 11.468042);
-        */
-
-        //spots.addAll(Arrays.asList(s1, s2, s3));
 
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -124,7 +118,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                         Spot spot = documentSnapshot.toObject(Spot.class);
                         spots.add(spot);
                         Log.d(TAG, "Spots loaded: "+spot.getTitle());
-                        //TODO Change marker setting in external function to call here
+                        setAllSpotMarker(spots);
                     }
 
                 }
@@ -141,6 +135,18 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                 getLocation();
             }
         });
+    }
+
+    /**
+     * qfunction to create all spot marker in the spots list
+     * @param spots
+     */
+    private void setAllSpotMarker(ArrayList<Spot> spots){
+        Log.d(TAG, "setAllSpotMarker: Liste in Marker Funktion mit Entry: "+spots.get(0).getTitle());
+        for (int i = 0; i < spots.size(); i++) {
+            LatLng pos = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
+            mMap.addMarker(new MarkerOptions().position(pos).title(spots.get(i).getTitle()));
+        }
     }
 
     private void onMapClicked(){
@@ -225,11 +231,12 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
         getLocation();
-
+        /*
         for (int i = 0; i < spots.size(); i++) {
             LatLng pos = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
             mMap.addMarker(new MarkerOptions().position(pos).title(spots.get(i).getTitle()));
         }
+        */
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override

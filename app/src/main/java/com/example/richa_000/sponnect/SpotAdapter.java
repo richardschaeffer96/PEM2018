@@ -21,7 +21,7 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
         public TextView spot_date;
         public TextView spot_time;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             spot_name = itemView.findViewById(R.id.spot_name);
             spot_date = itemView.findViewById(R.id.spot_date);
@@ -31,6 +31,7 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
                 int position = getAdapterPosition();
                 Snackbar.make(v, "Click detected on item " + position, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 Intent intent = new Intent(itemView.getContext(), SpotInterface.class);
+                //intent.putExtra("id", Menu);
                 itemView.getContext().startActivity(intent);
 
             });
