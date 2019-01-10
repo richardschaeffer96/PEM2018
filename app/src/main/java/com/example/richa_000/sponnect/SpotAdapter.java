@@ -14,7 +14,8 @@ import java.util.ArrayList;
 
 public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
 
-    private ArrayList<Spot> mSpotList;
+    private static ArrayList<Spot> mSpotList;
+    private static String userID;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView spot_name;
@@ -29,17 +30,21 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
 
             itemView.setOnClickListener((v) -> {
                 int position = getAdapterPosition();
+                Spot clickedSpot = mSpotList.get(position);
                 Snackbar.make(v, "Click detected on item " + position, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 Intent intent = new Intent(itemView.getContext(), SpotInterface.class);
-                //intent.putExtra("id", Menu);
+                intent.putExtra("spot", clickedSpot);
+                intent.putExtra("id", userID);
                 itemView.getContext().startActivity(intent);
 
             });
         }
     }
 
-    public SpotAdapter(ArrayList<Spot> spotList){
+    public SpotAdapter(ArrayList<Spot> spotList, String userID){
+
         mSpotList = spotList;
+        this.userID = userID;
     }
 
     @NonNull

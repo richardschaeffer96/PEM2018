@@ -76,7 +76,7 @@ public class Menu extends AppCompatActivity {
                 mRecyclerView = findViewById(R.id.recyclerview);
                 mRecyclerView.setHasFixedSize(true);
                 mLayoutManager = new LinearLayoutManager(mRecyclerView.getContext());
-                mAdapter = new SpotAdapter(mySpotList);
+                mAdapter = new SpotAdapter(mySpotList, userID);
 
                 mRecyclerView.setLayoutManager(mLayoutManager);
                 mRecyclerView.setAdapter(mAdapter);

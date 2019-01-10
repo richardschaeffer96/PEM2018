@@ -1,6 +1,8 @@
 package com.example.richa_000.sponnect;
 
-class Spot {
+import java.io.Serializable;
+
+class Spot implements Serializable {
 
     private String title;
     private String address;
