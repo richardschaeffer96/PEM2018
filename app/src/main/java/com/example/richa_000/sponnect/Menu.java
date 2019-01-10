@@ -157,6 +157,7 @@ public class Menu extends AppCompatActivity {
         }
     }
 
+    /*
     public void seek(View view){
 
         if(isServicesOK()){
@@ -164,9 +165,8 @@ public class Menu extends AppCompatActivity {
             intent.putExtra("id", userID);
             startActivity(intent);
         }
-        // TODO: Felix
-
     }
+    */
 
     public void guide(View view){
         if(isServicesOK()){
