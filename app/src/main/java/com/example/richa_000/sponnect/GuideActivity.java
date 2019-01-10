@@ -2,6 +2,7 @@ package com.example.richa_000.sponnect;
 
 import android.*;
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -64,6 +65,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class GuideActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
+
+    Dialog mapOverlay;
 
     private static final int REQUEST_LOCATION = 1;
     private LocationManager locationManager;
@@ -135,6 +138,13 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                 getLocation();
             }
         });
+
+        mapOverlay = new Dialog(this);
+    }
+
+    public void showMapOverlay(){
+        mapOverlay.setContentView(R.layout.map_overlay);
+        mapOverlay.show();
     }
 
     /**
@@ -242,6 +252,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public boolean onMarkerClick(Marker marker) {
                 markerClicked(marker);
+
                 return true;
             }
         });
@@ -255,6 +266,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private void markerClicked(Marker marker) {
         Toast.makeText(GuideActivity.this, "You clicked on Marker " + marker.getTitle(), Toast.LENGTH_SHORT).show();
+        showMapOverlay();
     }
 
     private void onMapClicked(LatLng latLng) {
@@ -289,6 +301,10 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         System.out.println("NEW");
         Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
         startActivity(intent);
+    }
+
+    public void join(View view){
+        Toast.makeText(this, "Spot on!", Toast.LENGTH_SHORT).show();
     }
 
 }
