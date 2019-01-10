@@ -14,8 +14,8 @@
         android:id="@+id/text_my_spots"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
@@ -30,14 +30,15 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
         android:padding="4dp"
         android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/button_guide"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_my_spots">
@@ -64,7 +65,6 @@
         android:layout_height="60dp"
         android:layout_marginStart="50dp"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="5dp"
         android:layout_marginEnd="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginBottom="20dp"
@@ -74,7 +74,6 @@
         android:text="Explore"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerview" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
