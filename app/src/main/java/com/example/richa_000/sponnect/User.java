@@ -10,7 +10,7 @@ public class User {
     private String[] mySpots;
 
     //optional
-    private String[] socailMedia;
+    private String[] socialMedia;
 
     public User() {
         //public empty constructor needed for fireStore
