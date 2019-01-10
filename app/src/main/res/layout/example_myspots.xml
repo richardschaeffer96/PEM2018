@@ -1,44 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="100sp"
-    android:id="@+id/card_view"
     android:layout_margin="5dp"
-    card_view:cardBackgroundColor="#81C784"
+    android:clickable="true"
+    android:foreground="?selectableItemBackground"
+    card_view:cardBackgroundColor="@color/darkBlueAlpha"
     card_view:cardCornerRadius="12dp"
     card_view:cardElevation="3dp"
-    card_view:contentPadding="4dp"
-    android:foreground="?selectableItemBackground"
-    android:clickable="true">
+    card_view:contentPadding="4dp">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/spot_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
             android:text="Spot_name"
-            android:textSize="15sp"/>
-
-        <TextView
-            android:id="@+id/spot_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="29dp"
-            android:layout_marginLeft="29dp"
-            android:layout_marginTop="0dp"
-            android:layout_toEndOf="@+id/spot_name"
-            android:layout_toRightOf="@+id/spot_name"
-            android:text="01.01.2018"
-            tools:ignore="RtlCompat"
-            android:textSize="15sp"/>
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/spot_time"
@@ -46,14 +40,32 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/spot_name"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="1dp"
-            android:layout_marginTop="14dp"
-            android:text="00:00"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="1dp"
-            tools:ignore="RtlCompat"
-            android:textSize="15sp"/>
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="00:00"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/spot_date"
+            app:layout_constraintTop_toBottomOf="@+id/spot_name"
+            tools:ignore="RtlCompat" />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/spot_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@+id/spot_name"
+            android:layout_toRightOf="@+id/spot_name"
+            android:text="01.01.2018"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spot_name"
+            tools:ignore="RtlCompat" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
