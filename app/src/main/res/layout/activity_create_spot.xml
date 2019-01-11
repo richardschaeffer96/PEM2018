@@ -51,6 +51,19 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_address" />
 
         <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="22dp"
+            android:gravity="center_vertical"
+            android:text="Info: "
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+        <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +74,7 @@
             android:text="Date: "
             android:textSize="15dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_info" />
 
         <TextView
             android:id="@+id/tv_time"
@@ -101,6 +114,18 @@
             app:layout_constraintTop_toBottomOf="@+id/et_address" />
 
         <EditText
+            android:id="@+id/et_info"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:textSize="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_title" />
+
+        <EditText
             android:id="@+id/et_date"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
@@ -111,7 +136,7 @@
             android:gravity="center_vertical"
             android:textSize="15dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_title" />
+            app:layout_constraintTop_toBottomOf="@+id/et_info" />
 
         <EditText
             android:id="@+id/et_time"

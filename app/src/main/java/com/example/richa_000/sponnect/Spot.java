@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 class Spot implements Serializable {
 
+    private String info;
     private String title;
     private String address;
     private String date;
@@ -17,13 +18,22 @@ class Spot implements Serializable {
         //Need to be here for reasons...
     }
 
-    public Spot(String title, String address,String date, String time, double latitude, double longitude) {
+    public Spot(String title, String info, String address,String date, String time, double latitude, double longitude) {
         this.title = title;
         this.address = address;
+        this.info = info;
         this.date = date;
         this.time = time;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public String getTime() {

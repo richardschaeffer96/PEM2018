@@ -40,6 +40,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     private EditText date;
     private EditText time;
     private EditText title;
+    private EditText info;
     final Calendar myCalendar = Calendar.getInstance();
     private DatePickerDialog.OnDateSetListener datePicker;
 
@@ -147,6 +148,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         });
 
         title = findViewById(R.id.et_title);
+        info = findViewById(R.id.et_info);
     }
 
     private void updateLabel() {
@@ -164,7 +166,7 @@ public class CreateSpotActivity extends AppCompatActivity {
             adress = (String) selectedPlace.getAddress();
         }
 
-        final Spot spot = new Spot(title.getText().toString(),adress, date.getText().toString(), time.getText().toString(), lat, lng);
+        final Spot spot = new Spot(title.getText().toString(),info.getText().toString(), adress, date.getText().toString(), time.getText().toString(), lat, lng);
 
         spotsRef.add(spot).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

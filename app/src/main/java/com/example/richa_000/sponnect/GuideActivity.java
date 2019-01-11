@@ -142,8 +142,58 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         mapOverlay = new Dialog(this);
     }
 
-    public void showMapOverlay(){
+    public void showMapOverlay(Spot spot){
         mapOverlay.setContentView(R.layout.map_overlay);
+        TextView title = mapOverlay.findViewById(R.id.textView);
+        title.setText(spot.getTitle());
+
+        TextView date = mapOverlay.findViewById(R.id.text_date);
+        date.setText(spot.getDate() + "\n"+spot.getTime());
+
+        TextView distance = mapOverlay.findViewById(R.id.text_distance);
+        Location spotLoc = new Location("spot");
+        spotLoc.setLatitude(spot.getLatitude());
+        spotLoc.setLongitude(spot.getLatitude());
+        Location currentLoc = new Location("current");
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (ActivityCompat.checkSelfPermission(GuideActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                    (GuideActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "No location tracking enabled", Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(GuideActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+            } else {
+                Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Location location2 = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+                if (location != null) {
+                    currentLoc = location;
+
+                } else if (location1 != null) {
+                    currentLoc = location1;
+
+                } else if (location2 != null) {
+                    currentLoc = location2;
+
+                } else {
+                    Toast.makeText(this, "Unble to Trace your location\nTry again later", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        float[] results = new float[1];
+        Location.distanceBetween(spot.getLatitude(), spot.getLongitude(), currentLoc.getLatitude(), currentLoc.getLongitude(), results);
+        float f = results[0]/1000;
+        distance.setText(""+f+" km");
+
+        TextView address = mapOverlay.findViewById(R.id.text_address);
+        address.setText(spot.getAddress());
+
+        TextView info = mapOverlay.findViewById(R.id.text_info);
+        info.setText(spot.getInfo());
+
         mapOverlay.show();
     }
 
@@ -274,27 +324,18 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private void markerClicked(Marker marker) {
 
         CollectionReference spots = db.collection("spots");
-        final Spot[] clickedSpot = new Spot[1];
         spots.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     Spot spot = documentSnapshot.toObject(Spot.class);
-                    LatLng pos = new LatLng(spot.getLatitude(), spot.getLongitude());
-                    System.out.println(spot.getTitle() +" vs "+ marker.getTitle());
-                    if (spot.getTitle().equals(marker.getTitle())){
-                        clickedSpot[0] = spot;
+                    if(marker.getPosition().latitude == spot.getLatitude() && marker.getPosition().longitude==spot.getLongitude()) {
+                        showMapOverlay(spot);
                     }
                 }
             }
         });
-        if(clickedSpot[0] != null) {
-            Toast.makeText(GuideActivity.this, "Marker " + marker.getTitle() + " equals Spot '" + clickedSpot[0].getAddress() + "'", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(GuideActivity.this, "Corresponding spot in db not found", Toast.LENGTH_SHORT).show();
-        }
-        Toast.makeText(GuideActivity.this, "You clicked on Marker " + marker.getTitle(), Toast.LENGTH_SHORT).show();
-        showMapOverlay();
+
     }
 
     private void onMapClicked(LatLng latLng) {
