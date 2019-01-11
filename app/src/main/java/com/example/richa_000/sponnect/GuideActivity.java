@@ -187,6 +187,19 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.guide_map);
         mapFragment.getMapAsync(GuideActivity.this);
+
+        CollectionReference spots = db.collection("spots");
+        spots.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    Spot spot = documentSnapshot.toObject(Spot.class);
+                    System.out.println("SPOT______________: "+spot.getAddress());
+                    LatLng pos = new LatLng(spot.getLatitude(), spot.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()));
+                }
+            }
+        });
     }
 
 
@@ -241,12 +254,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
         getLocation();
-        /*
-        for (int i = 0; i < spots.size(); i++) {
-            LatLng pos = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
-            mMap.addMarker(new MarkerOptions().position(pos).title(spots.get(i).getTitle()));
-        }
-        */
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -265,6 +272,27 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void markerClicked(Marker marker) {
+
+        CollectionReference spots = db.collection("spots");
+        final Spot[] clickedSpot = new Spot[1];
+        spots.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    Spot spot = documentSnapshot.toObject(Spot.class);
+                    LatLng pos = new LatLng(spot.getLatitude(), spot.getLongitude());
+                    System.out.println(spot.getTitle() +" vs "+ marker.getTitle());
+                    if (spot.getTitle().equals(marker.getTitle())){
+                        clickedSpot[0] = spot;
+                    }
+                }
+            }
+        });
+        if(clickedSpot[0] != null) {
+            Toast.makeText(GuideActivity.this, "Marker " + marker.getTitle() + " equals Spot '" + clickedSpot[0].getAddress() + "'", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(GuideActivity.this, "Corresponding spot in db not found", Toast.LENGTH_SHORT).show();
+        }
         Toast.makeText(GuideActivity.this, "You clicked on Marker " + marker.getTitle(), Toast.LENGTH_SHORT).show();
         showMapOverlay();
     }
