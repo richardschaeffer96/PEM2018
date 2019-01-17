@@ -6,13 +6,16 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -35,6 +38,7 @@ public class SpotInterface extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("users");
+    private CollectionReference spotsRef = db.collection("spots");
 
     private TextView spotTitle;
     private TextView spotDate;
@@ -190,5 +194,71 @@ public class SpotInterface extends AppCompatActivity {
 
     private void buildAlertMessageNoGps() {
         Toast.makeText(this, "No location tracking enabled", Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void raiseHand(View view) {
+        Toast.makeText(this, "Raise Hand", Toast.LENGTH_SHORT).show();
+
+        spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    Spot spot = documentSnapshot.toObject(Spot.class);
+                    HashMap<String, Integer> participants = spot.getParticipants();
+                    for (Map.Entry<String, Integer> entry : participants.entrySet()) {
+                        if (userID.equals(entry.getKey())) {
+                            participants.put(userID, 3);
+                            DocumentReference refSpot = spotsRef.document(spot.getId());
+                            refSpot.update("participants", participants);
+                        }
+                    }
+                }
+
+            }
+        });
+    }
+    public void tooLate(View view){
+        Toast.makeText(this, "Too Late", Toast.LENGTH_SHORT).show();
+        spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    Spot spot = documentSnapshot.toObject(Spot.class);
+                    HashMap<String, Integer> participants = spot.getParticipants();
+                    for (Map.Entry<String, Integer> entry : participants.entrySet()) {
+                        if (userID.equals(entry.getKey())) {
+                            participants.put(userID, 1);
+                            DocumentReference refSpot = spotsRef.document(spot.getId());
+                            refSpot.update("participants", participants);
+                        }
+                    }
+                }
+
+            }
+        });
+    }
+    public void checkButton(View view){
+        Toast.makeText(this, "Check", Toast.LENGTH_SHORT).show();
+        spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    Spot spot = documentSnapshot.toObject(Spot.class);
+                    HashMap<String, Integer> participants = spot.getParticipants();
+                    for (Map.Entry<String, Integer> entry : participants.entrySet()) {
+                        if (userID.equals(entry.getKey())) {
+                            participants.put(userID, 2);
+                            DocumentReference refSpot = spotsRef.document(spot.getId());
+                            refSpot.update("participants", participants);
+                        }
+                    }
+                }
+
+            }
+        });
     }
 }
