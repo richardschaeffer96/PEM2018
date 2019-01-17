@@ -53,6 +53,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -60,6 +61,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -75,6 +77,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference spotsRef = db.collection("spots");
+    private CollectionReference usersRef = db.collection("users");
     private String userID;
 
     PlaceAutocompleteFragment placeAutoComplete;
@@ -88,6 +91,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private ArrayList<Spot> spots = new ArrayList<>();
 
     private Place selectedPlace;
+    private Spot selectedSpot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +103,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onPlaceSelected(Place place) {
                 geoLocate(place);
-                System.out.println("TEST");
                 selectedPlace = place;
                 Log.d("Maps", "Place selected: " + place.getName());
             }
@@ -138,6 +141,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                 getLocation();
             }
         });
+
+        userID = getIntent().getStringExtra("id");
 
         mapOverlay = new Dialog(this);
     }
@@ -193,6 +198,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
         TextView info = mapOverlay.findViewById(R.id.text_info);
         info.setText(spot.getInfo());
+
+        selectedSpot = spot;
 
         mapOverlay.show();
     }
@@ -369,11 +376,51 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     public void addSpot(View view){
         System.out.println("NEW");
         Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
+        intent.putExtra("id", userID);
         startActivity(intent);
     }
 
-    public void join(View view){
-        Toast.makeText(this, "Spot on!", Toast.LENGTH_SHORT).show();
+    public void join(View view) {
+
+        spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    Spot spot = documentSnapshot.toObject(Spot.class);
+                    if (selectedSpot.getId().equals(spot.getId())) {
+                        DocumentReference refSpot = spotsRef.document(selectedSpot.getId());
+                        HashMap<String, Integer> participantMap = spot.getParticipants();
+                        if (!participantMap.containsKey(userID)) {
+                            participantMap.put(userID, 0);
+                            refSpot.update("participants", participantMap);
+                        } else {
+                            System.out.println("YOU ALREADY JOINED THE SPOT");
+                        }
+                    }
+                }
+            }
+        });
+
+        usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    User user = documentSnapshot.toObject(User.class);
+                    if (userID.equals(user.getId())) {
+                        DocumentReference refUser = usersRef.document(userID);
+                        HashMap<String, Integer> spots = user.getMySpots();
+                        spots.put(selectedSpot.getId(), 0);
+                        refUser.update("mySpots", spots);
+                    }
+                }
+            }
+        });
+
+
+        Toast.makeText(this, "You joined the spot", Toast.LENGTH_SHORT).show();
+        mapOverlay.hide();
+
+
     }
 
 }

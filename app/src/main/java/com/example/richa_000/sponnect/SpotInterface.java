@@ -18,11 +18,23 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SpotInterface extends AppCompatActivity {
 
     private static final String TAG = "SpotInterface";
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference usersRef = db.collection("users");
 
     private TextView spotTitle;
     private TextView spotDate;
@@ -45,6 +57,8 @@ public class SpotInterface extends AppCompatActivity {
     private LocationManager locationManager;
     private static final int REQUEST_LOCATION = 1;
 
+    private ArrayList<ParticipantsExample> exampleList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,24 +68,30 @@ public class SpotInterface extends AppCompatActivity {
         spot = (Spot) getIntent().getSerializableExtra("spot");
         Log.d(TAG, "onCreate: Given Spot that was clicked is: "+spot.getTitle()+", on: "+spot.getDate()+", "+spot.getTime());
         setSpotInformation(spot);
-
-        //Log.d(TAG, "onCreate: User is logged in"+userID);
-
-        ArrayList<ParticipantsExample> exampleList = new ArrayList<>();
-        //Drawable images will not be pushed, need to be copied seprately. -Nanni
-        exampleList.add(new ParticipantsExample("Heinz699", "male", "22", R.drawable.user1));
-        exampleList.add(new ParticipantsExample("xXDragonfighterXx", "male", "19", R.drawable.user2));
-        exampleList.add(new ParticipantsExample("Julia_N.", "female", "21", R.drawable.user3));
-
-        mRecyclerView = findViewById(R.id.recyclerview);
-        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new ParticipantsAdapter(exampleList);
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        exampleList = new ArrayList<>();
+        usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    User user = documentSnapshot.toObject(User.class);
+                    HashMap<String, Integer> participants = spot.getParticipants();
+                    for (Map.Entry<String, Integer> entry : participants.entrySet()) {
+                        if (user.getId() != null && user.getId().equals(entry.getKey())) {
+                            exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1));
+                        }
+                    }
+                }
+                mAdapter = new ParticipantsAdapter(exampleList);
+                mRecyclerView = findViewById(R.id.recyclerview);
+                mRecyclerView.setHasFixedSize(true);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        });
 
         handler = new Handler();
+        System.out.println("final: " + exampleList);
     }
 
     @Override
@@ -85,27 +105,33 @@ public class SpotInterface extends AppCompatActivity {
         runnableCode = new Runnable() {
             @Override
             public void run() {
-                Location loc = checkCurrentLocation();
-                float[] results = new float[1];
-                Location.distanceBetween(spot.getLatitude(), spot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
-                float distance = results[0]/1000;
-                if (distance > 0.5){
-                    checkButton.setBackgroundColor(Color.GRAY);
-                    raiseHandButton.setBackgroundColor(Color.GRAY);
-                    checkButton.setEnabled(false);
-                    raiseHandButton.setEnabled(false);
-                }else{
-                    checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
-                    raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
-                    checkButton.setEnabled(true);
-                    raiseHandButton.setEnabled(true);
-                }
+                refresh();
                 handler.postDelayed(this, 2000);
             }
         };
         handler.post(runnableCode);
         super.onStart();
     }
+
+    private void refresh() {
+        System.out.println("final: " + exampleList);
+        Location loc = checkCurrentLocation();
+        float[] results = new float[1];
+        Location.distanceBetween(spot.getLatitude(), spot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
+        float distance = results[0]/1000;
+        if (distance > 0.5){
+            checkButton.setBackgroundColor(Color.GRAY);
+            raiseHandButton.setBackgroundColor(Color.GRAY);
+            checkButton.setEnabled(false);
+            raiseHandButton.setEnabled(false);
+        }else{
+            checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+            raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+            checkButton.setEnabled(true);
+            raiseHandButton.setEnabled(true);
+        }
+    }
+
 
     private Location checkCurrentLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

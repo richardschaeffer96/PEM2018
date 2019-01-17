@@ -1,16 +1,21 @@
 package com.example.richa_000.sponnect;
 
-public class User {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class User implements Serializable {
 
     private String eMail;
     private String nickname;
     private String password;
     private String gender;
     int age;
-    private String[] mySpots;
+    private HashMap<String, Integer> mySpots;
 
     //optional
     private String[] socialMedia;
+    private String id;
 
     public User() {
         //public empty constructor needed for fireStore
@@ -22,6 +27,15 @@ public class User {
         this.password = password;
         this.gender = gender;
         this.age = age;
+        this.mySpots = new HashMap<>();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String geteMail() {
@@ -64,7 +78,7 @@ public class User {
         this.age = age;
     }
 
-    public String[] getMySpots() { return mySpots; }
+    public HashMap<String, Integer> getMySpots() { return mySpots; }
 
-    public void setMySpots(String[] mySpots) { this.mySpots = mySpots; }
+    public void setMySpots(HashMap<String, Integer> mySpots) { this.mySpots = mySpots; }
 }

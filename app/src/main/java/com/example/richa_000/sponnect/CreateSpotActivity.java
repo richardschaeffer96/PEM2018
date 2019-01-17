@@ -24,6 +24,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,10 +48,12 @@ public class CreateSpotActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference spotsRef = db.collection("spots");
+    private CollectionReference usersRef = db.collection("users");
 
     private double lat;
     private double lng;
     private String adress;
+    private String userID;
 
     private static final String KEY_ADDRESS = "address";
     private static final String KEY_TIME = "time";
@@ -65,7 +69,8 @@ public class CreateSpotActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_spot);
         Intent intent = getIntent();
-
+        userID = intent.getStringExtra("id");
+        System.out.println("userID is: -------------------: "+userID);
         placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.et_address);
 
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -167,13 +172,28 @@ public class CreateSpotActivity extends AppCompatActivity {
         }
 
         final Spot spot = new Spot(title.getText().toString(),info.getText().toString(), adress, date.getText().toString(), time.getText().toString(), lat, lng);
-
         spotsRef.add(spot).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
+                String id = documentReference.getId();
+                DocumentReference spot = spotsRef.document(id);
+                spot.update("id", id);
                 Toast.makeText(CreateSpotActivity.this, "Spot saved", Toast.LENGTH_LONG).show();
-                Intent mIntent = new Intent(CreateSpotActivity.this, GuideActivity.class);
-                startActivity(mIntent);
+                usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            User user = documentSnapshot.toObject(User.class);
+                            if (userID.equals(user.getId())) {
+                                DocumentReference refUser = usersRef.document(userID);
+                                HashMap<String, Integer> spots = user.getMySpots();
+                                spots.put(id, 0);
+                                refUser.update("mySpots", spots);
+                            }
+                        }
+                    }
+                });
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -183,40 +203,10 @@ public class CreateSpotActivity extends AppCompatActivity {
             }
         });
 
-
-        /*
-        int spots = (int) (Math.random()*100);
-
-        String SpotAddress = placeAutoComplete.toString();
-        String SpotDate = date.getText().toString();
-        String SpotTime = time.getText().toString();
-        String SpotLatLng = spotLatLng;
-
-        Map<String, Object> spot = new HashMap<>();
-        spot.put(KEY_ADDRESS, SpotAddress);
-        spot.put(KEY_DATE, SpotDate);
-        spot.put(KEY_TIME, SpotTime);
-        spot.put(KEY_LATLNG, SpotLatLng);
-
-
-        db.collection("spots").document("spot"+spots).set(spot)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //Logging in
-                        Toast.makeText(CreateSpotActivity.this, "Data saved", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(CreateSpotActivity.this, "ERROR!", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, e.toString());
-                    }
-                });
-*/
-        Intent mIntent = new Intent(CreateSpotActivity.this, Menu.class);
+        Intent mIntent = new Intent(CreateSpotActivity.this, GuideActivity.class);
+        mIntent.putExtra("id", userID);
         startActivity(mIntent);
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.richa_000.sponnect;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 class Spot implements Serializable {
 
@@ -12,7 +13,9 @@ class Spot implements Serializable {
     private double latitude;
     private double longitude;
 
-    private String[] participants;
+    private String id;
+
+    private HashMap<String, Integer> participants;
 
     public Spot() {
         //Need to be here for reasons...
@@ -26,6 +29,15 @@ class Spot implements Serializable {
         this.time = time;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.participants = new HashMap<>();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getInfo() {
@@ -84,7 +96,11 @@ class Spot implements Serializable {
         this.longitude = longitude;
     }
 
-    public String[] getParticipants() { return participants; }
+    public HashMap<String, Integer> getParticipants() {
+        return participants;
+    }
 
-    public void setParticipants(String[] participants) { this.participants = participants; }
+    public void setParticipants(HashMap<String,Integer> participants) {
+        this.participants = participants;
+    }
 }

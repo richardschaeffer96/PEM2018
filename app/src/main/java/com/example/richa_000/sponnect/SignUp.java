@@ -85,8 +85,12 @@ public class SignUp extends AppCompatActivity {
             usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
+                    String id = documentReference.getId();
+                    DocumentReference refUser= usersRef.document(id);
+                    refUser.update("id", id);
                     Toast.makeText(SignUp.this, "Data saved and logged in!\nHello "+user.getNickname(), Toast.LENGTH_LONG).show();
                     Intent mIntent = new Intent(SignUp.this, Menu.class);
+                    mIntent.putExtra("id", id);
                     startActivity(mIntent);
                 }
             }).addOnFailureListener(new OnFailureListener() {

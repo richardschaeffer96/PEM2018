@@ -62,13 +62,11 @@ public class Menu extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                 for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                    //TODO Range Query or Number restriction
-                    if(true){
-                        Spot spot = documentSnapshot.toObject(Spot.class);
+                    Spot spot = documentSnapshot.toObject(Spot.class);
+                    if(spot.getParticipants().containsKey(userID)){
                         mySpotList.add(spot);
                         //Log.d(TAG, "onSuccess: Found Stuff in DB: "+spot.getTitle());
                     }
-
                 }
 
                 //Log.d(TAG, "First List entry: "+mySpotList.toString());
@@ -100,7 +98,6 @@ public class Menu extends AppCompatActivity {
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     if (documentSnapshot.getId().equals(id)) {
                         me = documentSnapshot.toObject(User.class);
-
                     }
                 }
                 Log.d(TAG, "onSuccess: User logged in: "+me.getNickname());

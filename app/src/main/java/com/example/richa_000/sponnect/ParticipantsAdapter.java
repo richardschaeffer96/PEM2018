@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         private TextView gender;
         private TextView age;
         private ImageView img;
+        private ImageButton share;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -28,6 +30,7 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
             gender = itemView.findViewById(R.id.text_gender);
             age = itemView.findViewById(R.id.text_age);
             img = itemView.findViewById(R.id.image_avatar);
+            share = itemView.findViewById(R.id.button_share);
 
             itemView.setOnClickListener((v) -> {
                 int position = getAdapterPosition();
