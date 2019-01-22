@@ -56,6 +56,9 @@ public class SpotInterface extends AppCompatActivity {
     private String userID;
     private Spot spot;
 
+    private int state;
+    private boolean closeEnough;
+
     private Runnable runnableCode;
     private Handler handler;
     private LocationManager locationManager;
@@ -67,7 +70,8 @@ public class SpotInterface extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spot_interface);
-
+        closeEnough = false;
+        state = 0;
         userID = getIntent().getStringExtra("id");
         spot = (Spot) getIntent().getSerializableExtra("spot");
         Log.d(TAG, "onCreate: Given Spot that was clicked is: "+spot.getTitle()+", on: "+spot.getDate()+", "+spot.getTime());
@@ -82,7 +86,7 @@ public class SpotInterface extends AppCompatActivity {
                     HashMap<String, Integer> participants = spot.getParticipants();
                     for (Map.Entry<String, Integer> entry : participants.entrySet()) {
                         if (user.getId() != null && user.getId().equals(entry.getKey())) {
-                            exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1));
+                            exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, 2));
                         }
                     }
                 }
@@ -110,7 +114,7 @@ public class SpotInterface extends AppCompatActivity {
             @Override
             public void run() {
                 refresh();
-                handler.postDelayed(this, 2000);
+                handler.postDelayed(this, 4000);
             }
         };
         handler.post(runnableCode);
@@ -118,21 +122,72 @@ public class SpotInterface extends AppCompatActivity {
     }
 
     private void refresh() {
-        System.out.println("final: " + exampleList);
+        // Geo based button deactivating and coloring
         Location loc = checkCurrentLocation();
         float[] results = new float[1];
         Location.distanceBetween(spot.getLatitude(), spot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
         float distance = results[0]/1000;
         if (distance > 0.5){
+            if(state==2 || state==3){
+                state =0;
+            }
+            if(state ==1){
+                tooLateButton.setBackgroundColor(Color.GREEN);
+            }
             checkButton.setBackgroundColor(Color.GRAY);
             raiseHandButton.setBackgroundColor(Color.GRAY);
             checkButton.setEnabled(false);
             raiseHandButton.setEnabled(false);
+            closeEnough = false;
+
         }else{
-            checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
-            raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+            switch(state){
+                case 0: checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                    raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                    tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));break;
+                case 1: checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                    raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                    tooLateButton.setBackgroundColor(Color.GREEN);break;
+                case 2: checkButton.setBackgroundColor(Color.GREEN);
+                    raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                    tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));break;
+                case 3: checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                    raiseHandButton.setBackgroundColor(Color.GREEN);
+                    tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));break;
+            }
             checkButton.setEnabled(true);
             raiseHandButton.setEnabled(true);
+            closeEnough = true;
+        }
+
+        // Update Participants List
+        if(mRecyclerView!=null) {
+            exampleList.clear();
+            spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Spot docSpot = documentSnapshot.toObject(Spot.class);
+                        if (spot.getId().equals(docSpot.getId())) {
+                            System.out.println("Found Spot!");
+                            HashMap<String, Integer> map = docSpot.getParticipants();
+                            usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots2) {
+                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots2) {
+                                        User user = documentSnapshot.toObject(User.class);
+                                        if (map.containsKey(user.getId())) {
+                                            System.out.println("Found User in Spot!");
+                                            exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, map.get(user.getId())));
+                                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -218,6 +273,10 @@ public class SpotInterface extends AppCompatActivity {
 
             }
         });
+        raiseHandButton.setBackgroundColor(Color.GREEN);
+        checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+        tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+        state=3;
     }
     public void tooLate(View view){
         Toast.makeText(this, "Too Late", Toast.LENGTH_SHORT).show();
@@ -239,6 +298,16 @@ public class SpotInterface extends AppCompatActivity {
 
             }
         });
+        tooLateButton.setBackgroundColor(Color.GREEN);
+        if(closeEnough) {
+            checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+            tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+        }
+        else{
+            checkButton.setBackgroundColor(Color.GRAY);
+            tooLateButton.setBackgroundColor(Color.GRAY);
+        }
+        state=1;
     }
     public void checkButton(View view){
         Toast.makeText(this, "Check", Toast.LENGTH_SHORT).show();
@@ -260,5 +329,9 @@ public class SpotInterface extends AppCompatActivity {
 
             }
         });
+        checkButton.setBackgroundColor(Color.GREEN);
+        raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+        tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+        state=2;
     }
 }

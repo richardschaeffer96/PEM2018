@@ -1,6 +1,7 @@
 package com.example.richa_000.sponnect;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -22,7 +26,7 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         private TextView gender;
         private TextView age;
         private ImageView img;
-        private ImageButton share;
+        ImageButton share;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -31,6 +35,10 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
             age = itemView.findViewById(R.id.text_age);
             img = itemView.findViewById(R.id.image_avatar);
             share = itemView.findViewById(R.id.button_share);
+
+            share.setOnClickListener((v) ->{
+                Snackbar.make(v, "Clicked share button", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            });
 
             itemView.setOnClickListener((v) -> {
                 int position = getAdapterPosition();
@@ -58,10 +66,25 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         viewHolder.age.setText(currentItem.getAge());
         viewHolder.gender.setText(currentItem.getGender());
         viewHolder.img.setImageResource(currentItem.getImg());
+
+        switch(currentItem.getState()){
+            case 0: viewHolder.share.setBackgroundColor(Color.parseColor("#FF74A4F1"));break;
+            case 1: viewHolder.share.setBackgroundColor(Color.YELLOW);break;
+            case 2: viewHolder.share.setBackgroundColor(Color.GREEN);break;
+            case 3: viewHolder.share.setBackgroundColor(Color.RED);break;
+        }
     }
 
     @Override
     public int getItemCount() {
         return mParticipantList.size();
+    }
+
+    public ArrayList<ParticipantsExample> getmParticipantList() {
+        return mParticipantList;
+    }
+
+    public void setmParticipantList(ArrayList<ParticipantsExample> mParticipantList) {
+        this.mParticipantList = mParticipantList;
     }
 }

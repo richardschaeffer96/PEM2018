@@ -5,12 +5,14 @@ public class ParticipantsExample {
     private String gender;
     private String age;
     private int img;
+    private int state;
 
-    public ParticipantsExample(String name, String gender, String age, int img) {
+    public ParticipantsExample(String name, String gender, String age, int img, int state) {
         this.name = name;
         this.gender = gender;
         this.age = age;
         this.img = img;
+        this.state = state;
     }
 
     public String getName() {
@@ -43,5 +45,13 @@ public class ParticipantsExample {
 
     public void setImg(int img) {
         this.img = img;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }
