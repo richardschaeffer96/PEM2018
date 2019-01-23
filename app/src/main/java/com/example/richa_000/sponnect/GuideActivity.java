@@ -438,17 +438,20 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId()){
             case R.id.settings:
                 Intent mIntent = new Intent(GuideActivity.this, SignUp.class);
+                mIntent.putExtra("id", userID);
                 startActivity(mIntent);
                 return true;
             case R.id.contacts:
                 Intent mIntent2 = new Intent(GuideActivity.this, Contacts.class);
+                mIntent2.putExtra("id", userID);
                 startActivity(mIntent2);
                 return true;
             case R.id.home:
                 Intent mIntent3 = new Intent(GuideActivity.this, Menu.class);
+                mIntent3.putExtra("id", userID);
                 startActivity(mIntent3);
             default:
                 return super.onOptionsItemSelected(item);

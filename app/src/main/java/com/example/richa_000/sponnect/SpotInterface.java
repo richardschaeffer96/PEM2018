@@ -352,17 +352,20 @@ public class SpotInterface extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId()){
             case R.id.settings:
                 Intent mIntent = new Intent(SpotInterface.this, SignUp.class);
+                mIntent.putExtra("id", userID);
                 startActivity(mIntent);
                 return true;
             case R.id.contacts:
                 Intent mIntent2 = new Intent(SpotInterface.this, Contacts.class);
+                mIntent2.putExtra("id", userID);
                 startActivity(mIntent2);
                 return true;
             case R.id.home:
                 Intent mIntent3 = new Intent(SpotInterface.this, Menu.class);
+                mIntent3.putExtra("id", userID);
                 startActivity(mIntent3);
             default:
                 return super.onOptionsItemSelected(item);
