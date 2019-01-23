@@ -2,6 +2,7 @@ package com.example.richa_000.sponnect;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -14,7 +15,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -70,6 +74,10 @@ public class SpotInterface extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spot_interface);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         closeEnough = false;
         state = 0;
         userID = getIntent().getStringExtra("id");
@@ -333,5 +341,31 @@ public class SpotInterface extends AppCompatActivity {
         raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
         tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
         state=2;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent mIntent = new Intent(SpotInterface.this, SignUp.class);
+                startActivity(mIntent);
+                return true;
+            case R.id.contacts:
+                Intent mIntent2 = new Intent(SpotInterface.this, Contacts.class);
+                startActivity(mIntent2);
+                return true;
+            case R.id.home:
+                Intent mIntent3 = new Intent(SpotInterface.this, Menu.class);
+                startActivity(mIntent3);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

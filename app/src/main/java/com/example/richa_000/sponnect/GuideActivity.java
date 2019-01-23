@@ -18,10 +18,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -97,6 +100,9 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide_activity);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -421,6 +427,32 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         mapOverlay.hide();
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent mIntent = new Intent(GuideActivity.this, SignUp.class);
+                startActivity(mIntent);
+                return true;
+            case R.id.contacts:
+                Intent mIntent2 = new Intent(GuideActivity.this, Contacts.class);
+                startActivity(mIntent2);
+                return true;
+            case R.id.home:
+                Intent mIntent3 = new Intent(GuideActivity.this, Menu.class);
+                startActivity(mIntent3);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
