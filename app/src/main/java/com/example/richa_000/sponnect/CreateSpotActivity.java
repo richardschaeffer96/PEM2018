@@ -2,7 +2,6 @@ package com.example.richa_000.sponnect;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +17,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -31,7 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class CreateSpotActivity extends AppCompatActivity {
 
@@ -52,7 +49,7 @@ public class CreateSpotActivity extends AppCompatActivity {
 
     private double lat;
     private double lng;
-    private String adress;
+    private String address;
     private String userID;
 
     private Place selectedPlace;
@@ -87,7 +84,7 @@ public class CreateSpotActivity extends AppCompatActivity {
                 placeAutoComplete.setText(getIntent().getStringExtra("Address"));
                 lat =  Double.parseDouble(getIntent().getStringExtra("Lat"));
                 lng =  Double.parseDouble(getIntent().getStringExtra("Lng"));
-                adress = getIntent().getStringExtra("Address");
+                address = getIntent().getStringExtra("Address");
             }
         }
 
@@ -157,54 +154,58 @@ public class CreateSpotActivity extends AppCompatActivity {
 
 
 
-    public void save(View view){
-        if(selectedPlace!=null){
+    public void save(View view) {
+        if (selectedPlace != null) {
             lat = selectedPlace.getLatLng().latitude;
             lng = selectedPlace.getLatLng().longitude;
-            adress = (String) selectedPlace.getAddress();
+            address = (String) selectedPlace.getAddress();
         }
 
-        final Spot spot = new Spot(title.getText().toString(),info.getText().toString(), adress, date.getText().toString(), time.getText().toString(), userID, lat, lng);
-        HashMap<String, Integer> participants = spot.getParticipants();
-        participants.put(userID, 0);
-        spot.setParticipants(participants);
-        spotsRef.add(spot).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                String id = documentReference.getId();
-                DocumentReference spot = spotsRef.document(id);
-                spot.update("id", id);
-                Toast.makeText(CreateSpotActivity.this, "Spot saved", Toast.LENGTH_LONG).show();
-                usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            User user = documentSnapshot.toObject(User.class);
-                            if (userID.equals(user.getId())) {
-                                DocumentReference refUser = usersRef.document(userID);
-                                HashMap<String, Boolean> spots = user.getMySpots();
-                                spots.put(id, true);
-                                refUser.update("mySpots", spots);
+        if (title.getText().toString().isEmpty() || date.getText().toString().isEmpty() || time.getText().toString().isEmpty()) {
+            Log.d(TAG, "Values were empty");
+            Toast.makeText(CreateSpotActivity.this, "Please give your Spot a Name, a Time and a Date!", Toast.LENGTH_LONG).show();
+        } else {
+            final Spot spot = new Spot(title.getText().toString(), info.getText().toString(), address, date.getText().toString(), time.getText().toString(), userID, lat, lng);
+            HashMap<String, Integer> participants = spot.getParticipants();
+            participants.put(userID, 0);
+            spot.setParticipants(participants);
+            spotsRef.add(spot).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    String id = documentReference.getId();
+                    DocumentReference spot = spotsRef.document(id);
+                    spot.update("id", id);
+                    Toast.makeText(CreateSpotActivity.this, "Spot saved", Toast.LENGTH_LONG).show();
+                    usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                User user = documentSnapshot.toObject(User.class);
+                                if (userID.equals(user.getId())) {
+                                    DocumentReference refUser = usersRef.document(userID);
+                                    HashMap<String, Boolean> spots = user.getMySpots();
+                                    spots.put(id, true);
+                                    refUser.update("mySpots", spots);
+                                }
                             }
                         }
-                    }
-                });
+                    });
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(CreateSpotActivity.this, "ERROR!", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, e.toString());
-            }
-        });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(CreateSpotActivity.this, "ERROR!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
+                }
+            });
 
-        Intent mIntent = new Intent(CreateSpotActivity.this, GuideActivity.class);
-        mIntent.putExtra("id", userID);
-        startActivity(mIntent);
+            Intent mIntent = new Intent(CreateSpotActivity.this, GuideActivity.class);
+            mIntent.putExtra("id", userID);
+            startActivity(mIntent);
+
+        }
 
     }
-
-
 
 }
