@@ -11,7 +11,7 @@ public class User implements Serializable {
     private String password;
     private String gender;
     int age;
-    private HashMap<String, Integer> mySpots;
+    private HashMap<String, Boolean> mySpots;
 
     //optional
     private String[] socialMedia;
@@ -78,7 +78,7 @@ public class User implements Serializable {
         this.age = age;
     }
 
-    public HashMap<String, Integer> getMySpots() { return mySpots; }
+    public HashMap<String, Boolean> getMySpots() { return mySpots; }
 
-    public void setMySpots(HashMap<String, Integer> mySpots) { this.mySpots = mySpots; }
+    public void setMySpots(HashMap<String, Boolean> mySpots) { this.mySpots = mySpots; }
 }

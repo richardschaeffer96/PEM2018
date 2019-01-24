@@ -62,6 +62,7 @@ public class Menu extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                 for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+
                     Spot spot = documentSnapshot.toObject(Spot.class);
                     if(spot.getParticipants().containsKey(userID)){
                         mySpotList.add(spot);

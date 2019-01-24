@@ -196,8 +196,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         }
         float[] results = new float[1];
         Location.distanceBetween(spot.getLatitude(), spot.getLongitude(), currentLoc.getLatitude(), currentLoc.getLongitude(), results);
-        float f = results[0]/1000;
-        distance.setText(""+f+" km");
+        double f = Math.round(results[0]/10) / 100.0;
+        distance.setText(" ("+f+" km)");
 
         TextView address = mapOverlay.findViewById(R.id.text_address);
         address.setText(spot.getAddress());
@@ -414,8 +414,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                     User user = documentSnapshot.toObject(User.class);
                     if (userID.equals(user.getId())) {
                         DocumentReference refUser = usersRef.document(userID);
-                        HashMap<String, Integer> spots = user.getMySpots();
-                        spots.put(selectedSpot.getId(), 0);
+                        HashMap<String, Boolean> spots = user.getMySpots();
+                        spots.put(selectedSpot.getId(), false);
                         refUser.update("mySpots", spots);
                     }
                 }

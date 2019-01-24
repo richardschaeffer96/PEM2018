@@ -55,14 +55,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     private String adress;
     private String userID;
 
-    private static final String KEY_ADDRESS = "address";
-    private static final String KEY_TIME = "time";
-    private static final String KEY_DATE = "date";
-    private static final String KEY_LATLNG= "latlng";
-
-
     private Place selectedPlace;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,7 +164,10 @@ public class CreateSpotActivity extends AppCompatActivity {
             adress = (String) selectedPlace.getAddress();
         }
 
-        final Spot spot = new Spot(title.getText().toString(),info.getText().toString(), adress, date.getText().toString(), time.getText().toString(), lat, lng);
+        final Spot spot = new Spot(title.getText().toString(),info.getText().toString(), adress, date.getText().toString(), time.getText().toString(), userID, lat, lng);
+        HashMap<String, Integer> participants = spot.getParticipants();
+        participants.put(userID, 0);
+        spot.setParticipants(participants);
         spotsRef.add(spot).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
@@ -186,8 +182,8 @@ public class CreateSpotActivity extends AppCompatActivity {
                             User user = documentSnapshot.toObject(User.class);
                             if (userID.equals(user.getId())) {
                                 DocumentReference refUser = usersRef.document(userID);
-                                HashMap<String, Integer> spots = user.getMySpots();
-                                spots.put(id, 0);
+                                HashMap<String, Boolean> spots = user.getMySpots();
+                                spots.put(id, true);
                                 refUser.update("mySpots", spots);
                             }
                         }

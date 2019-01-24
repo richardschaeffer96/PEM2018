@@ -10,6 +10,7 @@ class Spot implements Serializable {
     private String address;
     private String date;
     private String time;
+    private String creator;
     private double latitude;
     private double longitude;
 
@@ -21,12 +22,13 @@ class Spot implements Serializable {
         //Need to be here for reasons...
     }
 
-    public Spot(String title, String info, String address,String date, String time, double latitude, double longitude) {
+    public Spot(String title, String info, String address,String date, String time, String creator, double latitude, double longitude) {
         this.title = title;
         this.address = address;
         this.info = info;
         this.date = date;
         this.time = time;
+        this.creator = creator;
         this.latitude = latitude;
         this.longitude = longitude;
         this.participants = new HashMap<>();
@@ -79,6 +81,10 @@ class Spot implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public String getcreator() { return creator; }
+
+    public void setCreator(String creator) { this.creator = creator; }
 
     public double getLatitude() {
         return latitude;
