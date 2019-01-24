@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +57,7 @@ public class SpotInterface extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private String userID;
-    private Spot spot;
+    private Spot selectedSpot;
 
     private int state;
     private boolean closeEnough;
@@ -81,9 +80,9 @@ public class SpotInterface extends AppCompatActivity {
         closeEnough = false;
         state = 0;
         userID = getIntent().getStringExtra("id");
-        spot = (Spot) getIntent().getSerializableExtra("spot");
-        Log.d(TAG, "onCreate: Given Spot that was clicked is: "+spot.getTitle()+", on: "+spot.getDate()+", "+spot.getTime());
-        setSpotInformation(spot);
+        selectedSpot = (Spot) getIntent().getSerializableExtra("spot");
+        Log.d(TAG, "onCreate: Given Spot that was clicked is: "+ selectedSpot.getTitle()+", on: "+ selectedSpot.getDate()+", "+ selectedSpot.getTime());
+        setSpotInformation(selectedSpot);
         mLayoutManager = new LinearLayoutManager(this);
         exampleList = new ArrayList<>();
         usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -91,9 +90,25 @@ public class SpotInterface extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     User user = documentSnapshot.toObject(User.class);
-                    HashMap<String, Integer> participants = spot.getParticipants();
+                    HashMap<String, Integer> participants = selectedSpot.getParticipants();
                     for (Map.Entry<String, Integer> entry : participants.entrySet()) {
                         if (user.getId() != null && user.getId().equals(entry.getKey())) {
+                            if(userID.equals(user.getId())){
+                                spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            Spot spot = documentSnapshot.toObject(Spot.class);
+                                            HashMap<String, Integer> participants = spot.getParticipants();
+                                            for (Map.Entry<String, Integer> entry : participants.entrySet()) {
+                                                if (entry.getKey().equals(userID)) {
+                                                    state = entry.getValue();
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
                             exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, 2));
                         }
                     }
@@ -130,16 +145,33 @@ public class SpotInterface extends AppCompatActivity {
     }
 
     private void refresh() {
+        System.out.println("CURRENT STATE= "+state);
+        /*
+        spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    Spot spot = documentSnapshot.toObject(Spot.class);
+                    HashMap<String, Integer> participants = spot.getParticipants();
+                    for (Map.Entry<String, Integer> entry : participants.entrySet()) {
+                        if (entry.getKey().equals(userID)) {
+                            state = entry.getValue();
+                        }
+                    }
+                }
+            }
+        });*/
         // Geo based button deactivating and coloring
         Location loc = checkCurrentLocation();
         float[] results = new float[1];
-        Location.distanceBetween(spot.getLatitude(), spot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
+        Location.distanceBetween(selectedSpot.getLatitude(), selectedSpot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
         float distance = results[0]/1000;
         if (distance > 0.5){
             if(state==2 || state==3){
                 state =0;
             }
             if(state ==1){
+                System.out.println("SET COLOR TO GREEN");
                 tooLateButton.setBackgroundColor(Color.GREEN);
             }
             checkButton.setBackgroundColor(Color.GRAY);
@@ -176,7 +208,7 @@ public class SpotInterface extends AppCompatActivity {
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         Spot docSpot = documentSnapshot.toObject(Spot.class);
-                        if (spot.getId().equals(docSpot.getId())) {
+                        if (selectedSpot.getId().equals(docSpot.getId())) {
                             System.out.println("Found Spot!");
                             HashMap<String, Integer> map = docSpot.getParticipants();
                             usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -262,7 +294,6 @@ public class SpotInterface extends AppCompatActivity {
 
     public void raiseHand(View view) {
         Toast.makeText(this, "Raise Hand", Toast.LENGTH_SHORT).show();
-
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -271,20 +302,33 @@ public class SpotInterface extends AppCompatActivity {
                     Spot spot = documentSnapshot.toObject(Spot.class);
                     HashMap<String, Integer> participants = spot.getParticipants();
                     for (Map.Entry<String, Integer> entry : participants.entrySet()) {
-                        if (userID.equals(entry.getKey())) {
-                            participants.put(userID, 3);
-                            DocumentReference refSpot = spotsRef.document(spot.getId());
-                            refSpot.update("participants", participants);
+                        //get Spot with current user as participant
+                        if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
+                            if(participants.get(entry.getKey())==3){
+                                System.out.println("Set to 0");
+                                raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                state=0;
+                                participants.put(userID, 0);
+                                DocumentReference refSpot = spotsRef.document(spot.getId());
+                                refSpot.update("participants", participants);
+                            }else{
+                                System.out.println("Set to 3");
+                                raiseHandButton.setBackgroundColor(Color.GREEN);
+                                checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                state=3;
+                                participants.put(userID, 3);
+                                DocumentReference refSpot = spotsRef.document(spot.getId());
+                                refSpot.update("participants", participants);
+                            }
                         }
                     }
                 }
 
             }
         });
-        raiseHandButton.setBackgroundColor(Color.GREEN);
-        checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
-        tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
-        state=3;
     }
     public void tooLate(View view){
         Toast.makeText(this, "Too Late", Toast.LENGTH_SHORT).show();
@@ -296,26 +340,43 @@ public class SpotInterface extends AppCompatActivity {
                     Spot spot = documentSnapshot.toObject(Spot.class);
                     HashMap<String, Integer> participants = spot.getParticipants();
                     for (Map.Entry<String, Integer> entry : participants.entrySet()) {
-                        if (userID.equals(entry.getKey())) {
-                            participants.put(userID, 1);
-                            DocumentReference refSpot = spotsRef.document(spot.getId());
-                            refSpot.update("participants", participants);
+                        //get Spot with current user as participant
+                        if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
+                            if(participants.get(entry.getKey())==1){
+                                System.out.println("Set to 0");
+                                tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                if(closeEnough){
+                                    raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                    checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                }else{
+                                    raiseHandButton.setBackgroundColor(Color.GRAY);
+                                    checkButton.setBackgroundColor(Color.GRAY);
+                                }
+                                state=0;
+                                participants.put(userID, 0);
+                                DocumentReference refSpot = spotsRef.document(spot.getId());
+                                refSpot.update("participants", participants);
+                            }else{
+                                System.out.println("Set to 1");
+                                if(closeEnough){
+                                    raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                    checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                }
+                                else{
+                                    raiseHandButton.setBackgroundColor(Color.GRAY);
+                                    checkButton.setBackgroundColor(Color.GRAY);
+                                }
+                                tooLateButton.setBackgroundColor(Color.GREEN);
+                                participants.put(userID, 1);
+                                DocumentReference refSpot = spotsRef.document(spot.getId());
+                                refSpot.update("participants", participants);
+                            }
                         }
                     }
                 }
 
             }
         });
-        tooLateButton.setBackgroundColor(Color.GREEN);
-        if(closeEnough) {
-            checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
-            tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
-        }
-        else{
-            checkButton.setBackgroundColor(Color.GRAY);
-            tooLateButton.setBackgroundColor(Color.GRAY);
-        }
-        state=1;
     }
     public void checkButton(View view){
         Toast.makeText(this, "Check", Toast.LENGTH_SHORT).show();
@@ -327,20 +388,32 @@ public class SpotInterface extends AppCompatActivity {
                     Spot spot = documentSnapshot.toObject(Spot.class);
                     HashMap<String, Integer> participants = spot.getParticipants();
                     for (Map.Entry<String, Integer> entry : participants.entrySet()) {
-                        if (userID.equals(entry.getKey())) {
-                            participants.put(userID, 2);
-                            DocumentReference refSpot = spotsRef.document(spot.getId());
-                            refSpot.update("participants", participants);
+                        //get Spot with current user as participant
+                        if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
+                            if(participants.get(entry.getKey())==2){
+                                System.out.println("Set to 0");
+                                raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                state=0;
+                                participants.put(userID, 0);
+                                DocumentReference refSpot = spotsRef.document(spot.getId());
+                                refSpot.update("participants", participants);
+                            }else{
+                                System.out.println("Set to 2");
+                                raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                checkButton.setBackgroundColor(Color.GREEN);
+                                tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                participants.put(userID, 2);
+                                DocumentReference refSpot = spotsRef.document(spot.getId());
+                                refSpot.update("participants", participants);
+                            }
                         }
                     }
                 }
 
             }
         });
-        checkButton.setBackgroundColor(Color.GREEN);
-        raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
-        tooLateButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
-        state=2;
     }
 
     @Override
