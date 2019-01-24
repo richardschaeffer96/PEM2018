@@ -1,6 +1,14 @@
 package com.example.richa_000.sponnect;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -46,12 +54,59 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        profile_picture = (ImageView)findViewById(R.id.profile_picture);
-
         editTextSignUpMail = findViewById(R.id.edit_email_signup);
         editTextSignUpPassword = findViewById(R.id.edit_password_signup);
         editTextSignUpNickname = findViewById(R.id.edit_nickname);
         editTextSignUpAge = findViewById(R.id.edit_age);
+
+        profile_picture = (ImageView) findViewById(R.id.profile_picture);
+        Bitmap bm = BitmapFactory.decodeResource(getResources(),
+                R.drawable.emptyprofile);
+        Bitmap resized = Bitmap.createScaledBitmap(bm, 100, 100, true);
+        Bitmap converted_bm = getRoundedRectBitmap(resized, 100);
+        profile_picture.setImageBitmap(converted_bm);
+        // TODO Auto-generated method stub
+    }
+
+    public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
+        Bitmap result = null;
+        try {
+            result = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+
+            int color = 0xff424242;
+            Paint paint = new Paint();
+            Rect rect = new Rect(0, 0, 200, 200);
+
+            paint.setAntiAlias(true);
+            canvas.drawARGB(0, 0, 0, 0);
+            paint.setColor(color);
+            canvas.drawCircle(50, 50, 50, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        } catch (NullPointerException e) {
+        } catch (OutOfMemoryError o) {
+        }
+        return result;
+    }
+
+    public void upload_picture(View view){
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
+            imageUri = data.getData();
+            profile_picture.setImageURI(imageUri);
+            Bitmap bm = ((BitmapDrawable)profile_picture.getDrawable()).getBitmap();
+            Bitmap resized = Bitmap.createScaledBitmap(bm, 100, 100, true);
+            Bitmap converted_bm = getRoundedRectBitmap(resized, 100);
+            profile_picture.setImageBitmap(converted_bm);
+        }
     }
 
     public void add_more(View view){
@@ -113,18 +168,6 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    public void upload_picture(View view){
-        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, PICK_IMAGE);
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
-            imageUri = data.getData();
-            profile_picture.setImageURI(imageUri);
-        }
-    }
 
 }
