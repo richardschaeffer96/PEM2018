@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -205,8 +206,62 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         TextView info = mapOverlay.findViewById(R.id.text_info);
         info.setText(spot.getInfo());
 
-        selectedSpot = spot;
+        //get creator
+        String creatorID = spot.getcreator();
 
+        usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                    //TODO Range Query or Number restriction
+                    if(creatorID.equals(documentSnapshot.getId())){
+                        User creator = documentSnapshot.toObject(User.class);
+
+                        TextView creatorName = mapOverlay.findViewById(R.id.text_name);
+                        creatorName.setText(creator.getNickname());
+
+                        TextView creatorGender = mapOverlay.findViewById(R.id.text_gender);
+                        creatorGender.setText(creator.getGender());
+
+                        TextView creatorAge = mapOverlay.findViewById(R.id.text_age);
+                        String age = creator.getAge()+"";
+                        creatorAge.setText(age);
+                    }
+
+                }
+
+            }
+        });
+
+        TextView numberParticipants = mapOverlay.findViewById(R.id.number_participants);
+        int numberParticitpants = spot.getParticipants().size();
+        numberParticipants.setText(numberParticitpants+"");
+
+        Button buttonJoin = mapOverlay.findViewById(R.id.button_join);
+        usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    if(documentSnapshot.getId().equals(userID)){
+                        User user = documentSnapshot.toObject(User.class);
+                        if(user.getMySpots().containsKey(spot.getId())) {
+                            Log.d(TAG, "Spot is already in Spot List.");
+                            if(user.getMySpots().get(spot.getId())){
+                                buttonJoin.setText("Delete Spot");
+                                //TODO Deleting Spot when clicking on JOIN Button
+                            } else{
+                                //TODO Deleting Spot from User's List when leaving Spot
+                                buttonJoin.setText("Leave Spot")
+                                ;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        selectedSpot = spot;
         mapOverlay.show();
     }
 
@@ -422,10 +477,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-
         Toast.makeText(this, "You joined the spot", Toast.LENGTH_SHORT).show();
         mapOverlay.hide();
-
 
     }
 
