@@ -1,6 +1,5 @@
 package com.example.richa_000.sponnect;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -12,14 +11,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapter.ViewHolder> {
 
-    private ArrayList<ParticipantsExample> mParticipantList;
+    private static Spot selectedSpot;
+    private static String userID;
+    private static ArrayList<ParticipantsExample> mParticipantList;
+
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static CollectionReference usersRef = db.collection("users");
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         private TextView name;
@@ -35,9 +44,59 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
             age = itemView.findViewById(R.id.text_age);
             img = itemView.findViewById(R.id.image_avatar);
             share = itemView.findViewById(R.id.button_share);
+            share.setImageResource(android.R.color.transparent);
+            /*
+            usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        User user = documentSnapshot.toObject(User.class);
+                        if(user.getId().equals(userID)){
+                            share.setEnabled(false);
+                        }else{
+                            share.setEnabled(true);
+                        }
+                    }
+                }
+            });*/
 
             share.setOnClickListener((v) ->{
-                Snackbar.make(v, "Clicked share button", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                int position = getAdapterPosition();
+                ParticipantsExample currentItem = mParticipantList.get(position);
+                usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        User currentUser= null;
+                        User selectedUser = null;
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            User user = documentSnapshot.toObject(User.class);
+                            if(user.getId().equals(userID)){
+                                currentUser= user;
+                            }
+                            if(user.getId().equals(currentItem.getId())){
+                                selectedUser = user;
+                            }
+                        }
+
+                        HashMap<String, ArrayList<String>> contacts = null;
+                        while (selectedUser==null || currentUser==null){
+
+                        }
+                        if(selectedUser!=null){
+                            System.out.println(selectedUser.getContacts());
+                            if(!selectedUser.getContacts().containsKey(selectedUser.getId())) {
+                                contacts = selectedUser.getContacts();
+                                contacts.put(selectedUser.getId(), currentUser.getSocialMedia());
+                            }else{
+                                Snackbar.make(v, "You already shared your contact info with "+selectedUser.getNickname(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                            }
+                        }
+                        DocumentReference refUser = usersRef.document(selectedUser.getId());
+                        refUser.update("contacts", contacts);
+                        Snackbar.make(v, "You shared your contact info with "+selectedUser.getNickname(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    }
+                });
+
             });
 
             itemView.setOnClickListener((v) -> {
@@ -47,8 +106,10 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         }
     }
 
-    public ParticipantsAdapter(ArrayList<ParticipantsExample> participantList){
+    public ParticipantsAdapter(ArrayList<ParticipantsExample> participantList, String userID, Spot selectedSpot){
         mParticipantList = participantList;
+        this.userID = userID;
+        this.selectedSpot = selectedSpot;
     }
 
     @NonNull
@@ -68,10 +129,10 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         viewHolder.img.setImageResource(currentItem.getImg());
 
         switch(currentItem.getState()){
-            case 0: viewHolder.share.setBackgroundColor(Color.parseColor("#FF74A4F1"));break;
-            case 1: viewHolder.share.setBackgroundColor(Color.YELLOW);break;
-            case 2: viewHolder.share.setBackgroundColor(Color.GREEN);break;
-            case 3: viewHolder.share.setBackgroundColor(Color.RED);break;
+            case 0: viewHolder.share.setImageResource(android.R.color.transparent);break;
+            case 1: viewHolder.share.setImageResource(R.drawable.img_toolate);break;
+            case 2: viewHolder.share.setImageResource(R.drawable.img_arrived);break;
+            case 3: viewHolder.share.setImageResource(R.drawable.img_raisehandbutton);break;
         }
     }
 

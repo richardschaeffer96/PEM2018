@@ -29,6 +29,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +44,9 @@ public class SignUp extends AppCompatActivity {
     private EditText editTextSignUpPassword;
     private EditText editTextSignUpNickname;
     private EditText editTextSignUpAge;
+    private EditText editTextFacebook;
+    private EditText editTextInstagram;
+    private EditText editTextTwitter;
     private RadioGroup radioGroupGender;
     private RadioButton radioButtonGender;
 
@@ -58,7 +62,9 @@ public class SignUp extends AppCompatActivity {
         editTextSignUpPassword = findViewById(R.id.edit_password_signup);
         editTextSignUpNickname = findViewById(R.id.edit_nickname);
         editTextSignUpAge = findViewById(R.id.edit_age);
-
+        editTextFacebook = findViewById(R.id.edit_facebook);
+        editTextInstagram = findViewById(R.id.edit_instagram);
+        editTextTwitter = findViewById(R.id.edit_twitter);
         profile_picture = (ImageView) findViewById(R.id.profile_picture);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),
                 R.drawable.emptyprofile);
@@ -119,6 +125,9 @@ public class SignUp extends AppCompatActivity {
         String SignUpMail = editTextSignUpMail.getText().toString();
         String SignUpPassword = editTextSignUpPassword.getText().toString();
         String SignUpNickname = editTextSignUpNickname.getText().toString();
+        String SignUpFacebook = editTextFacebook.getText().toString();
+        String SignUpInstagram = editTextInstagram.getText().toString();
+        String SignUpTwitter = editTextTwitter.getText().toString();
         int SignUpAge;
 
         if(SignUpMail.isEmpty() || SignUpNickname.isEmpty() || SignUpPassword.isEmpty()) {
@@ -143,9 +152,14 @@ public class SignUp extends AppCompatActivity {
                 SignUpGender = radioButtonGender.getText().toString();
             }
 
-            Log.d(TAG, "Creating User Document");
-            final User user = new User(SignUpMail, SignUpNickname, SignUpPassword, SignUpGender, SignUpAge);
+            ArrayList<String> socialMedia = new ArrayList<>();
+            socialMedia.add(SignUpFacebook);
+            socialMedia.add(SignUpInstagram);
+            socialMedia.add(SignUpTwitter);
 
+            Log.d(TAG, "Creating User Document");
+            final User user = new User(SignUpMail, SignUpNickname, SignUpPassword, SignUpGender, SignUpAge, socialMedia);
+            System.out.println(user.getNickname());
             usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {

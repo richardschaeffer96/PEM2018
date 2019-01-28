@@ -416,6 +416,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             intent.putExtra("Address", address);
             intent.putExtra("Lat", Double.toString(latLng.latitude));
             intent.putExtra("Lng", Double.toString(latLng.longitude));
+            intent.putExtra("id", userID);
             startActivity(intent);
 
         } catch (IOException e) {

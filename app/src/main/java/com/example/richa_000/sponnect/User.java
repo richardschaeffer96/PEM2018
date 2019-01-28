@@ -14,20 +14,41 @@ public class User implements Serializable {
     private HashMap<String, Boolean> mySpots;
 
     //optional
-    private String[] socialMedia;
+    private ArrayList<String> socialMedia;
     private String id;
+    private HashMap<String, ArrayList<String>> contacts;
 
     public User() {
         //public empty constructor needed for fireStore
     }
 
-    public User(String eMail, String nickname, String password, String gender, int age){
+
+    public User(String eMail, String nickname, String password, String gender, int age, ArrayList<String> socialMedia){
         this.eMail = eMail;
         this.nickname = nickname;
         this.password = password;
         this.gender = gender;
         this.age = age;
         this.mySpots = new HashMap<>();
+        this.contacts = new HashMap<>();
+        this.socialMedia = socialMedia;
+
+    }
+
+    public HashMap<String, ArrayList<String>> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(HashMap<String, ArrayList<String>> contacts) {
+        this.contacts = contacts;
+    }
+
+    public ArrayList<String> getSocialMedia() {
+        return socialMedia;
+    }
+
+    public void setSocialMedia(ArrayList<String> socialMedia) {
+        this.socialMedia = socialMedia;
     }
 
     public String getId() {
