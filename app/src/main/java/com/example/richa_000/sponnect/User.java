@@ -12,6 +12,7 @@ public class User implements Serializable {
     private String gender;
     int age;
     private HashMap<String, Boolean> mySpots;
+    private String imageUri;
 
     //optional
     private ArrayList<String> socialMedia;
@@ -102,4 +103,9 @@ public class User implements Serializable {
     public HashMap<String, Boolean> getMySpots() { return mySpots; }
 
     public void setMySpots(HashMap<String, Boolean> mySpots) { this.mySpots = mySpots; }
+
+    public String getImageUri() { return imageUri; }
+
+    public void setImageUri(String imageUri) { this.imageUri = imageUri; }
+
 }
