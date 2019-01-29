@@ -174,42 +174,52 @@ public class SpotInterface extends AppCompatActivity {
         });*/
         // Geo based button deactivating and coloring
         Location loc = checkCurrentLocation();
-        float[] results = new float[1];
-        Location.distanceBetween(selectedSpot.getLatitude(), selectedSpot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
-        float distance = results[0]/1000;
-        if (distance > 0.5){
-            if(state==2 || state==3){
-                state =0;
-            }
-            if(state ==1){
-                tooLateButton.setImageResource(R.drawable.img_toolate_clicked);
-            }
-            checkButton.setBackgroundColor(Color.GRAY);
-            raiseHandButton.setBackgroundColor(Color.GRAY);
-            checkButton.setEnabled(false);
-            raiseHandButton.setEnabled(false);
-            closeEnough = false;
 
-        }else{
-            switch(state){
-                case 0: checkButton.setImageResource(R.drawable.img_arrived);
-                    raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                    tooLateButton.setImageResource(R.drawable.img_toolate);break;
-                case 1: checkButton.setImageResource(R.drawable.img_arrived);
-                    raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                    tooLateButton.setImageResource(R.drawable.img_toolate_clicked);break;
-                case 2: checkButton.setImageResource(R.drawable.img_arrived_clicked);
-                    raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                    tooLateButton.setImageResource(R.drawable.img_toolate);break;
-                case 3: checkButton.setImageResource(R.drawable.img_arrived);
-                    raiseHandButton.setImageResource(R.drawable.img_raisehandbutton_clicked);
-                    tooLateButton.setImageResource(R.drawable.img_toolate);break;
+        if(selectedSpot!=null && loc!=null) {
+            float[] results = new float[1];
+            Location.distanceBetween(selectedSpot.getLatitude(), selectedSpot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
+            float distance = results[0] / 1000;
+            if (distance > 0.5) {
+                if (state == 2 || state == 3) {
+                    state = 0;
+                }
+                if (state == 1) {
+                    tooLateButton.setImageResource(R.drawable.img_toolate_clicked);
+                }
+                checkButton.setBackgroundColor(Color.GRAY);
+                raiseHandButton.setBackgroundColor(Color.GRAY);
+                checkButton.setEnabled(false);
+                raiseHandButton.setEnabled(false);
+                closeEnough = false;
+
+            } else {
+                switch (state) {
+                    case 0:
+                        checkButton.setImageResource(R.drawable.img_arrived);
+                        raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
+                        tooLateButton.setImageResource(R.drawable.img_toolate);
+                        break;
+                    case 1:
+                        checkButton.setImageResource(R.drawable.img_arrived);
+                        raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
+                        tooLateButton.setImageResource(R.drawable.img_toolate_clicked);
+                        break;
+                    case 2:
+                        checkButton.setImageResource(R.drawable.img_arrived_clicked);
+                        raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
+                        tooLateButton.setImageResource(R.drawable.img_toolate);
+                        break;
+                    case 3:
+                        checkButton.setImageResource(R.drawable.img_arrived);
+                        raiseHandButton.setImageResource(R.drawable.img_raisehandbutton_clicked);
+                        tooLateButton.setImageResource(R.drawable.img_toolate);
+                        break;
+                }
+                checkButton.setEnabled(true);
+                raiseHandButton.setEnabled(true);
+                closeEnough = true;
             }
-            checkButton.setEnabled(true);
-            raiseHandButton.setEnabled(true);
-            closeEnough = true;
         }
-
         // Update Participants List
         if(mRecyclerView!=null) {
             updateParticipantsList();
