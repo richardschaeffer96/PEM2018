@@ -56,9 +56,15 @@ public class Menu extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Who is logged in now?
         userID = getIntent().getStringExtra("id");
-        getLoggedInUser(userID);
+        me = (User) getIntent().getSerializableExtra("user");
+        //Who is logged in now?
+        if (getIntent().getStringExtra("login") != null){
+            getLoggedInUser(userID);
+        } else {
+            setUserInfo(me);
+        }
+        //getLoggedInUser(userID);
 
         // Log.d(TAG, "Person logged in:"+me.getNickname());
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -145,16 +151,19 @@ public class Menu extends AppCompatActivity {
             case R.id.settings:
                 Intent mIntent = new Intent(Menu.this, SignUp.class);
                 mIntent.putExtra("id", userID);
+                mIntent.putExtra("user", me);
                 startActivity(mIntent);
                 return true;
             case R.id.contacts:
                 Intent mIntent2 = new Intent(Menu.this, Contacts.class);
                 mIntent2.putExtra("id", userID);
+                mIntent2.putExtra("user", me);
                 startActivity(mIntent2);
                 return true;
             case R.id.home:
                 Intent mIntent3 = new Intent(Menu.this, Menu.class);
                 mIntent3.putExtra("id", userID);
+                mIntent3.putExtra("user", me);
                 startActivity(mIntent3);
             default:
                 return super.onOptionsItemSelected(item);
@@ -176,6 +185,7 @@ public class Menu extends AppCompatActivity {
         if(isServicesOK()){
             Intent intent = new Intent(Menu.this, GuideActivity.class);
             intent.putExtra("id", userID);
+            intent.putExtra("user", me);
             startActivity(intent);
         }
     }

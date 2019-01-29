@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, data, Toast.LENGTH_LONG).show();
                             Intent mIntent = new Intent(LoginActivity.this, Menu.class);
                             mIntent.putExtra("id", id);
+                            mIntent.putExtra("login", "login");
                             startActivity(mIntent);
                             break;
                         } else{

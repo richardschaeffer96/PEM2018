@@ -95,7 +95,7 @@ public class SignUp extends AppCompatActivity {
             paint.setAntiAlias(true);
             canvas.drawARGB(0, 0, 0, 0);
             paint.setColor(color);
-            canvas.drawCircle(100, 100, 100, paint);
+            canvas.drawCircle(100, 100, 75, paint);
             paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
             canvas.drawBitmap(bitmap, rect, rect, paint);
 
@@ -227,6 +227,7 @@ public class SignUp extends AppCompatActivity {
                             }
                             Intent mIntent = new Intent(SignUp.this, Menu.class);
                             mIntent.putExtra("id", id);
+                            mIntent.putExtra("user", user);
                             startActivity(mIntent);
 
                         }

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +72,11 @@ public class SpotInterface extends AppCompatActivity {
 
     private ArrayList<ParticipantsExample> exampleList;
 
+    private User me = new User();
+    private TextView line1;
+    private TextView line2;
+    private ImageView profile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,9 +85,12 @@ public class SpotInterface extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        userID = getIntent().getStringExtra("id");
+        me = (User) getIntent().getSerializableExtra("user");
+        setUserInfo(me);
+
         closeEnough = false;
         state = 0;
-        userID = getIntent().getStringExtra("id");
         selectedSpot = (Spot) getIntent().getSerializableExtra("spot");
         Log.d(TAG, "onCreate: Given Spot that was clicked is: "+ selectedSpot.getTitle()+", on: "+ selectedSpot.getDate()+", "+ selectedSpot.getTime());
         setSpotInformation(selectedSpot);
@@ -432,19 +443,41 @@ public class SpotInterface extends AppCompatActivity {
             case R.id.settings:
                 Intent mIntent = new Intent(SpotInterface.this, SignUp.class);
                 mIntent.putExtra("id", userID);
+                mIntent.putExtra("user", me);
                 startActivity(mIntent);
                 return true;
             case R.id.contacts:
                 Intent mIntent2 = new Intent(SpotInterface.this, Contacts.class);
                 mIntent2.putExtra("id", userID);
+                mIntent2.putExtra("user", me);
                 startActivity(mIntent2);
                 return true;
             case R.id.home:
                 Intent mIntent3 = new Intent(SpotInterface.this, Menu.class);
                 mIntent3.putExtra("id", userID);
+                mIntent3.putExtra("user", me);
                 startActivity(mIntent3);
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * sets all needed information from the user to the toolbar layout
+     * TODO: get list with spots the user wants to participate in
+     * @param me
+     */
+    private void setUserInfo(User me){
+        String nickname = me.getNickname();
+        String gender = me.getGender();
+        int age = me.getAge();
+        String info = gender + ", ("+age+")";
+        line1 = findViewById(R.id.toolbarTextView1);
+        line2 = findViewById(R.id.toolbarTextView2);
+        line1.setText(nickname);
+        line2.setText(info);
+        profile = findViewById(R.id.iV_profile);
+        Uri uri = Uri.parse(me.getImageUri());
+        Picasso.get().load(uri).into(profile);
     }
 }
