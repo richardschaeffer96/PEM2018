@@ -314,6 +314,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                     Spot spot = documentSnapshot.toObject(Spot.class);
                     System.out.println("SPOT______________: "+spot.getAddress());
                     LatLng pos = new LatLng(spot.getLatitude(), spot.getLongitude());
+                    //TODO change Marker color
                     mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()));
                 }
             }

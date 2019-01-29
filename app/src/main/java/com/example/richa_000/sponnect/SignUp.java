@@ -1,5 +1,6 @@
 package com.example.richa_000.sponnect;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,7 +30,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +60,9 @@ public class SignUp extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("users");
+    private CollectionReference uploadsRef = db.collection("uploads");
+    private StorageReference mStorageRef;
+    private StorageTask mUploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +76,10 @@ public class SignUp extends AppCompatActivity {
         editTextFacebook = findViewById(R.id.edit_facebook);
         editTextInstagram = findViewById(R.id.edit_instagram);
         editTextTwitter = findViewById(R.id.edit_twitter);
+
+        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         profile_picture = (ImageView) findViewById(R.id.profile_picture);
-        Bitmap bm = BitmapFactory.decodeResource(getResources(),
-                R.drawable.emptyprofile);
-        Bitmap resized = Bitmap.createScaledBitmap(bm, 100, 100, true);
-        Bitmap converted_bm = getRoundedRectBitmap(resized, 100);
-        profile_picture.setImageBitmap(converted_bm);
-        // TODO Auto-generated method stub
+
     }
 
     public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
@@ -87,7 +95,7 @@ public class SignUp extends AppCompatActivity {
             paint.setAntiAlias(true);
             canvas.drawARGB(0, 0, 0, 0);
             paint.setColor(color);
-            canvas.drawCircle(50, 50, 50, paint);
+            canvas.drawCircle(100, 100, 100, paint);
             paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
             canvas.drawBitmap(bitmap, rect, rect, paint);
 
@@ -97,11 +105,6 @@ public class SignUp extends AppCompatActivity {
         return result;
     }
 
-    public void upload_picture(View view){
-        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, PICK_IMAGE);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -109,10 +112,16 @@ public class SignUp extends AppCompatActivity {
             imageUri = data.getData();
             profile_picture.setImageURI(imageUri);
             Bitmap bm = ((BitmapDrawable)profile_picture.getDrawable()).getBitmap();
-            Bitmap resized = Bitmap.createScaledBitmap(bm, 100, 100, true);
-            Bitmap converted_bm = getRoundedRectBitmap(resized, 100);
+            //Bitmap bm = ((BitmapDrawable)profile_picture.getDrawable()).getBitmap();
+            Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, true);
+            Bitmap converted_bm = getRoundedRectBitmap(resized, 200);
             profile_picture.setImageBitmap(converted_bm);
         }
+    }
+
+    public void upload_picture(View view){
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
     }
 
     public void add_more(View view){
@@ -166,10 +175,8 @@ public class SignUp extends AppCompatActivity {
                     String id = documentReference.getId();
                     DocumentReference refUser= usersRef.document(id);
                     refUser.update("id", id);
+                    uploadFile(id, user);
                     Toast.makeText(SignUp.this, "Data saved and logged in!\nHello "+user.getNickname(), Toast.LENGTH_LONG).show();
-                    Intent mIntent = new Intent(SignUp.this, Menu.class);
-                    mIntent.putExtra("id", id);
-                    startActivity(mIntent);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -182,6 +189,84 @@ public class SignUp extends AppCompatActivity {
 
     }
 
+    private String getFileExtension(Uri uri){
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
 
+    private void uploadFile(String id, User user){
+        profile_picture.setDrawingCacheEnabled(true);
+        profile_picture.buildDrawingCache();
+        Bitmap bitmap = profile_picture.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        if(bitmap != null){
+            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+
+            //mUploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            mUploadTask = fileReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(SignUp.this, "Success!", Toast.LENGTH_SHORT).show();
+                    fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Uri dlUri = uri;
+                            //Upload upload = new Upload(id, dlUri.toString());
+                            DocumentReference refUser = usersRef.document(id);
+                            System.out.println("URI is " + dlUri);
+                            Log.d(TAG, "URI is " + dlUri);
+                            String uriPicture = dlUri.toString();
+                            refUser.update("imageUri", uriPicture);
+                            while(user.getImageUri() == null){
+                                user.setImageUri(uriPicture);
+                                System.out.println("Uri in User is: " + user.getImageUri());
+                            }
+                            Intent mIntent = new Intent(SignUp.this, Menu.class);
+                            mIntent.putExtra("id", id);
+                            startActivity(mIntent);
+
+                        }
+                    });
+
+                    //String uploadId = mDatabaseRef.push().getKey();
+                    //mDatabaseRef.child(uploadId).setValue(upload);
+
+
+                    /*
+
+                    usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    String id = documentReference.getId();
+                    DocumentReference refUser= usersRef.document(id);
+                    refUser.update("id", id);
+                    Toast.makeText(SignUp.this, "Data saved and logged in!\nHello "+user.getNickname(), Toast.LENGTH_LONG).show();
+                    Intent mIntent = new Intent(SignUp.this, Menu.class);
+                    mIntent.putExtra("id", id);
+                    uploadFile(id);
+                    startActivity(mIntent);
+
+                     */
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(SignUp.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                }
+            });
+        } else {
+            Toast.makeText(this, "No image file selected!", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

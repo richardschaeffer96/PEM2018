@@ -2,6 +2,7 @@ package com.example.richa_000.sponnect;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -39,6 +42,7 @@ public class Menu extends AppCompatActivity {
 
     private TextView line1;
     private TextView line2;
+    private ImageView profile;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference spotsRef = db.collection("spots");
@@ -122,6 +126,10 @@ public class Menu extends AppCompatActivity {
         line2 = findViewById(R.id.toolbarTextView2);
         line1.setText(nickname);
         line2.setText(info);
+        profile = findViewById(R.id.iV_profile);
+        Log.d(TAG, "User URI is: "+me.getImageUri() );
+        Uri uri = Uri.parse(me.getImageUri());
+        Picasso.get().load(uri).into(profile);
     }
 
     @Override

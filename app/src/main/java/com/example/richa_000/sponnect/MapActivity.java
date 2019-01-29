@@ -1,5 +1,5 @@
 package com.example.richa_000.sponnect;
-
+/*
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -29,9 +29,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{}
 
-    //TODO: DELETE!?!?!?!?!?!
+    //TODO: DELETE?
 
     private static final int REQUEST_LOCATION = 1;
     private LocationManager locationManager;
@@ -169,4 +169,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
-}
+    */
