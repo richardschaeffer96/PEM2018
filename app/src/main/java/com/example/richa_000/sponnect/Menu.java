@@ -128,8 +128,11 @@ public class Menu extends AppCompatActivity {
         line2.setText(info);
         profile = findViewById(R.id.iV_profile);
         Log.d(TAG, "User URI is: "+me.getImageUri() );
-        Uri uri = Uri.parse(me.getImageUri());
-        Picasso.get().load(uri).into(profile);
+        if(me.getImageUri()!=null){
+            Uri uri = Uri.parse(me.getImageUri());
+            Picasso.get().load(uri).into(profile);
+        }
+
     }
 
     @Override
