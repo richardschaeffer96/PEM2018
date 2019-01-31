@@ -9,4 +9,5 @@
     <color name="lightBlue">#74e2f1</color>
     <color name="darkBlue">#74a4f1</color>
     <color name="darkBlueAlpha">#a4c4f6</color>
+    <color name="greenAlpha">#d3f8bb</color>
 </resources>

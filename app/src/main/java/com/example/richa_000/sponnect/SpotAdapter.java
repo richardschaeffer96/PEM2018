@@ -1,8 +1,10 @@
 package com.example.richa_000.sponnect;
 
 import android.content.Intent;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +66,12 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
         viewHolder.spot_name.setText(currentItem.getTitle());
         viewHolder.spot_date.setText(currentItem.getDate());
         viewHolder.spot_time.setText(currentItem.getTime());
+        //change color depending of creator id
+        if(currentItem.getcreator().equals(userID)){
+            viewHolder.itemView.setBackgroundResource(R.color.greenAlpha);
+        }else{
+            //stay default blue
+        }
     }
 
     @Override
