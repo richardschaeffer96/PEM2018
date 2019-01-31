@@ -1,6 +1,7 @@
 package com.example.richa_000.sponnect;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,7 +53,7 @@ public class Contacts extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        String userID = getIntent().getStringExtra("id");
+        userID = getIntent().getStringExtra("id");
 
         mLayoutManager = new LinearLayoutManager(this);
 

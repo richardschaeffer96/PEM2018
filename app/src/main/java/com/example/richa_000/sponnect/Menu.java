@@ -57,11 +57,12 @@ public class Menu extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         userID = getIntent().getStringExtra("id");
-        me = (User) getIntent().getSerializableExtra("user");
+
         //Who is logged in now?
         if (getIntent().getStringExtra("login") != null){
             getLoggedInUser(userID);
         } else {
+            me = (User) getIntent().getSerializableExtra("user");
             setUserInfo(me);
         }
         //getLoggedInUser(userID);
@@ -85,7 +86,10 @@ public class Menu extends AppCompatActivity {
                 mRecyclerView = findViewById(R.id.recyclerview);
                 mRecyclerView.setHasFixedSize(true);
                 mLayoutManager = new LinearLayoutManager(mRecyclerView.getContext());
-                mAdapter = new SpotAdapter(mySpotList, userID);
+
+                System.out.println("User is: " + me);
+                System.out.println("User with nickname for spotadapter: " + me.getNickname());
+                mAdapter = new SpotAdapter(mySpotList, userID, me);
 
                 mRecyclerView.setLayoutManager(mLayoutManager);
                 mRecyclerView.setAdapter(mAdapter);
@@ -108,7 +112,9 @@ public class Menu extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     if (documentSnapshot.getId().equals(id)) {
+
                         me = documentSnapshot.toObject(User.class);
+
                     }
                 }
                 Log.d(TAG, "onSuccess: User logged in: "+me.getNickname());

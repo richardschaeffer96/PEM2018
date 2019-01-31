@@ -16,6 +16,7 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
 
     private static ArrayList<Spot> mSpotList;
     private static String userID;
+    private static User user;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView spot_name;
@@ -35,16 +36,18 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
                 Intent intent = new Intent(itemView.getContext(), SpotInterface.class);
                 intent.putExtra("spot", clickedSpot);
                 intent.putExtra("id", userID);
+                intent.putExtra("user", user);
                 itemView.getContext().startActivity(intent);
 
             });
         }
     }
 
-    public SpotAdapter(ArrayList<Spot> spotList, String userID){
+    public SpotAdapter(ArrayList<Spot> spotList, String userID, User user){
 
         mSpotList = spotList;
         this.userID = userID;
+        this.user = user;
     }
 
     @NonNull

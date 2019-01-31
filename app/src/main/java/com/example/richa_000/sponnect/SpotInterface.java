@@ -87,6 +87,7 @@ public class SpotInterface extends AppCompatActivity {
 
         userID = getIntent().getStringExtra("id");
         me = (User) getIntent().getSerializableExtra("user");
+        System.out.println("User in Spotinterface is: " + me);
         setUserInfo(me);
 
         closeEnough = false;
@@ -478,6 +479,7 @@ public class SpotInterface extends AppCompatActivity {
      * @param me
      */
     private void setUserInfo(User me){
+        System.out.println("User in setUserInfo is: " + me);
         String nickname = me.getNickname();
         String gender = me.getGender();
         int age = me.getAge();
@@ -487,6 +489,8 @@ public class SpotInterface extends AppCompatActivity {
         line1.setText(nickname);
         line2.setText(info);
         profile = findViewById(R.id.iV_profile);
+        System.out.println("Sportinterface name is: " + nickname);
+        System.out.println("Sportinterface uri is: " + me.getImageUri());
         Uri uri = Uri.parse(me.getImageUri());
         Picasso.get().load(uri).into(profile);
     }
