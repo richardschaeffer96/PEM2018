@@ -72,7 +72,7 @@ public class SpotInterface extends AppCompatActivity {
 
     private ArrayList<ParticipantsExample> exampleList;
 
-    private User me = new User();
+    private User me;
     private TextView line1;
     private TextView line2;
     private ImageView profile;
@@ -86,9 +86,10 @@ public class SpotInterface extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         userID = getIntent().getStringExtra("id");
-        me = (User) getIntent().getSerializableExtra("user");
-        System.out.println("User in Spotinterface is: " + me);
-        setUserInfo(me);
+        //me = (User) getIntent().getSerializableExtra("user");
+        //System.out.println("User in Spotinterface is: " + me);
+        //setUserInfo(me);
+        getLoggedInUser(userID);
 
         closeEnough = false;
         state = 0;
@@ -471,6 +472,25 @@ public class SpotInterface extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void getLoggedInUser(String userId){
+
+        final String id = userId;
+        usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    if (documentSnapshot.getId().equals(id)) {
+
+                        me = documentSnapshot.toObject(User.class);
+
+                    }
+                }
+                Log.d(TAG, "onSuccess: User logged in: "+me.getNickname());
+                setUserInfo(me);
+            }
+        });
     }
 
     /**

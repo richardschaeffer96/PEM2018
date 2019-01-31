@@ -39,7 +39,7 @@ public class Contacts extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("users");
 
-    private User me = new User();
+    private User me;
     public String userID;
     private TextView line1;
     private TextView line2;
@@ -54,6 +54,8 @@ public class Contacts extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         userID = getIntent().getStringExtra("id");
+        me = (User) getIntent().getSerializableExtra("user");
+        setUserInfo(me);
 
         mLayoutManager = new LinearLayoutManager(this);
 
@@ -76,9 +78,6 @@ public class Contacts extends AppCompatActivity {
         });
 
 
-        userID = getIntent().getStringExtra("id");
-        me = (User) getIntent().getSerializableExtra("user");
-        setUserInfo(me);
     }
 
 

@@ -38,7 +38,7 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
                 Intent intent = new Intent(itemView.getContext(), SpotInterface.class);
                 intent.putExtra("spot", clickedSpot);
                 intent.putExtra("id", userID);
-                intent.putExtra("user", user);
+                //intent.putExtra("user", user);
                 itemView.getContext().startActivity(intent);
 
             });
@@ -68,7 +68,7 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
         viewHolder.spot_time.setText(currentItem.getTime());
         //change color depending of creator id
         if(currentItem.getcreator().equals(userID)){
-            viewHolder.itemView.setBackgroundResource(R.color.greenAlpha);
+            //viewHolder.itemView.setBackgroundResource(R.color.greenAlpha);
         }else{
             //stay default blue
         }
