@@ -68,8 +68,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private CollectionReference usersRef = db.collection("users");
     private String userID;
 
-    Button buttonJoin = mapOverlay.findViewById(R.id.button_join);
-
     PlaceAutocompleteFragment placeAutoComplete;
 
     private Geocoder geocoder;
@@ -160,6 +158,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
         TextView date = mapOverlay.findViewById(R.id.text_date);
         date.setText(spot.getDate() + "\n"+spot.getTime());
+
+        Button buttonJoin = mapOverlay.findViewById(R.id.button_join);
 
         TextView distance = mapOverlay.findViewById(R.id.text_distance);
         Location spotLoc = new Location("spot");
@@ -421,6 +421,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             intent.putExtra("Lat", Double.toString(latLng.latitude));
             intent.putExtra("Lng", Double.toString(latLng.longitude));
             intent.putExtra("id", userID);
+            intent.putExtra("user", me);
             startActivity(intent);
 
         } catch (IOException e) {
@@ -443,6 +444,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         System.out.println("NEW");
         Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
         intent.putExtra("id", userID);
+        intent.putExtra("user", me);
         startActivity(intent);
     }
 
@@ -460,7 +462,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                             participantMap.put(userID, 0);
                             refSpot.update("participants", participantMap);
                         } else{
-                            if(buttonJoin.getText().equals("Delete Spot") && selectedSpot.getcreator().equals(userID)){
+                            if(selectedSpot.getcreator().equals(userID)){
                                 // TODO Ask if really wants to delete Spot
                                 Log.d(TAG, "Deleting Spot...");
                             } else{
@@ -484,6 +486,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                     if (userID.equals(user.getId())) {
                         DocumentReference refUser = usersRef.document(userID);
                         HashMap<String, Boolean> spots = user.getMySpots();
+                        
                         spots.put(selectedSpot.getId(), false);
                         refUser.update("mySpots", spots);
                     }

@@ -368,7 +368,7 @@ public class SpotInterface extends AppCompatActivity {
                     HashMap<String, Integer> participants = spot.getParticipants();
                     for (Map.Entry<String, Integer> entry : participants.entrySet()) {
                         //get Spot with current user as participant
-                        if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
+                        if(entry.getKey().equals(userID) && spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==1){
                                 System.out.println("Set to 0");
                                 tooLateButton.setImageResource(R.drawable.img_toolate);
@@ -413,6 +413,10 @@ public class SpotInterface extends AppCompatActivity {
                     HashMap<String, Integer> participants = spot.getParticipants();
                     for (Map.Entry<String, Integer> entry : participants.entrySet()) {
                         //get Spot with current user as participant
+                        Log.d(TAG, "onSuccess: Test1: " + entry.getKey() );
+                        Log.d(TAG, "onSuccess: Test2: " + userID );
+                        Log.d(TAG, "onSuccess: Test3: " + spot.getId() );
+                        Log.d(TAG, "onSuccess: Test4: " + selectedSpot.getId() );
                         if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==2){
                                 System.out.println("Set to 0");
