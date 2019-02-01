@@ -49,7 +49,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -285,7 +289,34 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         Log.d(TAG, "setAllSpotMarker: Liste in Marker Funktion mit Entry: "+spots.get(0).getTitle());
         for (int i = 0; i < spots.size(); i++) {
             LatLng pos = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
-            mMap.addMarker(new MarkerOptions().position(pos).title(spots.get(i).getTitle()));
+            Spot spot = spots.get(i);
+            System.out.println("SPOT______________: "+spot.getAddress());
+            Date currentTime = Calendar.getInstance().getTime();
+            String spotDate = spot.getDate()+"-"+spot.getTime();
+            System.out.println(spotDate);
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy-HH:mm");
+            Date date = null;
+            try {
+                date = format.parse(spotDate);
+                System.out.println(date);
+                if(spot.getcreator().equals(userID)){
+                    if(date.after(currentTime)) {
+                        mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle())
+                                .icon(BitmapDescriptorFactory.defaultMarker(hueGreen)));
+                    }else{
+                       // mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueGreen)).alpha(0.2f));
+                    }
+                } else{
+                    if(date.after(currentTime)) {
+                        mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle())
+                                .icon(BitmapDescriptorFactory.defaultMarker(hueBlue)));
+                    }else{
+                        //mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueBlue)).alpha(0.2f));
+                    }
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -317,7 +348,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.guide_map);
         mapFragment.getMapAsync(GuideActivity.this);
-
+        /*
         CollectionReference spots = db.collection("spots");
         spots.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -326,15 +357,39 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                     Spot spot = documentSnapshot.toObject(Spot.class);
                     System.out.println("SPOT______________: "+spot.getAddress());
                     LatLng pos = new LatLng(spot.getLatitude(), spot.getLongitude());
-                    if(spot.getcreator().equals(userID)){
-                        mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueGreen)));
-                    } else{
-                        mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueBlue)));
+                    Date currentTime = Calendar.getInstance().getTime();
+                    String spotDate = spot.getDate()+"-"+spot.getTime();
+                    System.out.println(spotDate);
+                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy-HH:mm");
+                    Date date = null;
+                    try {
+                        date = format.parse(spotDate);
+                        System.out.println(date);
+                        if(spot.getcreator().equals(userID)){
+                            if(date.after(currentTime)) {
+                                mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle())
+                                        .icon(BitmapDescriptorFactory.defaultMarker(hueGreen)));
+                            }else{
+                                mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueGreen)).alpha(0.2f));
+                            }
+                        } else{
+                            if(date.after(currentTime)) {
+                                mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle())
+                                    .icon(BitmapDescriptorFactory.defaultMarker(hueBlue)));
+                            }else{
+                                mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueBlue)).alpha(0.2f));
+                            }
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
+
+
 
                 }
             }
         });
+        */
     }
 
 
