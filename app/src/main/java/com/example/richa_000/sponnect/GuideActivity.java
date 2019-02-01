@@ -213,7 +213,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                 for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                    //TODO Range Query or Number restriction
                     if(creatorID.equals(documentSnapshot.getId())){
                         User creator = documentSnapshot.toObject(User.class);
 
@@ -221,15 +220,28 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                         Uri uri = Uri.parse(creator.getImageUri());
                         Picasso.get().load(uri).into(creatorProfile);
 
-                        TextView creatorName = mapOverlay.findViewById(R.id.text_name);
-                        creatorName.setText(creator.getNickname());
+                        if(creatorID.equals(userID)){
+                            //LoggedIn User created the Spot
+                            TextView creatorName = mapOverlay.findViewById(R.id.text_name);
+                            creatorName.setText("This is your Spot!");
 
-                        TextView creatorGender = mapOverlay.findViewById(R.id.text_gender);
-                        creatorGender.setText(creator.getGender());
+                            TextView creatorGender = mapOverlay.findViewById(R.id.text_gender);
+                            creatorGender.setText("");
 
-                        TextView creatorAge = mapOverlay.findViewById(R.id.text_age);
-                        String age = creator.getAge()+"";
-                        creatorAge.setText(age);
+                            TextView creatorAge = mapOverlay.findViewById(R.id.text_age);
+                            creatorAge.setText("");
+                        } else{
+                            //Show Creator's information
+                            TextView creatorName = mapOverlay.findViewById(R.id.text_name);
+                            creatorName.setText(creator.getNickname());
+
+                            TextView creatorGender = mapOverlay.findViewById(R.id.text_gender);
+                            creatorGender.setText(creator.getGender());
+
+                            TextView creatorAge = mapOverlay.findViewById(R.id.text_age);
+                            String age = creator.getAge()+"";
+                            creatorAge.setText(age);
+                        }
                     }
 
                 }

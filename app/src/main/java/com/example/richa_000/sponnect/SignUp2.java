@@ -174,6 +174,7 @@ public class SignUp2 extends AppCompatActivity {
     }
 
     private void uploadFile(String id, User user){
+
         profile_picture.setDrawingCacheEnabled(true);
         profile_picture.buildDrawingCache();
         Bitmap bitmap = profile_picture.getDrawingCache();
@@ -181,71 +182,70 @@ public class SignUp2 extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
 
-        if(bitmap != null){
-            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+        //Log.d(TAG, "uploadFile: Ist Bild da? "+data);
 
-            //mUploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            mUploadTask = fileReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(SignUp2.this, "Success!", Toast.LENGTH_SHORT).show();
-                    fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            Uri dlUri = uri;
-                            //Upload upload = new Upload(id, dlUri.toString());
-                            DocumentReference refUser = usersRef.document(id);
-                            System.out.println("URI is " + dlUri);
-                            Log.d(TAG, "URI is " + dlUri);
-                            String uriPicture = dlUri.toString();
-                            refUser.update("imageUri", uriPicture);
-                            while(user.getImageUri() == null){
-                                user.setImageUri(uriPicture);
-                                System.out.println("Uri in User is: " + user.getImageUri());
-                            }
-                            Intent mIntent = new Intent(SignUp2.this, Menu.class);
-                            mIntent.putExtra("id", id);
-                            mIntent.putExtra("user", user);
-                            startActivity(mIntent);
+        StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
 
+        //mUploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        mUploadTask = fileReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(SignUp2.this, "Success!", Toast.LENGTH_SHORT).show();
+                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Uri dlUri = uri;
+                        //Upload upload = new Upload(id, dlUri.toString());
+                        DocumentReference refUser = usersRef.document(id);
+                        System.out.println("URI is " + dlUri);
+                        Log.d(TAG, "URI is " + dlUri);
+                        String uriPicture = dlUri.toString();
+                        refUser.update("imageUri", uriPicture);
+                        while(user.getImageUri() == null){
+                            user.setImageUri(uriPicture);
+                            System.out.println("Uri in User is: " + user.getImageUri());
                         }
-                    });
+                        Intent mIntent = new Intent(SignUp2.this, Menu.class);
+                        mIntent.putExtra("id", id);
+                        mIntent.putExtra("user", user);
+                        startActivity(mIntent);
 
-                    //String uploadId = mDatabaseRef.push().getKey();
-                    //mDatabaseRef.child(uploadId).setValue(upload);
+                    }
+                });
+
+                //String uploadId = mDatabaseRef.push().getKey();
+                //mDatabaseRef.child(uploadId).setValue(upload);
 
 
-                    /*
+                /*
 
-                    usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    String id = documentReference.getId();
-                    DocumentReference refUser= usersRef.document(id);
-                    refUser.update("id", id);
-                    Toast.makeText(SignUp.this, "Data saved and logged in!\nHello "+user.getNickname(), Toast.LENGTH_LONG).show();
-                    Intent mIntent = new Intent(SignUp.this, Menu.class);
-                    mIntent.putExtra("id", id);
-                    uploadFile(id);
-                    startActivity(mIntent);
+                usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                String id = documentReference.getId();
+                DocumentReference refUser= usersRef.document(id);
+                refUser.update("id", id);
+                Toast.makeText(SignUp.this, "Data saved and logged in!\nHello "+user.getNickname(), Toast.LENGTH_LONG).show();
+                Intent mIntent = new Intent(SignUp.this, Menu.class);
+                mIntent.putExtra("id", id);
+                uploadFile(id);
+                startActivity(mIntent);
 
-                     */
+                 */
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(SignUp2.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(SignUp2.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
 
-                }
-            });
-        } else {
-            Toast.makeText(this, "No image file selected!", Toast.LENGTH_SHORT).show();
-        }
+            }
+        });
+
     }
 
 }
