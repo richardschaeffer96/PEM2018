@@ -122,7 +122,7 @@ public class SpotInterface extends AppCompatActivity {
                                     }
                                 });
                             }
-                            exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, 2, userID));
+                            exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), user.getImageUri(), 2, userID));
                         }
                     }
                 }
@@ -245,7 +245,7 @@ public class SpotInterface extends AppCompatActivity {
                                     User user = documentSnapshot.toObject(User.class);
                                     if (map.containsKey(user.getId())) {
                                         System.out.println("Found User in Spot!");
-                                        exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, map.get(user.getId()), userID));
+                                        exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), user.getImageUri(), map.get(user.getId()), userID));
                                         mRecyclerView.getAdapter().notifyDataSetChanged();
                                     }
                                 }
@@ -499,7 +499,6 @@ public class SpotInterface extends AppCompatActivity {
 
     /**
      * sets all needed information from the user to the toolbar layout
-     * TODO: get list with spots the user wants to participate in
      * @param me
      */
     private void setUserInfo(User me){

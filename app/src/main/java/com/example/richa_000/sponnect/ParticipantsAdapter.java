@@ -1,6 +1,7 @@
 package com.example.richa_000.sponnect;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,7 +128,8 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         viewHolder.name.setText(currentItem.getName());
         viewHolder.age.setText(currentItem.getAge());
         viewHolder.gender.setText(currentItem.getGender());
-        viewHolder.img.setImageResource(currentItem.getImg());
+        Uri uri = Uri.parse(currentItem.getImg());
+        Picasso.get().load(uri).into(viewHolder.img);
 
         switch(currentItem.getState()){
             case 0: viewHolder.share.setImageResource(android.R.color.transparent);break;
