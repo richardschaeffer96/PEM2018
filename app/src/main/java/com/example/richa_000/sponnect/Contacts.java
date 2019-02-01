@@ -67,7 +67,7 @@ public class Contacts extends AppCompatActivity {
                     User user = documentSnapshot.toObject(User.class);
                     if(user.getId().equals(userID)){
                         list = user.getContacts();
-                        mAdapter = new ContactsAdapter(list);
+                        mAdapter = new ContactsAdapter(list, me);
                         mRecyclerView = findViewById(R.id.recyclerview);
                         mRecyclerView.setHasFixedSize(true);
                         mRecyclerView.setLayoutManager(mLayoutManager);

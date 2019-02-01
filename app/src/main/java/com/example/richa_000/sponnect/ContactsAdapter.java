@@ -30,6 +30,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference usersRef = db.collection("users");
+    private static User curUser;
+    private static ContactsAdapter adapter;
 
     public static class ViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder{
         private TextView fb;
@@ -39,7 +41,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         private TextView gender;
         private TextView age;
         private ImageView img;
-        ImageButton delete;
+        private ImageButton delete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -50,12 +52,33 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             gender = itemView.findViewById(R.id.text_contact_gender);
             age = itemView.findViewById(R.id.text_contact_age);
             img = itemView.findViewById(R.id.image_contact_avatar);
-            //delete = itemView.findViewById(R.id.btn_delete);
+            delete = itemView.findViewById(R.id.btn_contact_delete);
+
+            delete.setOnClickListener((v) -> {
+                int position = getAdapterPosition();
+                int count =0;
+                for (Map.Entry<String, ArrayList<String>> e: mContacts.entrySet()) {
+                    if(count==position){
+                        HashMap<String, ArrayList<String>> contacts = new HashMap<String, ArrayList<String>>();
+                        contacts = curUser.getContacts();
+                        contacts.remove(e.getKey());
+                        DocumentReference refUser = usersRef.document(curUser.getId());
+                        refUser.update("contacts", contacts);
+                        count+=1;
+                        setmContacts(contacts);
+                        adapter.notifyDataSetChanged();
+                    }
+                    else count+=1;
+                }
+            });
+
         }
     }
 
-    public ContactsAdapter(HashMap<String, ArrayList<String>> contacts){
+    public ContactsAdapter(HashMap<String, ArrayList<String>> contacts, User curUser){
+        adapter = this;
         mContacts = contacts;
+        this.curUser = curUser;
     }
 
     @NonNull
@@ -73,8 +96,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             System.out.println("Contact "+i+ " ID: "+e.getKey());
             if(count==i){
                 viewHolder.fb.setText(e.getValue().get(0));
-                viewHolder.twitter.setText(e.getValue().get(1));
-                viewHolder.insta.setText(e.getValue().get(2));
+                viewHolder.twitter.setText(e.getValue().get(2));
+                viewHolder.insta.setText(e.getValue().get(1));
                 usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -84,8 +107,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                                 viewHolder.name.setText(user.getNickname());
                                 viewHolder.age.setText(""+user.getAge());
                                 viewHolder.gender.setText(user.getGender());
-                                //Uri uri = Uri.parse(user.getImageUri());
-                                //Picasso.get().load(uri).into(viewHolder.img);
+                                Uri uri = Uri.parse(user.getImageUri());
+                                System.out.println(uri);
+                                Picasso.get().load(uri).into(viewHolder.img);
                             }
                         }
                     }
