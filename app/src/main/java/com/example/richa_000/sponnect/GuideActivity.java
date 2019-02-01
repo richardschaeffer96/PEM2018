@@ -467,7 +467,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                                 Log.d(TAG, "Deleting Spot...");
                             } else{
                                // Just leave Spot
-                                //System.out.println("YOU ALREADY JOINED THE SPOT");
                                 participantMap.remove(userID);
                                 refSpot.update("participants", participantMap);
                             }
@@ -486,9 +485,21 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                     if (userID.equals(user.getId())) {
                         DocumentReference refUser = usersRef.document(userID);
                         HashMap<String, Boolean> spots = user.getMySpots();
-                        
-                        spots.put(selectedSpot.getId(), false);
-                        refUser.update("mySpots", spots);
+                        if (!spots.containsKey(selectedSpot.getId())) {
+                            spots.put(selectedSpot.getId(), false);
+                            refUser.update("mySpots", spots);
+                        } else{
+                            if(selectedSpot.getcreator().equals(userID)){
+                                // TODO Ask if really wants to delete Spot
+                                Log.d(TAG, "Deleting Spot...");
+                            } else{
+                                // Just leave Spot
+                                spots.remove(selectedSpot.getId());
+                                refUser.update("mySpots", spots);
+                            }
+
+                        }
+
                     }
                 }
             }
