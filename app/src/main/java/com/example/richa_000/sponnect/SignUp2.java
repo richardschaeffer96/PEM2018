@@ -168,9 +168,13 @@ public class SignUp2 extends AppCompatActivity {
     }
 
     private String getFileExtension(Uri uri){
-        ContentResolver cR = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
+        if(imageUri == null){
+            return "png";
+        } else {
+            ContentResolver cR = getContentResolver();
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            return mime.getExtensionFromMimeType(cR.getType(uri));
+        }
     }
 
     private void uploadFile(String id, User user){
