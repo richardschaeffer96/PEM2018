@@ -217,6 +217,10 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                     if(creatorID.equals(documentSnapshot.getId())){
                         User creator = documentSnapshot.toObject(User.class);
 
+                        ImageView creatorProfile = mapOverlay.findViewById(R.id.iVguider);
+                        Uri uri = Uri.parse(creator.getImageUri());
+                        Picasso.get().load(uri).into(creatorProfile);
+
                         TextView creatorName = mapOverlay.findViewById(R.id.text_name);
                         creatorName.setText(creator.getNickname());
 
@@ -247,10 +251,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                             Log.d(TAG, "Spot is already in Spot List.");
                             if(user.getMySpots().get(spot.getId())){
                                 buttonJoin.setText("Delete Spot");
-                                //TODO Deleting Spot when clicking on JOIN Button
-
                             } else{
-                                //TODO Deleting Spot from User's List when leaving Spot
                                 buttonJoin.setText("Leave Spot")
                                 ;
                             }
@@ -463,11 +464,10 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                             refSpot.update("participants", participantMap);
                         } else{
                             if(selectedSpot.getcreator().equals(userID)){
-                                // TODO Ask if really wants to delete Spot
+                                // TODO NANNI: Ask if really wants to delete Spot
                                 Log.d(TAG, "Deleting Spot...");
                             } else{
                                // Just leave Spot
-                                //System.out.println("YOU ALREADY JOINED THE SPOT");
                                 participantMap.remove(userID);
                                 refSpot.update("participants", participantMap);
                             }
@@ -486,9 +486,21 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                     if (userID.equals(user.getId())) {
                         DocumentReference refUser = usersRef.document(userID);
                         HashMap<String, Boolean> spots = user.getMySpots();
-                        
-                        spots.put(selectedSpot.getId(), false);
-                        refUser.update("mySpots", spots);
+                        if (!spots.containsKey(selectedSpot.getId())) {
+                            spots.put(selectedSpot.getId(), false);
+                            refUser.update("mySpots", spots);
+                        } else{
+                            if(selectedSpot.getcreator().equals(userID)){
+                                // TODO NANNI: Ask if really wants to delete Spot
+                                Log.d(TAG, "Deleting Spot...");
+                            } else{
+                                // Just leave Spot
+                                spots.remove(selectedSpot.getId());
+                                refUser.update("mySpots", spots);
+                            }
+
+                        }
+
                     }
                 }
             }
@@ -534,7 +546,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     /**
      * sets all needed information from the user to the toolbar layout
-     * TODO: get list with spots the user wants to participate in
      * @param me
      */
     private void setUserInfo(User me){
