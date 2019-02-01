@@ -1,6 +1,7 @@
 package com.example.richa_000.sponnect;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,10 +68,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-
-        Map.Entry<String, ArrayList<String>>[] entries = new Map.Entry[mContacts.size()];
         int count = 0;
         for (Map.Entry<String, ArrayList<String>> e: mContacts.entrySet()) {
+            System.out.println("Contact "+i+ " ID: "+e.getKey());
             if(count==i){
                 viewHolder.fb.setText(e.getValue().get(0));
                 viewHolder.twitter.setText(e.getValue().get(1));
@@ -81,13 +82,15 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                             User user = documentSnapshot.toObject(User.class);
                             if (user.getId().equals(e.getKey())) {
                                 viewHolder.name.setText(user.getNickname());
-                                //viewHolder.age.setText(user.getAge());
+                                viewHolder.age.setText(""+user.getAge());
                                 viewHolder.gender.setText(user.getGender());
-                                //viewHolder.img.setImageResource(user.getgetImg());
+                                //Uri uri = Uri.parse(user.getImageUri());
+                                //Picasso.get().load(uri).into(viewHolder.img);
                             }
                         }
                     }
                 });
+                count+=1;
             }
             else count+=1;
         }

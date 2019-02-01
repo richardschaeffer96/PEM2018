@@ -91,9 +91,9 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
                             if(selectedUser.getId().equals(currentUser.getId())) {
                                 Snackbar.make(v, "Don't share stuff with yourself you moron!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                             }else {
-                                if (!selectedUser.getContacts().containsKey(selectedUser.getId())) {
+                                if (!selectedUser.getContacts().containsKey(currentUser.getId())) {
                                     contacts = selectedUser.getContacts();
-                                    contacts.put(selectedUser.getId(), currentUser.getSocialMedia());
+                                    contacts.put(currentUser.getId(), currentUser.getSocialMedia());
                                     DocumentReference refUser = usersRef.document(selectedUser.getId());
                                     refUser.update("contacts", contacts);
                                     Snackbar.make(v, "You shared your contact info with " + selectedUser.getNickname(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
