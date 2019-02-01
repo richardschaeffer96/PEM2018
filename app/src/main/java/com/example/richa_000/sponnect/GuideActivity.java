@@ -68,6 +68,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private CollectionReference usersRef = db.collection("users");
     private String userID;
 
+    Button buttonJoin = mapOverlay.findViewById(R.id.button_join);
+
     PlaceAutocompleteFragment placeAutoComplete;
 
     private Geocoder geocoder;
@@ -235,7 +237,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         int numberParticitpants = spot.getParticipants().size();
         numberParticipants.setText(numberParticitpants+"");
 
-        Button buttonJoin = mapOverlay.findViewById(R.id.button_join);
         usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -247,6 +248,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                             if(user.getMySpots().get(spot.getId())){
                                 buttonJoin.setText("Delete Spot");
                                 //TODO Deleting Spot when clicking on JOIN Button
+
                             } else{
                                 //TODO Deleting Spot from User's List when leaving Spot
                                 buttonJoin.setText("Leave Spot")
@@ -457,8 +459,17 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                         if (!participantMap.containsKey(userID)) {
                             participantMap.put(userID, 0);
                             refSpot.update("participants", participantMap);
-                        } else {
-                            System.out.println("YOU ALREADY JOINED THE SPOT");
+                        } else{
+                            if(buttonJoin.getText().equals("Delete Spot") && selectedSpot.getcreator().equals(userID)){
+                                // TODO Ask if really wants to delete Spot
+                                Log.d(TAG, "Deleting Spot...");
+                            } else{
+                               // Just leave Spot
+                                //System.out.println("YOU ALREADY JOINED THE SPOT");
+                                participantMap.remove(userID);
+                                refSpot.update("participants", participantMap);
+                            }
+
                         }
                     }
                 }
