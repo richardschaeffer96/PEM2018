@@ -122,7 +122,7 @@ public class SpotInterface extends AppCompatActivity {
                                     }
                                 });
                             }
-                            exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, 2, userID));
+                            exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, 2, user.getId()));
                         }
                     }
                 }
@@ -245,7 +245,7 @@ public class SpotInterface extends AppCompatActivity {
                                     User user = documentSnapshot.toObject(User.class);
                                     if (map.containsKey(user.getId())) {
                                         System.out.println("Found User in Spot!");
-                                        exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, map.get(user.getId()), userID));
+                                        exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, map.get(user.getId()), user.getId()));
                                         mRecyclerView.getAdapter().notifyDataSetChanged();
                                     }
                                 }

@@ -63,6 +63,7 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
             share.setOnClickListener((v) ->{
                 int position = getAdapterPosition();
                 ParticipantsExample currentItem = mParticipantList.get(position);
+                System.out.println("Clicked of "+ currentItem.getName() + " | "+currentItem.getId());
                 usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -83,17 +84,23 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
 
                         }
                         if(selectedUser!=null){
+                            contacts = new HashMap<String, ArrayList<String>>();
                             System.out.println(selectedUser.getContacts());
-                            if(!selectedUser.getContacts().containsKey(selectedUser.getId())) {
-                                contacts = selectedUser.getContacts();
-                                contacts.put(selectedUser.getId(), currentUser.getSocialMedia());
-                            }else{
-                                Snackbar.make(v, "You already shared your contact info with "+selectedUser.getNickname(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                            if(selectedUser.getId().equals(currentUser.getId())) {
+                                Snackbar.make(v, "Don't share stuff with yourself you moron!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                            }else {
+                                if (!selectedUser.getContacts().containsKey(selectedUser.getId())) {
+                                    contacts = selectedUser.getContacts();
+                                    contacts.put(selectedUser.getId(), currentUser.getSocialMedia());
+                                    DocumentReference refUser = usersRef.document(selectedUser.getId());
+                                    refUser.update("contacts", contacts);
+                                    Snackbar.make(v, "You shared your contact info with " + selectedUser.getNickname(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                } else {
+                                    Snackbar.make(v, "You already shared your contact info with " + selectedUser.getNickname(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                }
                             }
                         }
-                        DocumentReference refUser = usersRef.document(selectedUser.getId());
-                        refUser.update("contacts", contacts);
-                        Snackbar.make(v, "You shared your contact info with "+selectedUser.getNickname(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
                     }
                 });
 
