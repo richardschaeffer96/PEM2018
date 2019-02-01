@@ -26,7 +26,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Menu extends AppCompatActivity {
 
@@ -52,6 +56,7 @@ public class Menu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        System.out.println("INIT");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,8 +81,24 @@ public class Menu extends AppCompatActivity {
 
                     Spot spot = documentSnapshot.toObject(Spot.class);
                     if(spot.getParticipants().containsKey(userID)){
-                        mySpotList.add(spot);
+                        Calendar c = Calendar.getInstance();
+                        Date currentTime = c.getTime();
+                        String spotDate = spot.getDate()+"-"+spot.getTime();
+                        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy-HH:mm");
+                        Date date = null;
+                        try {
+                            date = format.parse(spotDate);
+                            c.setTime(date);
+                            c.add(Calendar.DATE, 1);
+                            System.out.println(c.getTime());
+                            if(currentTime.before(c.getTime())) {
+                                mySpotList.add(spot);
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                         //Log.d(TAG, "onSuccess: Found Stuff in DB: "+spot.getTitle());
+
                     }
                 }
 
