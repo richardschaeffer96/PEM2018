@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -90,6 +91,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private TextView line2;
     private ImageView profile;
 
+    private Runnable runnableCode;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +119,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                 Log.d("Maps", "An error occurred: " + status);
             }
         });
-
 
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -149,6 +151,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         userID = getIntent().getStringExtra("id");
 
         mapOverlay = new Dialog(this);
+        handler = new Handler();
     }
 
     public void showMapOverlay(Spot spot){
@@ -282,7 +285,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
      * @param spots
      */
     private void setAllSpotMarker(ArrayList<Spot> spots){
-        Log.d(TAG, "setAllSpotMarker: Liste in Marker Funktion mit Entry: "+spots.get(0).getTitle());
+        mMap.clear();
+        //Log.d(TAG, "setAllSpotMarker: Liste in Marker Funktion mit Entry: "+spots.get(0).getTitle());
         for (int i = 0; i < spots.size(); i++) {
             LatLng pos = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
             mMap.addMarker(new MarkerOptions().position(pos).title(spots.get(i).getTitle()));
@@ -336,7 +340,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
     }
-
 
     private void getLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -574,5 +577,41 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         Picasso.get().load(uri).into(profile);
     }
 
+    @Override
+    protected void onStop() {
+        handler.removeCallbacks(runnableCode);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        runnableCode = new Runnable() {
+            @Override
+            public void run() {
+                refreshSpots();
+                handler.postDelayed(this, 1000);
+            }
+        };
+        handler.post(runnableCode);
+        super.onStart();
+    }
+
+    private void refreshSpots(){
+        Log.d(TAG, "refreshSpots: Updated");
+
+        ArrayList<Spot> spotsUpdate = new ArrayList<Spot>();
+        spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                    Spot spot = documentSnapshot.toObject(Spot.class);
+                    spotsUpdate.add(spot);
+                }
+                setAllSpotMarker(spotsUpdate);
+            }
+
+        });
+
+    }
 }
 

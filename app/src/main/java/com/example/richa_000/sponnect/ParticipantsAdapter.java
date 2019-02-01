@@ -131,7 +131,11 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+
         ParticipantsExample currentItem = mParticipantList.get(i);
+        if(currentItem.getId().equals(selectedSpot.getcreator())){
+            viewHolder.itemView.setBackgroundResource(R.color.greenAlpha);
+        }
         viewHolder.name.setText(currentItem.getName());
         viewHolder.age.setText(currentItem.getAge());
         viewHolder.gender.setText(currentItem.getGender());

@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -159,6 +160,23 @@ public class SpotInterface extends AppCompatActivity {
 
     private void refresh() {
         System.out.println("CURRENT STATE= "+state);
+
+        if (state==2 && selectedSpot.getcreator().equals(userID)){
+           double[] creatorLoc = getLocation();
+            Log.d(TAG, "refresh: Current Location of Creator: "+creatorLoc[0]+", "+creatorLoc[1]);
+            spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        if (documentSnapshot.getId().equals(selectedSpot.getId())) {
+                            DocumentReference refSpot = spotsRef.document(selectedSpot.getId());
+                            refSpot.update("latitude", creatorLoc[0]);
+                            refSpot.update("longitude", creatorLoc[1]);
+                        }
+                    }
+                }
+            });
+        }
         /*
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -179,9 +197,10 @@ public class SpotInterface extends AppCompatActivity {
 
         if(selectedSpot!=null && loc!=null) {
             float[] results = new float[1];
+            //TODO FELIX: Check time and Date
             Location.distanceBetween(selectedSpot.getLatitude(), selectedSpot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
             float distance = results[0] / 1000;
-            if (distance > 0.5) {
+            if (distance > 5) { //0.5
                 if (state == 2 || state == 3) {
                     state = 0;
                 }
@@ -236,7 +255,7 @@ public class SpotInterface extends AppCompatActivity {
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     Spot docSpot = documentSnapshot.toObject(Spot.class);
                     if (selectedSpot.getId().equals(docSpot.getId())) {
-                        System.out.println("Found Spot!");
+                        //System.out.println("Found Spot!");
                         HashMap<String, Integer> map = docSpot.getParticipants();
                         usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
@@ -244,7 +263,7 @@ public class SpotInterface extends AppCompatActivity {
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots2) {
                                     User user = documentSnapshot.toObject(User.class);
                                     if (map.containsKey(user.getId())) {
-                                        System.out.println("Found User in Spot!");
+                                        //System.out.println("Found User in Spot!");
                                         exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), user.getImageUri(), map.get(user.getId()), user.getId()));
                                         mRecyclerView.getAdapter().notifyDataSetChanged();
                                     }
@@ -413,10 +432,6 @@ public class SpotInterface extends AppCompatActivity {
                     HashMap<String, Integer> participants = spot.getParticipants();
                     for (Map.Entry<String, Integer> entry : participants.entrySet()) {
                         //get Spot with current user as participant
-                        Log.d(TAG, "onSuccess: Test1: " + entry.getKey() );
-                        Log.d(TAG, "onSuccess: Test2: " + userID );
-                        Log.d(TAG, "onSuccess: Test3: " + spot.getId() );
-                        Log.d(TAG, "onSuccess: Test4: " + selectedSpot.getId() );
                         if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==2){
                                 System.out.println("Set to 0");
@@ -428,6 +443,7 @@ public class SpotInterface extends AppCompatActivity {
                                 DocumentReference refSpot = spotsRef.document(spot.getId());
                                 refSpot.update("participants", participants);
                             }else{
+                                //Creator is on Location and checked himself in
                                 System.out.println("Set to 2");
                                 checkButton.setImageResource(R.drawable.img_arrived_clicked);
                                 raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
@@ -517,4 +533,45 @@ public class SpotInterface extends AppCompatActivity {
         Uri uri = Uri.parse(me.getImageUri());
         Picasso.get().load(uri).into(profile);
     }
+
+    private double[] getLocation() {
+
+        double[] creatorCoords = new double[2];
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            if (ActivityCompat.checkSelfPermission(SpotInterface.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                    (SpotInterface.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                Toast.makeText(this, "No location tracking enabled", Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(SpotInterface.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+            } else {
+                Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Location location2 = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+                //mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                //mMap.setMyLocationEnabled(true);
+                if (location != null) {
+                    creatorCoords[0] = location.getLatitude();
+                    creatorCoords[1] = location.getLongitude();
+                } else if (location1 != null) {
+                    creatorCoords[0] = location1.getLatitude();
+                    creatorCoords[1] = location1.getLongitude();
+                } else if (location2 != null) {
+                    creatorCoords[0] = location2.getLatitude();
+                    creatorCoords[1] = location2.getLongitude();
+                } else {
+                    Toast.makeText(this, "Unble to Trace your location\nTry again later", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        return creatorCoords;
+    }
+
 }
