@@ -50,19 +50,13 @@ public class SignUp extends AppCompatActivity {
 
     private EditText editTextSignUpMail;
     private EditText editTextSignUpPassword;
+    private EditText editTextSignUpPassword2;
     private EditText editTextSignUpNickname;
     private EditText editTextSignUpAge;
-    private EditText editTextFacebook;
-    private EditText editTextInstagram;
-    private EditText editTextTwitter;
     private RadioGroup radioGroupGender;
     private RadioButton radioButtonGender;
-
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference usersRef = db.collection("users");
-    private CollectionReference uploadsRef = db.collection("uploads");
-    private StorageReference mStorageRef;
-    private StorageTask mUploadTask;
+    private String SignUpGender = null;
+    private String SignUpAge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,73 +65,19 @@ public class SignUp extends AppCompatActivity {
 
         editTextSignUpMail = findViewById(R.id.edit_email_signup);
         editTextSignUpPassword = findViewById(R.id.edit_password_signup);
+        editTextSignUpPassword2 = findViewById(R.id.edit_password_signup2);
         editTextSignUpNickname = findViewById(R.id.edit_nickname);
         editTextSignUpAge = findViewById(R.id.edit_age);
-        editTextFacebook = findViewById(R.id.edit_facebook);
-        editTextInstagram = findViewById(R.id.edit_instagram);
-        editTextTwitter = findViewById(R.id.edit_twitter);
-
-        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
-        profile_picture = (ImageView) findViewById(R.id.profile_picture);
-
     }
 
-    public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
-        Bitmap result = null;
-        try {
-            result = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(result);
 
-            int color = 0xff424242;
-            Paint paint = new Paint();
-            Rect rect = new Rect(0, 0, 200, 200);
+    public void next(View view){
 
-            paint.setAntiAlias(true);
-            canvas.drawARGB(0, 0, 0, 0);
-            paint.setColor(color);
-            canvas.drawCircle(100, 100, 75, paint);
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-            canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        } catch (NullPointerException e) {
-        } catch (OutOfMemoryError o) {
-        }
-        return result;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
-            imageUri = data.getData();
-            profile_picture.setImageURI(imageUri);
-            Bitmap bm = ((BitmapDrawable)profile_picture.getDrawable()).getBitmap();
-            //Bitmap bm = ((BitmapDrawable)profile_picture.getDrawable()).getBitmap();
-            Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, true);
-            Bitmap converted_bm = getRoundedRectBitmap(resized, 200);
-            profile_picture.setImageBitmap(converted_bm);
-        }
-    }
-
-    public void upload_picture(View view){
-        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, PICK_IMAGE);
-    }
-
-    public void add_more(View view){
-
-    }
-
-    public void save(View view){
-
-        Log.d(TAG, "Saving Data...");
+        Log.d(TAG, "Next...");
         String SignUpMail = editTextSignUpMail.getText().toString();
         String SignUpPassword = editTextSignUpPassword.getText().toString();
+        String SignUpPassword2 = editTextSignUpPassword2.getText().toString();
         String SignUpNickname = editTextSignUpNickname.getText().toString();
-        String SignUpFacebook = editTextFacebook.getText().toString();
-        String SignUpInstagram = editTextInstagram.getText().toString();
-        String SignUpTwitter = editTextTwitter.getText().toString();
-        int SignUpAge;
 
         if(SignUpMail.isEmpty() || SignUpNickname.isEmpty() || SignUpPassword.isEmpty()) {
             Log.d(TAG, "Values were empty");
@@ -145,129 +85,39 @@ public class SignUp extends AppCompatActivity {
         }
         else {
             if(editTextSignUpAge.getText().toString().isEmpty()){
-                SignUpAge = 0;
+                Toast.makeText(SignUp.this, "Please fill out Age", Toast.LENGTH_LONG).show();
             } else{
-                SignUpAge = Integer.parseInt(editTextSignUpAge.getText().toString());
+                SignUpAge = editTextSignUpAge.getText().toString();
             };
+            if(SignUpPassword.equals(SignUpPassword2)){
 
-            radioGroupGender = findViewById(R.id.radio_gender);
-            int genderId = radioGroupGender.getCheckedRadioButtonId();
-            Log.d(TAG, "Not selecting a Gender results in ID: "+genderId);
-            radioButtonGender = findViewById(genderId);
-            String SignUpGender = "";
-            if(genderId < 0){
-                SignUpGender = "-";
-            } else {
-                SignUpGender = radioButtonGender.getText().toString();
+                radioGroupGender = findViewById(R.id.radio_gender);
+                int genderId = radioGroupGender.getCheckedRadioButtonId();
+                Log.d(TAG, "Not selecting a Gender results in ID: " + genderId);
+                radioButtonGender = findViewById(genderId);
+
+                if (genderId < 0) {
+                    SignUpGender = null;
+                    Toast.makeText(SignUp.this, "Please select gender", Toast.LENGTH_LONG).show();
+                } else {
+                    SignUpGender = radioButtonGender.getText().toString();
+                    Intent mIntent = new Intent(SignUp.this, SignUp2.class);
+                    mIntent.putExtra("nickname", SignUpNickname);
+                    mIntent.putExtra("password", SignUpPassword);
+                    mIntent.putExtra("gender", SignUpGender);
+                    mIntent.putExtra("mail", SignUpMail);
+                    mIntent.putExtra("age", SignUpAge);
+                    startActivity(mIntent);
+                }
+
+            }else {
+                Toast.makeText(SignUp.this, "Passwords do not match", Toast.LENGTH_LONG).show();
             }
 
-            ArrayList<String> socialMedia = new ArrayList<>();
-            socialMedia.add(SignUpFacebook);
-            socialMedia.add(SignUpInstagram);
-            socialMedia.add(SignUpTwitter);
-
-            Log.d(TAG, "Creating User Document");
-            final User user = new User(SignUpMail, SignUpNickname, SignUpPassword, SignUpGender, SignUpAge, socialMedia);
-            System.out.println(user.getNickname());
-            usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    String id = documentReference.getId();
-                    DocumentReference refUser= usersRef.document(id);
-                    refUser.update("id", id);
-                    uploadFile(id, user);
-                    Toast.makeText(SignUp.this, "Data saved and logged in!\nHello "+user.getNickname(), Toast.LENGTH_LONG).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(SignUp.this, "ERROR!", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, e.toString());
-                }
-            });
         }
 
     }
 
-    private String getFileExtension(Uri uri){
-        ContentResolver cR = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
 
-    private void uploadFile(String id, User user){
-        profile_picture.setDrawingCacheEnabled(true);
-        profile_picture.buildDrawingCache();
-        Bitmap bitmap = profile_picture.getDrawingCache();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        if(bitmap != null){
-            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
-
-            //mUploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            mUploadTask = fileReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(SignUp.this, "Success!", Toast.LENGTH_SHORT).show();
-                    fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            Uri dlUri = uri;
-                            //Upload upload = new Upload(id, dlUri.toString());
-                            DocumentReference refUser = usersRef.document(id);
-                            System.out.println("URI is " + dlUri);
-                            Log.d(TAG, "URI is " + dlUri);
-                            String uriPicture = dlUri.toString();
-                            refUser.update("imageUri", uriPicture);
-                            while(user.getImageUri() == null){
-                                user.setImageUri(uriPicture);
-                                System.out.println("Uri in User is: " + user.getImageUri());
-                            }
-                            Intent mIntent = new Intent(SignUp.this, Menu.class);
-                            mIntent.putExtra("id", id);
-                            mIntent.putExtra("user", user);
-                            startActivity(mIntent);
-
-                        }
-                    });
-
-                    //String uploadId = mDatabaseRef.push().getKey();
-                    //mDatabaseRef.child(uploadId).setValue(upload);
-
-
-                    /*
-
-                    usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    String id = documentReference.getId();
-                    DocumentReference refUser= usersRef.document(id);
-                    refUser.update("id", id);
-                    Toast.makeText(SignUp.this, "Data saved and logged in!\nHello "+user.getNickname(), Toast.LENGTH_LONG).show();
-                    Intent mIntent = new Intent(SignUp.this, Menu.class);
-                    mIntent.putExtra("id", id);
-                    uploadFile(id);
-                    startActivity(mIntent);
-
-                     */
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(SignUp.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
-                }
-            });
-        } else {
-            Toast.makeText(this, "No image file selected!", Toast.LENGTH_SHORT).show();
-        }
-    }
 
 }

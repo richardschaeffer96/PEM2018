@@ -122,7 +122,7 @@ public class SpotInterface extends AppCompatActivity {
                                     }
                                 });
                             }
-                            exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, 2, userID));
+                            exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), user.getImageUri(), 2, user.getId()));
                         }
                     }
                 }
@@ -245,7 +245,7 @@ public class SpotInterface extends AppCompatActivity {
                                     User user = documentSnapshot.toObject(User.class);
                                     if (map.containsKey(user.getId())) {
                                         System.out.println("Found User in Spot!");
-                                        exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), R.drawable.user1, map.get(user.getId()), userID));
+                                        exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), user.getImageUri(), map.get(user.getId()), user.getId()));
                                         mRecyclerView.getAdapter().notifyDataSetChanged();
                                     }
                                 }
@@ -368,7 +368,7 @@ public class SpotInterface extends AppCompatActivity {
                     HashMap<String, Integer> participants = spot.getParticipants();
                     for (Map.Entry<String, Integer> entry : participants.entrySet()) {
                         //get Spot with current user as participant
-                        if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
+                        if(entry.getKey().equals(userID) && spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==1){
                                 System.out.println("Set to 0");
                                 tooLateButton.setImageResource(R.drawable.img_toolate);
@@ -413,6 +413,10 @@ public class SpotInterface extends AppCompatActivity {
                     HashMap<String, Integer> participants = spot.getParticipants();
                     for (Map.Entry<String, Integer> entry : participants.entrySet()) {
                         //get Spot with current user as participant
+                        Log.d(TAG, "onSuccess: Test1: " + entry.getKey() );
+                        Log.d(TAG, "onSuccess: Test2: " + userID );
+                        Log.d(TAG, "onSuccess: Test3: " + spot.getId() );
+                        Log.d(TAG, "onSuccess: Test4: " + selectedSpot.getId() );
                         if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==2){
                                 System.out.println("Set to 0");
@@ -495,7 +499,6 @@ public class SpotInterface extends AppCompatActivity {
 
     /**
      * sets all needed information from the user to the toolbar layout
-     * TODO: get list with spots the user wants to participate in
      * @param me
      */
     private void setUserInfo(User me){

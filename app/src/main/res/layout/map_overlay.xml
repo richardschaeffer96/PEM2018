@@ -80,7 +80,7 @@
         android:layout_marginTop="10dp"
         android:text="Sehr gutes Essen und tolle Unterhaltung!"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_guider" />
+        app:layout_constraintTop_toBottomOf="@+id/iVguider" />
 
     <TextView
         android:id="@+id/text_participants"
@@ -105,7 +105,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_info" />
 
     <ImageView
-        android:id="@+id/image_guider"
+        android:id="@+id/iVguider"
         android:layout_width="61dp"
         android:layout_height="41dp"
         android:layout_marginStart="10dp"
@@ -123,7 +123,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="18dp"
         android:text="Creator"
-        app:layout_constraintStart_toEndOf="@+id/image_guider"
+        app:layout_constraintStart_toEndOf="@+id/iVguider"
         app:layout_constraintTop_toBottomOf="@+id/textViewCreator" />
 
     <TextView

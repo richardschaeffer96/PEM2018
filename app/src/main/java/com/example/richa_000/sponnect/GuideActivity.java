@@ -159,6 +159,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         TextView date = mapOverlay.findViewById(R.id.text_date);
         date.setText(spot.getDate() + "\n"+spot.getTime());
 
+        Button buttonJoin = mapOverlay.findViewById(R.id.button_join);
+
         TextView distance = mapOverlay.findViewById(R.id.text_distance);
         Location spotLoc = new Location("spot");
         spotLoc.setLatitude(spot.getLatitude());
@@ -211,19 +213,35 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                 for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                    //TODO Range Query or Number restriction
                     if(creatorID.equals(documentSnapshot.getId())){
                         User creator = documentSnapshot.toObject(User.class);
 
-                        TextView creatorName = mapOverlay.findViewById(R.id.text_name);
-                        creatorName.setText(creator.getNickname());
+                        ImageView creatorProfile = mapOverlay.findViewById(R.id.iVguider);
+                        Uri uri = Uri.parse(creator.getImageUri());
+                        Picasso.get().load(uri).into(creatorProfile);
 
-                        TextView creatorGender = mapOverlay.findViewById(R.id.text_gender);
-                        creatorGender.setText(creator.getGender());
+                        if(creatorID.equals(userID)){
+                            //LoggedIn User created the Spot
+                            TextView creatorName = mapOverlay.findViewById(R.id.text_name);
+                            creatorName.setText("This is your Spot!");
 
-                        TextView creatorAge = mapOverlay.findViewById(R.id.text_age);
-                        String age = creator.getAge()+"";
-                        creatorAge.setText(age);
+                            TextView creatorGender = mapOverlay.findViewById(R.id.text_gender);
+                            creatorGender.setText("");
+
+                            TextView creatorAge = mapOverlay.findViewById(R.id.text_age);
+                            creatorAge.setText("");
+                        } else{
+                            //Show Creator's information
+                            TextView creatorName = mapOverlay.findViewById(R.id.text_name);
+                            creatorName.setText(creator.getNickname());
+
+                            TextView creatorGender = mapOverlay.findViewById(R.id.text_gender);
+                            creatorGender.setText(creator.getGender());
+
+                            TextView creatorAge = mapOverlay.findViewById(R.id.text_age);
+                            String age = creator.getAge()+"";
+                            creatorAge.setText(age);
+                        }
                     }
 
                 }
@@ -235,7 +253,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         int numberParticitpants = spot.getParticipants().size();
         numberParticipants.setText(numberParticitpants+"");
 
-        Button buttonJoin = mapOverlay.findViewById(R.id.button_join);
         usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -246,9 +263,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                             Log.d(TAG, "Spot is already in Spot List.");
                             if(user.getMySpots().get(spot.getId())){
                                 buttonJoin.setText("Delete Spot");
-                                //TODO Deleting Spot when clicking on JOIN Button
                             } else{
-                                //TODO Deleting Spot from User's List when leaving Spot
                                 buttonJoin.setText("Leave Spot")
                                 ;
                             }
@@ -419,6 +434,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             intent.putExtra("Lat", Double.toString(latLng.latitude));
             intent.putExtra("Lng", Double.toString(latLng.longitude));
             intent.putExtra("id", userID);
+            intent.putExtra("user", me);
             startActivity(intent);
 
         } catch (IOException e) {
@@ -441,6 +457,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         System.out.println("NEW");
         Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
         intent.putExtra("id", userID);
+        intent.putExtra("user", me);
         startActivity(intent);
     }
 
@@ -457,8 +474,16 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                         if (!participantMap.containsKey(userID)) {
                             participantMap.put(userID, 0);
                             refSpot.update("participants", participantMap);
-                        } else {
-                            System.out.println("YOU ALREADY JOINED THE SPOT");
+                        } else{
+                            if(selectedSpot.getcreator().equals(userID)){
+                                // TODO NANNI: Ask if really wants to delete Spot
+                                Log.d(TAG, "Deleting Spot...");
+                            } else{
+                               // Just leave Spot
+                                participantMap.remove(userID);
+                                refSpot.update("participants", participantMap);
+                            }
+
                         }
                     }
                 }
@@ -473,8 +498,21 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                     if (userID.equals(user.getId())) {
                         DocumentReference refUser = usersRef.document(userID);
                         HashMap<String, Boolean> spots = user.getMySpots();
-                        spots.put(selectedSpot.getId(), false);
-                        refUser.update("mySpots", spots);
+                        if (!spots.containsKey(selectedSpot.getId())) {
+                            spots.put(selectedSpot.getId(), false);
+                            refUser.update("mySpots", spots);
+                        } else{
+                            if(selectedSpot.getcreator().equals(userID)){
+                                // TODO NANNI: Ask if really wants to delete Spot
+                                Log.d(TAG, "Deleting Spot...");
+                            } else{
+                                // Just leave Spot
+                                spots.remove(selectedSpot.getId());
+                                refUser.update("mySpots", spots);
+                            }
+
+                        }
+
                     }
                 }
             }
@@ -520,7 +558,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     /**
      * sets all needed information from the user to the toolbar layout
-     * TODO: get list with spots the user wants to participate in
      * @param me
      */
     private void setUserInfo(User me){

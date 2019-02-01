@@ -40,6 +40,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     private EditText time;
     private EditText title;
     private EditText info;
+    private User me;
     final Calendar myCalendar = Calendar.getInstance();
     private DatePickerDialog.OnDateSetListener datePicker;
 
@@ -60,6 +61,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_spot);
         Intent intent = getIntent();
         userID = intent.getStringExtra("id");
+        me = (User) getIntent().getSerializableExtra("user");
         System.out.println("userID is: -------------------: "+userID);
         placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.et_address);
 
@@ -202,6 +204,7 @@ public class CreateSpotActivity extends AppCompatActivity {
 
             Intent mIntent = new Intent(CreateSpotActivity.this, GuideActivity.class);
             mIntent.putExtra("id", userID);
+            mIntent.putExtra("user", me);
             startActivity(mIntent);
 
         }
