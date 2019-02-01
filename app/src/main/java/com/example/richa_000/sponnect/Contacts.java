@@ -117,7 +117,6 @@ public class Contacts extends AppCompatActivity {
 
     /**
      * sets all needed information from the user to the toolbar layout
-     * TODO: get list with spots the user wants to participate in
      * @param me
      */
     private void setUserInfo(User me){
