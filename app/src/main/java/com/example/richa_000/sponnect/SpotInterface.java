@@ -249,10 +249,10 @@ public class SpotInterface extends AppCompatActivity {
     }
 
     private void updateParticipantsList() {
-        exampleList.clear();
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     Spot docSpot = documentSnapshot.toObject(Spot.class);
                     if (selectedSpot.getId().equals(docSpot.getId())) {
@@ -261,6 +261,7 @@ public class SpotInterface extends AppCompatActivity {
                         usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots2) {
+                                exampleList.clear();
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots2) {
                                     User user = documentSnapshot.toObject(User.class);
                                     if (map.containsKey(user.getId())) {
