@@ -144,33 +144,38 @@ public class EditProfile extends AppCompatActivity {
 
         String Editpassword1 = password1.getText().toString();
         String Editpassword2 = password2.getText().toString();
-        if(Editpassword1.equals(Editpassword2)){
-            String Editname = nickname.getText().toString();
-            String Editmail = mail.getText().toString();
-            String EditFacebook = facebook.getText().toString();
-            String EditInstagram = instagram.getText().toString();
-            String EditTwitter = twitter.getText().toString();
+        if(Editpassword1.isEmpty() || Editpassword2.isEmpty()){
+            Toast.makeText(EditProfile.this, "Type in your password!", Toast.LENGTH_LONG).show();
+        } else{
+            if(Editpassword1.equals(Editpassword2)){
+                String Editname = nickname.getText().toString();
+                String Editmail = mail.getText().toString();
+                String EditFacebook = facebook.getText().toString();
+                String EditInstagram = instagram.getText().toString();
+                String EditTwitter = twitter.getText().toString();
 
-            ArrayList<String> socialMedia = new ArrayList<>();
-            socialMedia.add(EditFacebook);
-            socialMedia.add(EditInstagram);
-            socialMedia.add(EditTwitter);
+                ArrayList<String> socialMedia = new ArrayList<>();
+                socialMedia.add(EditFacebook);
+                socialMedia.add(EditInstagram);
+                socialMedia.add(EditTwitter);
 
-            DocumentReference refUser= usersRef.document(userID);
-            refUser.update("nickname", Editname);
-            refUser.update("eMail", Editmail);
-            refUser.update("password", Editpassword1);
-            refUser.update("socialMedia", socialMedia);
+                DocumentReference refUser= usersRef.document(userID);
+                refUser.update("nickname", Editname);
+                refUser.update("eMail", Editmail);
+                refUser.update("password", Editpassword1);
+                refUser.update("socialMedia", socialMedia);
 
-            if(me.getImageUri()!=null) {
-                oldUri = Uri.parse(me.getImageUri());
+                if(me.getImageUri()!=null) {
+                    oldUri = Uri.parse(me.getImageUri());
+                }
+
+                uploadFile(userID, me, oldUri);
+
+            } else {
+                Toast.makeText(EditProfile.this, "Passwords do not match", Toast.LENGTH_LONG).show();
             }
-
-            uploadFile(userID, me, oldUri);
-
-        } else {
-            Toast.makeText(EditProfile.this, "Passwords do not match", Toast.LENGTH_LONG).show();
         }
+
     }
 
     private String getFileExtension(Uri uri){
