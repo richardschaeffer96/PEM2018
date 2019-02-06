@@ -178,7 +178,7 @@ public class Menu extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.settings:
-                Intent mIntent = new Intent(Menu.this, SignUp.class);
+                Intent mIntent = new Intent(Menu.this, EditProfile.class);
                 mIntent.putExtra("id", userID);
                 mIntent.putExtra("user", me);
                 startActivity(mIntent);

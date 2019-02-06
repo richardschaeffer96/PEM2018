@@ -92,7 +92,7 @@ public class Contacts extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
-                Intent mIntent = new Intent(Contacts.this, SignUp.class);
+                Intent mIntent = new Intent(Contacts.this, EditProfile.class);
                 mIntent.putExtra("id", userID);
                 mIntent.putExtra("user", me);
                 startActivity(mIntent);

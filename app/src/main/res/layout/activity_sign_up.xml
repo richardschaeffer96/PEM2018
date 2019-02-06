@@ -11,7 +11,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/text_signup"
+                android:id="@+id/text_editprofile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -36,10 +36,10 @@
                 android:text="E-Mail:"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_signup" />
+                app:layout_constraintTop_toBottomOf="@+id/text_editprofile" />
 
             <EditText
-                android:id="@+id/edit_email_signup"
+                android:id="@+id/edit_email_edit"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
@@ -49,7 +49,7 @@
                 android:ems="10"
                 android:inputType="textEmailAddress"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_signup" />
+                app:layout_constraintTop_toBottomOf="@+id/text_editprofile" />
 
             <TextView
                 android:id="@+id/text_nickname"
@@ -64,7 +64,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/text_email" />
 
             <EditText
-                android:id="@+id/edit_nickname"
+                android:id="@+id/edit_nickname_edit"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -74,7 +74,7 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_email_signup" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_email_edit" />
 
             <TextView
                 android:id="@+id/text_password"
@@ -101,7 +101,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/text_password" />
 
             <EditText
-                android:id="@+id/edit_password_signup"
+                android:id="@+id/edit_password_edit"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -111,10 +111,10 @@
                 android:ems="10"
                 android:inputType="textPassword"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_nickname" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_nickname_edit" />
 
             <EditText
-                android:id="@+id/edit_password_signup2"
+                android:id="@+id/edit_password_edit2"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -124,7 +124,7 @@
                 android:ems="10"
                 android:inputType="textPassword"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_password_signup" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_password_edit" />
 
             <TextView
                 android:id="@+id/text_age"
@@ -149,7 +149,7 @@
                 android:ems="10"
                 android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_password_signup2" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_password_edit2" />
 
             <TextView
                 android:id="@+id/text_gender"
