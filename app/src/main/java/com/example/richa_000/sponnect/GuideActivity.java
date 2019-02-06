@@ -1,8 +1,10 @@
 package com.example.richa_000.sponnect;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -64,6 +66,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     Dialog mapOverlay;
 
     private static final int REQUEST_LOCATION = 1;
+    private final String DEL = "deleeeting...";
     private LocationManager locationManager;
     private Button btnGetCurrentLocation;
     private GoogleMap mMap;
@@ -534,8 +537,20 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                             refSpot.update("participants", participantMap);
                         } else{
                             if(selectedSpot.getcreator().equals(userID)){
-                                // TODO NANNI: Ask if really wants to delete Spot
+                                AlertDialog alertDialog = new AlertDialog.Builder(GuideActivity.this).create();
+                                alertDialog.setTitle("Are your sure?");
+                                alertDialog.setMessage("If you leave your Spot, the Spot will be deleted. Is that okay?");
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.show();
                                 Log.d(TAG, "Deleting Spot...");
+                                participantMap.remove(userID);
+                                refSpot.update("participants", participantMap);
+                                refSpot.update("info", DEL);
                             } else{
                                // Just leave Spot
                                 participantMap.remove(userID);
@@ -560,15 +575,12 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                             spots.put(selectedSpot.getId(), false);
                             refUser.update("mySpots", spots);
                         } else{
-                            if(selectedSpot.getcreator().equals(userID)){
-                                // TODO NANNI: Ask if really wants to delete Spot
-                                Log.d(TAG, "Deleting Spot...");
-                            } else{
-                                // Just leave Spot
+                            if(selectedSpot.getcreator().equals(userID) || selectedSpot.getInfo().equals(DEL)){
+                                // Leave Spot
                                 spots.remove(selectedSpot.getId());
                                 refUser.update("mySpots", spots);
+                                Log.d(TAG, "Deleting Spot...");
                             }
-
                         }
 
                     }
@@ -576,7 +588,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        Toast.makeText(this, "You joined the spot", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Saved...", Toast.LENGTH_SHORT).show();
         mapOverlay.hide();
 
     }

@@ -26,6 +26,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextLogInMail;
     private EditText editTextLogInPassword;
 
+    private boolean eMailDoesNotExist = false;
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("users");
 
@@ -73,12 +75,14 @@ public class LoginActivity extends AppCompatActivity {
 
                     } else{
                         //Not a match
+                        eMailDoesNotExist = true;
                     }
 
                 }
-                //TODO NANNI: mail address is not found but Toast will be shown anyway, IF needed
                 //Did not find the mail address
-                //Toast.makeText(LoginActivity.this, "Your Email does not exist. How about signing up?", Toast.LENGTH_LONG).show();
+                if(eMailDoesNotExist){
+                    Toast.makeText(LoginActivity.this, "Your Email does not exist. How about signing up?", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

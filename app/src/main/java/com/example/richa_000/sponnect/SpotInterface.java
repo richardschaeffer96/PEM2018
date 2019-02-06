@@ -200,8 +200,7 @@ public class SpotInterface extends AppCompatActivity {
             //TODO FELIX: Check time and Date
             Location.distanceBetween(selectedSpot.getLatitude(), selectedSpot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
             float distance = results[0] / 1000;
-            //TODO Change Value back to 0.5
-            if (distance > 5) {
+            if (distance > 0.5) {
                 if (state == 2 || state == 3) {
                     state = 0;
                 }
