@@ -1,6 +1,8 @@
 package com.example.richa_000.sponnect;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -597,6 +599,13 @@ public class SpotInterface extends AppCompatActivity {
             }
         }
         return creatorCoords;
+    }
+
+    public void copy(View v){
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("address", selectedSpot.getAddress());
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(this, "Copied spot address!", Toast.LENGTH_SHORT).show();
     }
 
 }
