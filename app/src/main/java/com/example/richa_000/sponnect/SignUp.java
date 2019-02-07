@@ -1,16 +1,22 @@
 package com.example.richa_000.sponnect;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class SignUp extends AppCompatActivity {
 
@@ -29,6 +35,11 @@ public class SignUp extends AppCompatActivity {
     private String SignUpGender = null;
     private String SignUpAge;
 
+    private Typeface comfortaa_regular;
+    private Typeface comfortaa_bold;
+    private Typeface comfortaa_light;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +50,35 @@ public class SignUp extends AppCompatActivity {
         editTextSignUpPassword2 = findViewById(R.id.edit_password_edit2);
         editTextSignUpNickname = findViewById(R.id.edit_nickname_edit);
         editTextSignUpAge = findViewById(R.id.edit_age);
+
+        comfortaa_regular = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Regular.ttf");
+        comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
+        comfortaa_light = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Light.ttf");
+
+        TextView text_headline_signup = findViewById(R.id.text_editprofile);
+        TextView text_email = findViewById(R.id.text_email);
+        TextView text_nickname = findViewById(R.id.text_nickname);
+        TextView text_password = findViewById(R.id.text_password);
+        TextView text_password2 = findViewById(R.id.text_password2);
+        TextView text_age = findViewById(R.id.text_age);
+        TextView text_gender = findViewById(R.id.text_gender);
+        Button next_button = findViewById(R.id.button_next);
+        RadioButton male = findViewById(R.id.radioButton_male);
+        RadioButton female = findViewById(R.id.radioButton_female);
+        RadioButton other = findViewById(R.id.radioButton_other);
+
+        text_headline_signup.setTypeface(comfortaa_bold);
+        text_email.setTypeface(comfortaa_regular);
+        text_nickname.setTypeface(comfortaa_regular);
+        text_password.setTypeface(comfortaa_regular);
+        text_password2.setTypeface(comfortaa_regular);
+        text_age.setTypeface(comfortaa_regular);
+        text_gender.setTypeface(comfortaa_regular);
+        next_button.setTypeface(comfortaa_regular);
+        male.setTypeface(comfortaa_bold);
+        female.setTypeface(comfortaa_bold);
+        other.setTypeface(comfortaa_bold);
+
     }
 
 

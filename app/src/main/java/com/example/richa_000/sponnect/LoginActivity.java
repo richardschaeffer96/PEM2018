@@ -1,6 +1,7 @@
 package com.example.richa_000.sponnect;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,14 +31,40 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean eMailDoesNotExist = false;
 
+    private TextView text_logo;
+    private TextView text_email;
+    private TextView text_password;
+    private Typeface comfortaa_regular;
+    private Typeface comfortaa_bold;
+    private Typeface comfortaa_light;
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("users");
+
+    private Button login_button;
+    private Button signUp_button;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        comfortaa_regular = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Regular.ttf");
+        comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
+        comfortaa_light = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Light.ttf");
+
+        text_logo = findViewById(R.id.text_logo);
+        text_email = findViewById(R.id.text_email);
+        text_password = findViewById(R.id.text_password);
+        login_button = findViewById(R.id.button_login);
+        signUp_button = findViewById(R.id.button_signup);
+
+        text_logo.setTypeface(comfortaa_bold);
+        text_email.setTypeface(comfortaa_regular);
+        text_password.setTypeface(comfortaa_regular);
+        login_button.setTypeface(comfortaa_bold);
+        signUp_button.setTypeface(comfortaa_bold);
 
         editTextLogInMail = findViewById(R.id.edit_email_login);
         editTextLogInPassword = findViewById(R.id.edit_password_login);
