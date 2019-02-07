@@ -50,8 +50,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -174,28 +172,11 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         mapOverlay.setContentView(R.layout.map_overlay);
         TextView title = mapOverlay.findViewById(R.id.textView_headline);
         title.setText(spot.getTitle());
-        title.setTypeface(comfortaa_regular);
 
         TextView date = mapOverlay.findViewById(R.id.text_date);
         date.setText(spot.getDate() + "\n"+spot.getTime());
-        date.setTypeface(comfortaa_regular);
 
         Button buttonJoin = mapOverlay.findViewById(R.id.button_join);
-        buttonJoin.setTypeface(comfortaa_bold);
-
-        /*
-        TextView text_participants = findViewById(R.id.text_participants);
-        TextView number_participants = findViewById(R.id.number_participants);
-        TextView text_host = findViewById(R.id.textViewCreator);
-        TextView text_datetime = findViewById(R.id.textViewDateTime);
-        TextView text_creater = findViewById(R.id.text_name);
-
-        text_participants.setTypeface(comfortaa_regular);
-        number_participants.setTypeface(comfortaa_regular);
-        text_host.setTypeface(comfortaa_regular);
-        text_datetime.setTypeface(comfortaa_regular);
-        text_creater.setTypeface(comfortaa_regular);
-        */
 
         TextView distance = mapOverlay.findViewById(R.id.text_distance);
         Location spotLoc = new Location("spot");
@@ -235,17 +216,11 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         double f = Math.round(results[0]/10) / 100.0;
         distance.setText(" ("+f+" km)");
 
-        distance.setTypeface(comfortaa_regular);
-
-        TextView address = mapOverlay.findViewById(R.id.text_address);
+        TextView address = mapOverlay.findViewById(R.id.spot_address);
         address.setText(spot.getAddress());
-
-        address.setTypeface(comfortaa_regular);
 
         TextView info = mapOverlay.findViewById(R.id.text_info);
         info.setText(spot.getInfo());
-
-        info.setTypeface(comfortaa_regular);
 
         //get creator
         String creatorID = spot.getcreator();

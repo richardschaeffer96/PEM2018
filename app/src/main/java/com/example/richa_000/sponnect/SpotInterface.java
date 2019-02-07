@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationManager;
@@ -15,7 +14,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -58,6 +56,7 @@ public class SpotInterface extends AppCompatActivity {
     private TextView spotDate;
     private TextView spotTime;
     private TextView spotDesc;
+    private TextView spotAddress;
 
     private ImageButton tooLateButton;
     private ImageButton checkButton;
@@ -368,16 +367,20 @@ public class SpotInterface extends AppCompatActivity {
         spotTitle = findViewById(R.id.spot_title);
         spotDate = findViewById(R.id.spot_date);
         spotTime = findViewById(R.id.spot_time);
+        spotAddress = findViewById(R.id.spot_address);
+        spotDesc = findViewById(R.id.spot_desc);
 
         spotTitle.setTypeface(comfortaa_bold);
         spotDate.setTypeface(comfortaa_regular);
         spotTime.setTypeface(comfortaa_regular);
+        spotAddress.setTypeface(comfortaa_regular);
+        spotDesc.setTypeface(comfortaa_regular);
 
-        //spotDesc = findViewById(R.id.spot_desc);
         spotTitle.setText(spot.getTitle());
         spotDate.setText(spot.getDate());
         spotTime.setText(spot.getTime());
-        //spotDesc.setText(spot.getInfo());
+        spotDesc.setText(spot.getInfo());
+        spotAddress.setText(spot.getAddress());
 
         raiseHandButton = findViewById(R.id.raiseHand_button);
         checkButton = findViewById(R.id.check_button);
