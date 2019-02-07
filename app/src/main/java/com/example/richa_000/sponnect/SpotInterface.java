@@ -181,8 +181,7 @@ public class SpotInterface extends AppCompatActivity {
     private void refresh() {
         System.out.println("CURRENT STATE= "+state);
         Location loc = checkCurrentLocation();
-        //TODO: change state back to 2
-        if (state==0 && selectedSpot.getcreator().equals(userID)){
+        if (state==2 && selectedSpot.getcreator().equals(userID)){
            double[] creatorLoc = getLocation();
             Log.d(TAG, "refresh: Current Location of Creator: "+creatorLoc[0]+", "+creatorLoc[1]);
             spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -227,9 +226,9 @@ public class SpotInterface extends AppCompatActivity {
                 c.setTime(date);
                 c.add(Calendar.DATE, -1);
                 if (currentTime.before(c.getTime())) {
-                    checkButton.setBackgroundColor(Color.GRAY);
-                    raiseHandButton.setBackgroundColor(Color.GRAY);
-                    tooLateButton.setBackgroundColor(Color.GRAY);
+                    checkButton.setBackgroundResource(R.drawable.buttonstylebackgrounddisabled);
+                    raiseHandButton.setBackgroundResource(R.drawable.buttonstylebackgrounddisabled);
+                    tooLateButton.setBackgroundResource(R.drawable.buttonstylebackgrounddisabled);
                     checkButton.setEnabled(false);
                     raiseHandButton.setEnabled(false);
                     tooLateButton.setEnabled(false);
@@ -237,15 +236,15 @@ public class SpotInterface extends AppCompatActivity {
                     float[] results = new float[1];
                     Location.distanceBetween(selectedSpot.getLatitude(), selectedSpot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
                     float distance = results[0] / 1000;
-                    if (distance > 5) {
+                    if (distance > 0.5) {
                         if (state == 2 || state == 3) {
                             state = 0;
                         }
                         if (state == 1) {
                             tooLateButton.setImageResource(R.drawable.toolate_checked);
                         }
-                        checkButton.setBackgroundColor(Color.GRAY);
-                        raiseHandButton.setBackgroundColor(Color.GRAY);
+                        checkButton.setBackgroundResource(R.drawable.buttonstylebackgrounddisabled);
+                        raiseHandButton.setBackgroundResource(R.drawable.buttonstylebackgrounddisabled);
                         checkButton.setEnabled(false);
                         raiseHandButton.setEnabled(false);
                         closeEnough = false;
@@ -456,12 +455,12 @@ public class SpotInterface extends AppCompatActivity {
                             checkButton.setImageResource(R.drawable.there);
                             raiseHandButton.setImageResource(R.drawable.wave);
                             if(closeEnough){
-                                raiseHandButton.setBackgroundResource(R.color.darkBlue);
-                                checkButton.setBackgroundResource(R.color.darkBlue);
+                                raiseHandButton.setBackgroundResource(R.drawable.buttonstylebackground);
+                                checkButton.setBackgroundResource(R.drawable.buttonstylebackground);
 
                             }else{
-                                raiseHandButton.setBackgroundColor(Color.GRAY);
-                                checkButton.setBackgroundColor(Color.GRAY);
+                                raiseHandButton.setBackgroundResource(R.drawable.buttonstylebackgrounddisabled);
+                                checkButton.setBackgroundResource(R.drawable.buttonstylebackgrounddisabled);
                             }
                             updateParticipantsList();
                         }
