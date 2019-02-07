@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="300dp"
-    android:layout_height="350dp"
+    android:layout_height="355dp"
+    android:background="@drawable/gradientbackground"
     android:padding="5dp"
     android:layout_gravity="center">
 
@@ -19,6 +20,7 @@
         android:layout_marginTop="10dp"
         android:text="Großes Fressen beim Inder"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,15 +30,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="9dp"
         android:layout_marginRight="9dp"
-        android:layout_marginBottom="13dp"
         android:background="@drawable/buttonstylebackground"
         android:onClick="join"
         android:text="Join"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/number_participants"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/text_distance"
@@ -46,6 +51,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
         android:text="(2km)"
+        android:textStyle="italic"
         app:layout_constraintStart_toEndOf="@+id/textView_headline"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,6 +62,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
+        android:textSize="35px"
         android:text="Schleißheimerstraße 12\n89092 München"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_date" />
@@ -83,13 +90,14 @@
         app:layout_constraintTop_toBottomOf="@+id/iVguider" />
 
     <TextView
-        android:id="@+id/text_participants"
+        android:id="@+id/ov_participants"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
         android:text="Teilnehmer:"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_info" />
 
@@ -97,17 +105,17 @@
         android:id="@+id/number_participants"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="3/4"
-        app:layout_constraintStart_toEndOf="@+id/text_participants"
+        app:layout_constraintStart_toEndOf="@+id/ov_participants"
         app:layout_constraintTop_toBottomOf="@+id/text_info" />
 
     <ImageView
         android:id="@+id/iVguider"
-        android:layout_width="61dp"
-        android:layout_height="41dp"
+        android:layout_width="93dp"
+        android:layout_height="70dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
@@ -119,10 +127,11 @@
         android:id="@+id/text_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="28dp"
         android:text="Creator"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/iVguider"
         app:layout_constraintTop_toBottomOf="@+id/textViewCreator" />
 
@@ -153,6 +162,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="12dp"
+        android:textStyle="bold"
         android:text="Date: \nTime:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_headline" />
@@ -161,6 +171,7 @@
         android:id="@+id/textViewCreator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
