@@ -605,7 +605,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.settings:
-                Intent mIntent = new Intent(GuideActivity.this, SignUp.class);
+                Intent mIntent = new Intent(GuideActivity.this, EditProfile.class);
                 mIntent.putExtra("id", userID);
                 mIntent.putExtra("user", me);
                 startActivity(mIntent);

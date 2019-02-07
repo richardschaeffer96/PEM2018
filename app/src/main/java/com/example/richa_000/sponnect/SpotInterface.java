@@ -1,6 +1,8 @@
 package com.example.richa_000.sponnect;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -35,7 +37,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -196,49 +201,70 @@ public class SpotInterface extends AppCompatActivity {
         Location loc = checkCurrentLocation();
 
         if(selectedSpot!=null && loc!=null) {
-            float[] results = new float[1];
-            //TODO FELIX: Check time and Date
-            Location.distanceBetween(selectedSpot.getLatitude(), selectedSpot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
-            float distance = results[0] / 1000;
-            if (distance > 0.5) {
-                if (state == 2 || state == 3) {
-                    state = 0;
+            Calendar c = Calendar.getInstance();
+            Date currentTime = c.getTime();
+            String spotDate = selectedSpot.getDate() + "-" + selectedSpot.getTime();
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy-HH:mm");
+            Date date = null;
+            try {
+                date = format.parse(spotDate);
+                c.setTime(date);
+                c.add(Calendar.DATE, -1);
+                if (currentTime.before(c.getTime())) {
+                    checkButton.setBackgroundColor(Color.GRAY);
+                    raiseHandButton.setBackgroundColor(Color.GRAY);
+                    tooLateButton.setBackgroundColor(Color.GRAY);
+                    checkButton.setEnabled(false);
+                    raiseHandButton.setEnabled(false);
+                    tooLateButton.setEnabled(false);
+                } else {
+                    float[] results = new float[1];
+                    //TODO FELIX: Check time and Date
+                    Location.distanceBetween(selectedSpot.getLatitude(), selectedSpot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
+                    float distance = results[0] / 1000;
+                    //TODO Change Value back to 0.5
+                    if (distance > 5) {
+                        if (state == 2 || state == 3) {
+                            state = 0;
+                        }
+                        if (state == 1) {
+                            tooLateButton.setImageResource(R.drawable.img_toolate_clicked);
+                        }
+                        checkButton.setBackgroundColor(Color.GRAY);
+                        raiseHandButton.setBackgroundColor(Color.GRAY);
+                        checkButton.setEnabled(false);
+                        raiseHandButton.setEnabled(false);
+                        closeEnough = false;
+                    } else {
+                        switch (state) {
+                            case 0:
+                                checkButton.setImageResource(R.drawable.img_arrived);
+                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
+                                tooLateButton.setImageResource(R.drawable.img_toolate);
+                                break;
+                            case 1:
+                                checkButton.setImageResource(R.drawable.img_arrived);
+                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
+                                tooLateButton.setImageResource(R.drawable.img_toolate_clicked);
+                                break;
+                            case 2:
+                                checkButton.setImageResource(R.drawable.img_arrived_clicked);
+                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
+                                tooLateButton.setImageResource(R.drawable.img_toolate);
+                                break;
+                            case 3:
+                                checkButton.setImageResource(R.drawable.img_arrived);
+                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton_clicked);
+                                tooLateButton.setImageResource(R.drawable.img_toolate);
+                                break;
+                        }
+                        checkButton.setEnabled(true);
+                        raiseHandButton.setEnabled(true);
+                        closeEnough = true;
+                    }
                 }
-                if (state == 1) {
-                    tooLateButton.setImageResource(R.drawable.img_toolate_clicked);
-                }
-                checkButton.setBackgroundColor(Color.GRAY);
-                raiseHandButton.setBackgroundColor(Color.GRAY);
-                checkButton.setEnabled(false);
-                raiseHandButton.setEnabled(false);
-                closeEnough = false;
-
-            } else {
-                switch (state) {
-                    case 0:
-                        checkButton.setImageResource(R.drawable.img_arrived);
-                        raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                        tooLateButton.setImageResource(R.drawable.img_toolate);
-                        break;
-                    case 1:
-                        checkButton.setImageResource(R.drawable.img_arrived);
-                        raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                        tooLateButton.setImageResource(R.drawable.img_toolate_clicked);
-                        break;
-                    case 2:
-                        checkButton.setImageResource(R.drawable.img_arrived_clicked);
-                        raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                        tooLateButton.setImageResource(R.drawable.img_toolate);
-                        break;
-                    case 3:
-                        checkButton.setImageResource(R.drawable.img_arrived);
-                        raiseHandButton.setImageResource(R.drawable.img_raisehandbutton_clicked);
-                        tooLateButton.setImageResource(R.drawable.img_toolate);
-                        break;
-                }
-                checkButton.setEnabled(true);
-                raiseHandButton.setEnabled(true);
-                closeEnough = true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         // Update Participants List
@@ -252,6 +278,7 @@ public class SpotInterface extends AppCompatActivity {
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     Spot docSpot = documentSnapshot.toObject(Spot.class);
                     if (selectedSpot.getId().equals(docSpot.getId())) {
@@ -260,6 +287,7 @@ public class SpotInterface extends AppCompatActivity {
                         usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots2) {
+                                exampleList.clear();
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots2) {
                                     User user = documentSnapshot.toObject(User.class);
                                     if (map.containsKey(user.getId())) {
@@ -574,6 +602,13 @@ public class SpotInterface extends AppCompatActivity {
             }
         }
         return creatorCoords;
+    }
+
+    public void copy(View v){
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("address", selectedSpot.getAddress());
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(this, "Copied spot address!", Toast.LENGTH_SHORT).show();
     }
 
 }
