@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -409,7 +410,7 @@ public class SpotInterface extends AppCompatActivity {
                                 mRecyclerView.getAdapter().notifyDataSetChanged();
                             }else{
                                 System.out.println("Set to 3");
-                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton_clicked);
+                                raiseHandButton.setImageResource(R.drawable.wave_checked);
                                 state=3;
                                 participants.put(userID, 3);
                                 DocumentReference refSpot = spotsRef.document(spot.getId());
@@ -455,8 +456,8 @@ public class SpotInterface extends AppCompatActivity {
                             checkButton.setImageResource(R.drawable.there);
                             raiseHandButton.setImageResource(R.drawable.wave);
                             if(closeEnough){
-                                raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
-                                checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
+                                raiseHandButton.setBackgroundResource(R.color.darkBlue);
+                                checkButton.setBackgroundResource(R.color.darkBlue);
 
                             }else{
                                 raiseHandButton.setBackgroundColor(Color.GRAY);
