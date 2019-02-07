@@ -322,9 +322,11 @@ public class SpotInterface extends AppCompatActivity {
         spotTitle = findViewById(R.id.spot_title);
         spotDate = findViewById(R.id.spot_date);
         spotTime = findViewById(R.id.spot_time);
+        spotDesc = findViewById(R.id.spot_desc);
         spotTitle.setText(spot.getTitle());
         spotDate.setText(spot.getDate());
         spotTime.setText(spot.getTime());
+        spotDesc.setText(spot.getInfo());
 
         raiseHandButton = findViewById(R.id.raiseHand_button);
         checkButton = findViewById(R.id.check_button);

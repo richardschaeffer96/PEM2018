@@ -320,6 +320,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                     }else{
                         //mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueBlue)).alpha(0.2f));
                     }
+                    //TODO filter for Deleted spots
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -575,8 +576,8 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                             spots.put(selectedSpot.getId(), false);
                             refUser.update("mySpots", spots);
                         } else{
-                            if(selectedSpot.getcreator().equals(userID) || selectedSpot.getInfo().equals(DEL)){
-                                // Leave Spot
+                            if(selectedSpot.getcreator().equals(userID) || selectedSpot.getInfo().equals(DEL)) {
+                                // Just leave Spot
                                 spots.remove(selectedSpot.getId());
                                 refUser.update("mySpots", spots);
                                 Log.d(TAG, "Deleting Spot...");
@@ -588,7 +589,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        Toast.makeText(this, "Saved...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "You joined the spot", Toast.LENGTH_SHORT).show();
         mapOverlay.hide();
 
     }

@@ -80,9 +80,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
                 //Did not find the mail address
-                if(eMailDoesNotExist){
-                    Toast.makeText(LoginActivity.this, "Your Email does not exist. How about signing up?", Toast.LENGTH_LONG).show();
-                }
+                //if(eMailDoesNotExist){
+                //    Toast.makeText(LoginActivity.this, "Your Email does not exist. How about signing up?", Toast.LENGTH_LONG).show();
+                //}
             }
         });
 
