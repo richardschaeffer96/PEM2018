@@ -106,6 +106,10 @@ public class SpotInterface extends AppCompatActivity {
         Button copy_button = findViewById(R.id.button_copy);
         copy_button.setTypeface(comfortaa_bold);
 
+        tooLateButton.setImageResource(R.drawable.empty);
+        checkButton.setImageResource(R.drawable.empty);
+        raiseHandButton.setImageResource(R.drawable.empty);
+
         userID = getIntent().getStringExtra("id");
         //me = (User) getIntent().getSerializableExtra("user");
         //System.out.println("User in Spotinterface is: " + me);
