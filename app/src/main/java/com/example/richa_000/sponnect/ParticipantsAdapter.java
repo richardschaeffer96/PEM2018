@@ -1,5 +1,7 @@
 package com.example.richa_000.sponnect;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -46,6 +48,14 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
             img = itemView.findViewById(R.id.image_avatar);
             share = itemView.findViewById(R.id.button_share);
             share.setImageResource(android.R.color.transparent);
+
+            Typeface comfortaa_regular = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Regular.ttf");
+            Typeface comfortaa_bold = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Bold.ttf");
+            Typeface comfortaa_light = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Light.ttf");
+
+            name.setTypeface(comfortaa_bold);
+            age.setTypeface(comfortaa_regular);
+            gender.setTypeface(comfortaa_regular);
             /*
             usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override

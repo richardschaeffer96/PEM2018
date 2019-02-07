@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -60,6 +62,10 @@ public class SpotInterface extends AppCompatActivity {
     private ImageButton checkButton;
     private ImageButton raiseHandButton;
 
+    private Typeface comfortaa_regular;
+    private Typeface comfortaa_bold;
+    private Typeface comfortaa_light;
+
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -89,6 +95,15 @@ public class SpotInterface extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        comfortaa_regular = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Regular.ttf");
+        comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
+        comfortaa_light = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Light.ttf");
+
+        TextView text_participants = findViewById(R.id.text_participants);
+        text_participants.setTypeface(comfortaa_regular);
+        Button copy_button = findViewById(R.id.button_copy);
+        copy_button.setTypeface(comfortaa_bold);
 
         userID = getIntent().getStringExtra("id");
         //me = (User) getIntent().getSerializableExtra("user");
@@ -349,6 +364,11 @@ public class SpotInterface extends AppCompatActivity {
         spotTitle = findViewById(R.id.spot_title);
         spotDate = findViewById(R.id.spot_date);
         spotTime = findViewById(R.id.spot_time);
+
+        spotTitle.setTypeface(comfortaa_bold);
+        spotDate.setTypeface(comfortaa_regular);
+        spotTime.setTypeface(comfortaa_regular);
+
         //spotDesc = findViewById(R.id.spot_desc);
         spotTitle.setText(spot.getTitle());
         spotDate.setText(spot.getDate());
@@ -547,20 +567,24 @@ public class SpotInterface extends AppCompatActivity {
      * @param me
      */
     private void setUserInfo(User me){
-        System.out.println("User in setUserInfo is: " + me);
+        Log.d(TAG, "setUserInfo: user is created: "+me.getNickname());
         String nickname = me.getNickname();
         String gender = me.getGender();
         int age = me.getAge();
-        String info = gender + ", ("+age+")";
+        String info = gender + ", "+age;
         line1 = findViewById(R.id.toolbarTextView1);
         line2 = findViewById(R.id.toolbarTextView2);
+        line1.setTypeface(comfortaa_bold);
+        line2.setTypeface(comfortaa_regular);
         line1.setText(nickname);
         line2.setText(info);
         profile = findViewById(R.id.iV_profile);
-        System.out.println("Sportinterface name is: " + nickname);
-        System.out.println("Sportinterface uri is: " + me.getImageUri());
-        Uri uri = Uri.parse(me.getImageUri());
-        Picasso.get().load(uri).into(profile);
+        Log.d(TAG, "User URI is: "+me.getImageUri() );
+        if(me.getImageUri()!=null){
+            Uri uri = Uri.parse(me.getImageUri());
+            Picasso.get().load(uri).into(profile);
+        }
+
     }
 
     private double[] getLocation() {

@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -17,8 +18,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -62,6 +65,10 @@ public class EditProfile extends AppCompatActivity {
     private StorageReference mStorageRef;
     private StorageTask mUploadTask;
 
+    private Typeface comfortaa_regular;
+    private Typeface comfortaa_bold;
+    private Typeface comfortaa_light;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +76,32 @@ public class EditProfile extends AppCompatActivity {
 
         userID = getIntent().getStringExtra("id");
         me = (User) getIntent().getSerializableExtra("user");
+
+        comfortaa_regular = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Regular.ttf");
+        comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
+        comfortaa_light = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Light.ttf");
+
+        TextView text_headline_signup = findViewById(R.id.text_editprofile);
+        TextView text_email = findViewById(R.id.text_email);
+        TextView text_nickname = findViewById(R.id.text_nickname);
+        TextView text_password = findViewById(R.id.text_password);
+        TextView text_password2 = findViewById(R.id.text_password2);
+        TextView text_facebook = findViewById(R.id.text_facebook);
+        TextView text_twitter = findViewById(R.id.text_twitter);
+        TextView text_instagram = findViewById(R.id.text_instagram);
+        TextView text_img = findViewById(R.id.text_img);
+        Button button_save = findViewById(R.id.button_save);
+
+        text_headline_signup.setTypeface(comfortaa_bold);
+        text_email.setTypeface(comfortaa_regular);
+        text_nickname.setTypeface(comfortaa_regular);
+        text_password.setTypeface(comfortaa_regular);
+        text_password2.setTypeface(comfortaa_regular);
+        text_facebook.setTypeface(comfortaa_regular);
+        text_twitter.setTypeface(comfortaa_regular);
+        text_instagram.setTypeface(comfortaa_regular);
+        text_img.setTypeface(comfortaa_regular);
+        button_save.setTypeface(comfortaa_regular);
 
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
@@ -243,5 +276,7 @@ public class EditProfile extends AppCompatActivity {
         });
 
     }
+
+
 
 }
