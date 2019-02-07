@@ -1,6 +1,7 @@
 package com.example.richa_000.sponnect;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -21,17 +22,25 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
     private static String userID;
     private static User user;
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView spot_name;
         public TextView spot_date;
         public TextView spot_time;
+
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             spot_name = itemView.findViewById(R.id.spot_name);
             spot_date = itemView.findViewById(R.id.spot_date);
             spot_time = itemView.findViewById(R.id.spot_time);
+
+            Typeface comfortaa_regular = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Regular.ttf");
+            Typeface comfortaa_bold = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Bold.ttf");
+            Typeface comfortaa_light = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Light.ttf");
+            
+            spot_name.setTypeface(comfortaa_bold);
+            spot_date.setTypeface(comfortaa_regular);
+            spot_time.setTypeface(comfortaa_regular);
 
             itemView.setOnClickListener((v) -> {
                 int position = getAdapterPosition();

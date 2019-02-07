@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
-                android:layout_marginTop="37dp"
+                android:layout_marginTop="32dp"
                 android:layout_weight="1"
                 android:text="(again)\nPassword:"
                 app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
-                android:layout_marginTop="52dp"
+                android:layout_marginTop="40dp"
                 android:layout_weight="1"
                 android:text="Age:"
                 app:layout_constraintStart_toStartOf="parent"
@@ -180,21 +180,24 @@
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="male" />
+                    android:text="male"
+                    android:textSize="40px"/>
 
                 <RadioButton
                     android:id="@+id/radioButton_female"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="female" />
+                    android:text="female"
+                    android:textSize="40px"/>
 
                 <RadioButton
                     android:id="@+id/radioButton_other"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="other" />
+                    android:text="other"
+                    android:textSize="40px"/>
             </RadioGroup>
 
             <Button
