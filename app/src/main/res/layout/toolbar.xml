@@ -40,7 +40,7 @@
             android:layout_toRightOf="@+id/iV_profile"
             android:text="user"
             android:textColor="#fff"
-            android:textSize="20dp"
+            android:textSize="18dp"
             app:layout_constraintStart_toEndOf="@+id/iV_profile"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,7 +56,7 @@
             android:layout_toRightOf="@+id/iV_profile"
             android:text="info"
             android:textColor="#fff"
-            android:textSize="14dp"
+            android:textSize="12dp"
             app:layout_constraintStart_toEndOf="@+id/iV_profile"
             app:layout_constraintTop_toBottomOf="@+id/toolbarTextView1" />
 

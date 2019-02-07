@@ -2,6 +2,7 @@ package com.example.richa_000.sponnect;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,10 @@ public class Menu extends AppCompatActivity {
     private CollectionReference spotsRef = db.collection("spots");
     private CollectionReference usersRef = db.collection("users");
 
+    private Typeface comfortaa_regular;
+    private Typeface comfortaa_bold;
+    private Typeface comfortaa_light;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +66,17 @@ public class Menu extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        comfortaa_regular = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Regular.ttf");
+        comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
+        comfortaa_light = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Light.ttf");
+
+        TextView headline = findViewById(R.id.text_my_spots);
+        Button button_explore = findViewById(R.id.button_guide);
+
+
+        headline.setTypeface(comfortaa_bold);
+        button_explore.setTypeface(comfortaa_bold);
 
         userID = getIntent().getStringExtra("id");
 
@@ -156,6 +173,8 @@ public class Menu extends AppCompatActivity {
         String info = gender + ", ("+age+")";
         line1 = findViewById(R.id.toolbarTextView1);
         line2 = findViewById(R.id.toolbarTextView2);
+        line1.setTypeface(comfortaa_bold);
+        line2.setTypeface(comfortaa_regular);
         line1.setText(nickname);
         line2.setText(info);
         profile = findViewById(R.id.iV_profile);
