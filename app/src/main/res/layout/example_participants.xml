@@ -10,7 +10,7 @@
     android:clickable="true"
     android:foreground="?selectableItemBackground"
     card_view:cardBackgroundColor="@color/darkBlueAlpha"
-    card_view:cardCornerRadius="12dp"
+    card_view:cardCornerRadius="0dp"
     card_view:cardElevation="3dp"
     card_view:contentPadding="4dp">
 
@@ -49,8 +49,8 @@
             android:id="@+id/text_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginLeft="7dp"
             android:layout_marginTop="5dp"
             android:text="21"
             android:textSize="14sp"

@@ -95,29 +95,29 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="12dp"
-        android:background="@color/lightBlue"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/buttonstylebackground"
         android:onClick="tooLate"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/check_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_lock_idle_alarm" />
+        app:srcCompat="@drawable/toolate" />
 
     <ImageButton
         android:id="@+id/check_button"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="15dp"
-        android:background="@color/lightBlue"
+        android:background="@drawable/buttonstylebackground"
         android:onClick="checkButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/checkbox_on_background" />
+        app:srcCompat="@drawable/there" />
 
     <ImageButton
         android:id="@+id/raiseHand_button"
@@ -128,12 +128,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="15dp"
-        android:background="@color/lightBlue"
+        android:background="@drawable/buttonstylebackground"
         android:onClick="raiseHand"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/check_button"
-        app:srcCompat="@drawable/ic_contacts" />
+        app:srcCompat="@drawable/wave" />
 
     <Button
         android:id="@+id/button_copy"

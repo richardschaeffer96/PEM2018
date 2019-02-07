@@ -1,6 +1,5 @@
 package com.example.richa_000.sponnect;
 
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -144,9 +143,9 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
 
         switch(currentItem.getState()){
             case 0: viewHolder.share.setImageResource(android.R.color.transparent);break;
-            case 1: viewHolder.share.setImageResource(R.drawable.img_toolate);break;
-            case 2: viewHolder.share.setImageResource(R.drawable.img_arrived);break;
-            case 3: viewHolder.share.setImageResource(R.drawable.img_raisehandbutton);break;
+            case 1: viewHolder.share.setImageResource(R.drawable.toolate);break;
+            case 2: viewHolder.share.setImageResource(R.drawable.there);break;
+            case 3: viewHolder.share.setImageResource(R.drawable.wave);break;
         }
     }
 

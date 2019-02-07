@@ -28,9 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.api.LogDescriptor;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,7 +36,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
-import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -229,7 +226,7 @@ public class SpotInterface extends AppCompatActivity {
                             state = 0;
                         }
                         if (state == 1) {
-                            tooLateButton.setImageResource(R.drawable.img_toolate_clicked);
+                            tooLateButton.setImageResource(R.drawable.toolate_checked);
                         }
                         checkButton.setBackgroundColor(Color.GRAY);
                         raiseHandButton.setBackgroundColor(Color.GRAY);
@@ -239,24 +236,24 @@ public class SpotInterface extends AppCompatActivity {
                     } else {
                         switch (state) {
                             case 0:
-                                checkButton.setImageResource(R.drawable.img_arrived);
-                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                                tooLateButton.setImageResource(R.drawable.img_toolate);
+                                checkButton.setImageResource(R.drawable.there);
+                                raiseHandButton.setImageResource(R.drawable.wave);
+                                tooLateButton.setImageResource(R.drawable.toolate);
                                 break;
                             case 1:
-                                checkButton.setImageResource(R.drawable.img_arrived);
-                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                                tooLateButton.setImageResource(R.drawable.img_toolate_clicked);
+                                checkButton.setImageResource(R.drawable.there);
+                                raiseHandButton.setImageResource(R.drawable.wave);
+                                tooLateButton.setImageResource(R.drawable.toolate_checked);
                                 break;
                             case 2:
-                                checkButton.setImageResource(R.drawable.img_arrived_clicked);
-                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                                tooLateButton.setImageResource(R.drawable.img_toolate);
+                                checkButton.setImageResource(R.drawable.there_checked);
+                                raiseHandButton.setImageResource(R.drawable.wave);
+                                tooLateButton.setImageResource(R.drawable.toolate);
                                 break;
                             case 3:
-                                checkButton.setImageResource(R.drawable.img_arrived);
-                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton_clicked);
-                                tooLateButton.setImageResource(R.drawable.img_toolate);
+                                checkButton.setImageResource(R.drawable.there);
+                                raiseHandButton.setImageResource(R.drawable.wave_checked);
+                                tooLateButton.setImageResource(R.drawable.toolate);
                                 break;
                         }
                         checkButton.setEnabled(true);
@@ -383,7 +380,7 @@ public class SpotInterface extends AppCompatActivity {
                         if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==3){
                                 System.out.println("Set to 0");
-                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
+                                raiseHandButton.setImageResource(R.drawable.wave);
                                 state=0;
                                 participants.put(userID, 0);
                                 DocumentReference refSpot = spotsRef.document(spot.getId());
@@ -398,8 +395,8 @@ public class SpotInterface extends AppCompatActivity {
                                 DocumentReference refSpot = spotsRef.document(spot.getId());
                                 refSpot.update("participants", participants);
                             }
-                            checkButton.setImageResource(R.drawable.img_arrived);
-                            tooLateButton.setImageResource(R.drawable.img_toolate);
+                            checkButton.setImageResource(R.drawable.there);
+                            tooLateButton.setImageResource(R.drawable.toolate);
                             updateParticipantsList();
                         }
                     }
@@ -422,21 +419,21 @@ public class SpotInterface extends AppCompatActivity {
                         if(entry.getKey().equals(userID) && spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==1){
                                 System.out.println("Set to 0");
-                                tooLateButton.setImageResource(R.drawable.img_toolate);
+                                tooLateButton.setImageResource(R.drawable.toolate);
                                 state=0;
                                 participants.put(userID, 0);
                                 DocumentReference refSpot = spotsRef.document(spot.getId());
                                 refSpot.update("participants", participants);
                             }else{
                                 System.out.println("Set to 1");
-                                tooLateButton.setImageResource(R.drawable.img_toolate_clicked);
+                                tooLateButton.setImageResource(R.drawable.toolate_checked);
                                 state=1;
                                 participants.put(userID, 1);
                                 DocumentReference refSpot = spotsRef.document(spot.getId());
                                 refSpot.update("participants", participants);
                             }
-                            checkButton.setImageResource(R.drawable.img_arrived);
-                            raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
+                            checkButton.setImageResource(R.drawable.there);
+                            raiseHandButton.setImageResource(R.drawable.wave);
                             if(closeEnough){
                                 raiseHandButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
                                 checkButton.setBackgroundColor(Color.parseColor("#FF74E2F1"));
@@ -467,9 +464,9 @@ public class SpotInterface extends AppCompatActivity {
                         if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==2){
                                 System.out.println("Set to 0");
-                                checkButton.setImageResource(R.drawable.img_arrived);
-                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                                tooLateButton.setImageResource(R.drawable.img_toolate);
+                                checkButton.setImageResource(R.drawable.there);
+                                raiseHandButton.setImageResource(R.drawable.wave);
+                                tooLateButton.setImageResource(R.drawable.toolate);
                                 state=0;
                                 participants.put(userID, 0);
                                 DocumentReference refSpot = spotsRef.document(spot.getId());
@@ -477,9 +474,9 @@ public class SpotInterface extends AppCompatActivity {
                             }else{
                                 //Creator is on Location and checked himself in
                                 System.out.println("Set to 2");
-                                checkButton.setImageResource(R.drawable.img_arrived_clicked);
-                                raiseHandButton.setImageResource(R.drawable.img_raisehandbutton);
-                                tooLateButton.setImageResource(R.drawable.img_toolate);
+                                checkButton.setImageResource(R.drawable.there_checked);
+                                raiseHandButton.setImageResource(R.drawable.wave);
+                                tooLateButton.setImageResource(R.drawable.toolate);
                                 state=2;
                                 participants.put(userID, 2);
                                 DocumentReference refSpot = spotsRef.document(spot.getId());
