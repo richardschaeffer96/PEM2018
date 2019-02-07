@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -38,7 +38,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -76,6 +75,10 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private CollectionReference usersRef = db.collection("users");
     private String userID;
 
+    private Typeface comfortaa_regular;
+    private Typeface comfortaa_bold;
+    private Typeface comfortaa_light;
+
     PlaceAutocompleteFragment placeAutoComplete;
 
     private Geocoder geocoder;
@@ -105,6 +108,10 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide_activity);
+
+        comfortaa_regular = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Regular.ttf");
+        comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
+        comfortaa_light = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Light.ttf");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -163,7 +170,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     public void showMapOverlay(Spot spot){
         mapOverlay.setContentView(R.layout.map_overlay);
-        TextView title = mapOverlay.findViewById(R.id.textView);
+        TextView title = mapOverlay.findViewById(R.id.textView_headline);
         title.setText(spot.getTitle());
 
         TextView date = mapOverlay.findViewById(R.id.text_date);
@@ -631,18 +638,22 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
      * sets all needed information from the user to the toolbar layout
      * @param me
      */
-    private void setUserInfo(User me){
+    private void setUserInfo(User me) {
         String nickname = me.getNickname();
         String gender = me.getGender();
         int age = me.getAge();
-        String info = gender + ", ("+age+")";
+        String info = gender + ", " + age;
         line1 = findViewById(R.id.toolbarTextView1);
         line2 = findViewById(R.id.toolbarTextView2);
+        line1.setTypeface(comfortaa_bold);
+        line2.setTypeface(comfortaa_regular);
         line1.setText(nickname);
         line2.setText(info);
         profile = findViewById(R.id.iV_profile);
-        Uri uri = Uri.parse(me.getImageUri());
-        Picasso.get().load(uri).into(profile);
+        if (me.getImageUri() != null) {
+            Uri uri = Uri.parse(me.getImageUri());
+            Picasso.get().load(uri).into(profile);
+        }
     }
 
     @Override

@@ -1,12 +1,14 @@
 package com.example.richa_000.sponnect;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -45,11 +47,21 @@ public class Contacts extends AppCompatActivity {
     private TextView line2;
     private ImageView profile;
 
+    private Typeface comfortaa_regular;
+    private Typeface comfortaa_bold;
+    private Typeface comfortaa_light;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
+        comfortaa_regular = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Regular.ttf");
+        comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
+        comfortaa_light = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Light.ttf");
+
+        TextView text_contacts = findViewById(R.id.textView_contacts);
+        text_contacts.setTypeface(comfortaa_bold);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -123,14 +135,19 @@ public class Contacts extends AppCompatActivity {
         String nickname = me.getNickname();
         String gender = me.getGender();
         int age = me.getAge();
-        String info = gender + ", ("+age+")";
+        String info = gender + ", "+age;
         line1 = findViewById(R.id.toolbarTextView1);
         line2 = findViewById(R.id.toolbarTextView2);
+        line1.setTypeface(comfortaa_bold);
+        line2.setTypeface(comfortaa_regular);
         line1.setText(nickname);
         line2.setText(info);
         profile = findViewById(R.id.iV_profile);
-        Uri uri = Uri.parse(me.getImageUri());
-        Picasso.get().load(uri).into(profile);
+        if(me.getImageUri()!=null){
+            Uri uri = Uri.parse(me.getImageUri());
+            Picasso.get().load(uri).into(profile);
+        }
+
     }
 
 }

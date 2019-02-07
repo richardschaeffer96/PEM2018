@@ -170,7 +170,7 @@ public class Menu extends AppCompatActivity {
         String nickname = me.getNickname();
         String gender = me.getGender();
         int age = me.getAge();
-        String info = gender + ", ("+age+")";
+        String info = gender + ", "+age;
         line1 = findViewById(R.id.toolbarTextView1);
         line2 = findViewById(R.id.toolbarTextView2);
         line1.setTypeface(comfortaa_bold);

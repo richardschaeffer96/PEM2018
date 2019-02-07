@@ -3,13 +3,16 @@ package com.example.richa_000.sponnect;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -55,6 +58,10 @@ public class CreateSpotActivity extends AppCompatActivity {
 
     private Place selectedPlace;
 
+    private Typeface comfortaa_regular;
+    private Typeface comfortaa_bold;
+    private Typeface comfortaa_light;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +70,27 @@ public class CreateSpotActivity extends AppCompatActivity {
         userID = intent.getStringExtra("id");
         me = (User) getIntent().getSerializableExtra("user");
         System.out.println("userID is: -------------------: "+userID);
+
+        comfortaa_regular = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Regular.ttf");
+        comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
+        comfortaa_light = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Light.ttf");
+
+        TextView text_headline = findViewById(R.id.textView_headline);
+        TextView text_address = findViewById(R.id.tv_address);
+        TextView text_title = findViewById(R.id.tv_title);
+        TextView text_info = findViewById(R.id.tv_info);
+        TextView text_date = findViewById(R.id.tv_date);
+        TextView text_time = findViewById(R.id.tv_time);
+        Button add_button = findViewById(R.id.button_add);
+
+        text_headline.setTypeface(comfortaa_bold);
+        text_title.setTypeface(comfortaa_regular);
+        text_info.setTypeface(comfortaa_regular);
+        text_date.setTypeface(comfortaa_regular);
+        text_time.setTypeface(comfortaa_regular);
+        add_button.setTypeface(comfortaa_regular);
+        text_address.setTypeface(comfortaa_regular);
+
         placeAutoComplete = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.et_address);
 
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {

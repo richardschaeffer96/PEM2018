@@ -1,6 +1,7 @@
 package com.example.richa_000.sponnect;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -53,6 +54,17 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             age = itemView.findViewById(R.id.text_contact_age);
             img = itemView.findViewById(R.id.image_contact_avatar);
             delete = itemView.findViewById(R.id.btn_contact_delete);
+
+            Typeface comfortaa_regular = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Regular.ttf");
+            Typeface comfortaa_bold = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Bold.ttf");
+            Typeface comfortaa_light = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Light.ttf");
+
+            name.setTypeface(comfortaa_bold);
+            fb.setTypeface(comfortaa_regular);
+            twitter.setTypeface(comfortaa_regular);
+            insta.setTypeface(comfortaa_regular);
+            gender.setTypeface(comfortaa_regular);
+            age.setTypeface(comfortaa_regular);
 
             delete.setOnClickListener((v) -> {
                 int position = getAdapterPosition();
