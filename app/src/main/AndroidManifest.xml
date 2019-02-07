@@ -39,7 +39,6 @@
         </activity>
         <activity android:name=".SignUp" />
         <activity android:name=".Menu" />
-        <activity android:name=".MapActivity" />
         <activity android:name=".GuideActivity" />
         <activity android:name=".Contacts" />
         <activity android:name=".CreateSpotActivity" />

@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.api.LogDescriptor;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,6 +38,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
+import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -165,8 +167,9 @@ public class SpotInterface extends AppCompatActivity {
 
     private void refresh() {
         System.out.println("CURRENT STATE= "+state);
-
-        if (state==2 && selectedSpot.getcreator().equals(userID)){
+        Location loc = checkCurrentLocation();
+        //TODO: change state back to 2
+        if (state==0 && selectedSpot.getcreator().equals(userID)){
            double[] creatorLoc = getLocation();
             Log.d(TAG, "refresh: Current Location of Creator: "+creatorLoc[0]+", "+creatorLoc[1]);
             spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -198,7 +201,7 @@ public class SpotInterface extends AppCompatActivity {
             }
         });*/
         // Geo based button deactivating and coloring
-        Location loc = checkCurrentLocation();
+
 
         if(selectedSpot!=null && loc!=null) {
             Calendar c = Calendar.getInstance();
@@ -219,10 +222,8 @@ public class SpotInterface extends AppCompatActivity {
                     tooLateButton.setEnabled(false);
                 } else {
                     float[] results = new float[1];
-                    //TODO FELIX: Check time and Date
                     Location.distanceBetween(selectedSpot.getLatitude(), selectedSpot.getLongitude(), loc.getLatitude(), loc.getLongitude(), results);
                     float distance = results[0] / 1000;
-                    //TODO Change Value back to 0.5
                     if (distance > 5) {
                         if (state == 2 || state == 3) {
                             state = 0;
@@ -338,6 +339,7 @@ public class SpotInterface extends AppCompatActivity {
                 }
             }
         }
+        System.out.println("Spot-Interface: Current Location: "+resultLocation.getLatitude()+", "+resultLocation.getLongitude());
         return resultLocation;
     }
 
@@ -350,11 +352,11 @@ public class SpotInterface extends AppCompatActivity {
         spotTitle = findViewById(R.id.spot_title);
         spotDate = findViewById(R.id.spot_date);
         spotTime = findViewById(R.id.spot_time);
-        spotDesc = findViewById(R.id.spot_desc);
+        //spotDesc = findViewById(R.id.spot_desc);
         spotTitle.setText(spot.getTitle());
         spotDate.setText(spot.getDate());
         spotTime.setText(spot.getTime());
-        spotDesc.setText(spot.getInfo());
+        //spotDesc.setText(spot.getInfo());
 
         raiseHandButton = findViewById(R.id.raiseHand_button);
         checkButton = findViewById(R.id.check_button);
