@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textView_headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -35,7 +35,7 @@
             android:text="Address: "
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_headline" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -121,7 +121,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_headline" />
 
         <EditText
             android:id="@+id/et_title"
@@ -162,7 +162,7 @@
             app:layout_constraintTop_toBottomOf="@+id/et_date" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button_add"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
