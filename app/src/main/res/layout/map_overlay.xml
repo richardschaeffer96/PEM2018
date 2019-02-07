@@ -56,7 +56,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_address"
+        android:id="@+id/spot_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -179,5 +179,5 @@
         android:layout_marginTop="8dp"
         android:text="Host:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_address" />
+        app:layout_constraintTop_toBottomOf="@+id/spot_address" />
 </android.support.constraint.ConstraintLayout>
