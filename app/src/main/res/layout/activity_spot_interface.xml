@@ -55,13 +55,13 @@
         android:id="@+id/text_participants"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="15dp"
         android:text="Participants:"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spot_time" />
+        app:layout_constraintTop_toBottomOf="@+id/spot_desc" />
 
 
     <android.support.v7.widget.RecyclerView
@@ -133,22 +133,19 @@
         app:layout_constraintStart_toEndOf="@+id/check_button"
         app:srcCompat="@drawable/wave" />
 
-    <Button
+    <ImageButton
         android:id="@+id/button_copy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
         android:background="@drawable/buttonstylebackground"
         android:onClick="copy"
         android:text="copy address"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.565"
-        app:layout_constraintStart_toEndOf="@+id/spot_title"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:srcCompat="@drawable/copy" />
 
     <TextView
         android:id="@+id/spot_address"

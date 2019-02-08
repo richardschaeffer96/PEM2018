@@ -47,7 +47,7 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
             age = itemView.findViewById(R.id.text_age);
             img = itemView.findViewById(R.id.image_avatar);
             share = itemView.findViewById(R.id.button_share);
-            share.setImageResource(android.R.color.transparent);
+            share.setImageResource(R.drawable.empty);
 
             Typeface comfortaa_regular = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Regular.ttf");
             Typeface comfortaa_bold = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Bold.ttf");
@@ -152,7 +152,7 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         Picasso.get().load(uri).into(viewHolder.img);
 
         switch(currentItem.getState()){
-            case 0: viewHolder.share.setImageResource(android.R.color.transparent);break;
+            case 0: viewHolder.share.setImageResource(R.drawable.empty);break;
             case 1: viewHolder.share.setImageResource(R.drawable.toolate);break;
             case 2: viewHolder.share.setImageResource(R.drawable.there);break;
             case 3: viewHolder.share.setImageResource(R.drawable.wave);break;
