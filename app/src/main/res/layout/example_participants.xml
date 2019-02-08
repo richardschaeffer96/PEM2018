@@ -73,12 +73,27 @@
             android:id="@+id/button_share"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginTop="2dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:background="@color/darkBlue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            card_view:srcCompat="?attr/actionModeShareDrawable" />
+
+        <ImageButton
+            android:id="@+id/button_sharereal"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/darkBlue"
+            app:layout_constraintEnd_toStartOf="@+id/button_share"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
             card_view:srcCompat="?attr/actionModeShareDrawable" />
     </android.support.constraint.ConstraintLayout>
 

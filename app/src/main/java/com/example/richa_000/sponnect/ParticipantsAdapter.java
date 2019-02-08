@@ -39,6 +39,7 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         private TextView age;
         private ImageView img;
         ImageButton share;
+        ImageButton share_real;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -47,6 +48,7 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
             age = itemView.findViewById(R.id.text_age);
             img = itemView.findViewById(R.id.image_avatar);
             share = itemView.findViewById(R.id.button_share);
+            share_real = itemView.findViewById(R.id.button_sharereal);
             share.setImageResource(R.drawable.empty);
 
             Typeface comfortaa_regular = Typeface.createFromAsset(itemView.getContext().getAssets(), "Comfortaa-Regular.ttf");
@@ -71,7 +73,7 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
                 }
             });*/
 
-            share.setOnClickListener((v) ->{
+            share_real.setOnClickListener((v) ->{
                 int position = getAdapterPosition();
                 ParticipantsExample currentItem = mParticipantList.get(position);
                 System.out.println("Clicked of "+ currentItem.getName() + " | "+currentItem.getId());
