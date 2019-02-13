@@ -166,7 +166,6 @@ public class SignUp2 extends AppCompatActivity {
 
         Log.d(TAG, "Creating User Document");
         final User user = new User(SignUpMail, SignUpNickname, SignUpPassword, SignUpGender, userAge, socialMedia);
-        System.out.println(user.getNickname());
         usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
@@ -221,13 +220,11 @@ public class SignUp2 extends AppCompatActivity {
                         Uri dlUri = uri;
                         //Upload upload = new Upload(id, dlUri.toString());
                         DocumentReference refUser = usersRef.document(id);
-                        System.out.println("URI is " + dlUri);
                         Log.d(TAG, "URI is " + dlUri);
                         String uriPicture = dlUri.toString();
                         refUser.update("imageUri", uriPicture);
                         while(user.getImageUri() == null){
                             user.setImageUri(uriPicture);
-                            System.out.println("Uri in User is: " + user.getImageUri());
                         }
                         Intent mIntent = new Intent(SignUp2.this, Menu.class);
                         mIntent.putExtra("id", id);

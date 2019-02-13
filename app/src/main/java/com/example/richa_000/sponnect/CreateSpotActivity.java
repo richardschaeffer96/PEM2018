@@ -69,7 +69,6 @@ public class CreateSpotActivity extends AppCompatActivity {
         Intent intent = getIntent();
         userID = intent.getStringExtra("id");
         me = (User) getIntent().getSerializableExtra("user");
-        System.out.println("userID is: -------------------: "+userID);
 
         comfortaa_regular = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Regular.ttf");
         comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
@@ -96,7 +95,6 @@ public class CreateSpotActivity extends AppCompatActivity {
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                System.out.println("PLACE SELECTED");
                 selectedPlace = place;
             }
 
@@ -110,7 +108,6 @@ public class CreateSpotActivity extends AppCompatActivity {
         Bundle extras = intent.getExtras();
         if (extras != null) {
             if (extras.containsKey("Address")) {
-                System.out.println("THERE ARE EXTRAS");
                 placeAutoComplete.setText(getIntent().getStringExtra("Address"));
                 lat =  Double.parseDouble(getIntent().getStringExtra("Lat"));
                 lng =  Double.parseDouble(getIntent().getStringExtra("Lng"));
@@ -137,7 +134,6 @@ public class CreateSpotActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                System.out.println("TEST: Test");
                 new DatePickerDialog(CreateSpotActivity.this, datePicker, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();

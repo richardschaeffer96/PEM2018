@@ -127,7 +127,6 @@ public class EditProfile extends AppCompatActivity {
         oldUri = Uri.parse(me.getImageUri());
         Picasso.get().load(oldUri).into(profile_picture);
 
-        System.out.println("Uri of Picture is: "+oldUri.toString());
     }
 
     public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
@@ -159,7 +158,6 @@ public class EditProfile extends AppCompatActivity {
         if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
             oldUri = data.getData();
             profile_picture.setImageURI(oldUri);
-            System.out.println("Uri of Picture in VIEW is: "+oldUri.toString());
             Bitmap bm = ((BitmapDrawable)profile_picture.getDrawable()).getBitmap();
             //Bitmap bm = ((BitmapDrawable)profile_picture.getDrawable()).getBitmap();
             Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, true);
@@ -234,7 +232,6 @@ public class EditProfile extends AppCompatActivity {
 
         StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(oldUri));
 
-        System.out.println("Uri of NEW Picture is: "+oldUri.toString());
 
 
         //mUploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -248,12 +245,10 @@ public class EditProfile extends AppCompatActivity {
                         Uri dlUri = uri;
                         //Upload upload = new Upload(id, dlUri.toString());
                         DocumentReference refUser = usersRef.document(id);
-                        System.out.println("URI is " + dlUri);
                         Log.d(TAG, "URI is " + dlUri);
                         String uriPicture = dlUri.toString();
                         refUser.update("imageUri", uriPicture);
                         user.setImageUri(uriPicture);
-                        System.out.println("Uri in User is: " + user.getImageUri());
                         Intent mIntent = new Intent(EditProfile.this, Menu.class);
                         mIntent.putExtra("id", id);
                         mIntent.putExtra("user", user);

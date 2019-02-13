@@ -304,15 +304,12 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         for (int i = 0; i < spots.size(); i++) {
             LatLng pos = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
             Spot spot = spots.get(i);
-            System.out.println("SPOT______________: "+spot.getAddress());
             Date currentTime = Calendar.getInstance().getTime();
             String spotDate = spot.getDate()+"-"+spot.getTime();
-            System.out.println(spotDate);
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy-HH:mm");
             Date date = null;
             try {
                 date = format.parse(spotDate);
-                System.out.println(date);
                 if(spot.getcreator().equals(userID) && !(spot.getInfo().equals(DEL))){
                     if(date.after(currentTime)) {
                         mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle())
@@ -369,16 +366,13 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     Spot spot = documentSnapshot.toObject(Spot.class);
-                    System.out.println("SPOT______________: "+spot.getAddress());
                     LatLng pos = new LatLng(spot.getLatitude(), spot.getLongitude());
                     Date currentTime = Calendar.getInstance().getTime();
                     String spotDate = spot.getDate()+"-"+spot.getTime();
-                    System.out.println(spotDate);
                     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy-HH:mm");
                     Date date = null;
                     try {
                         date = format.parse(spotDate);
-                        System.out.println(date);
                         if(spot.getcreator().equals(userID)){
                             if(date.after(currentTime)) {
                                 mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle())
@@ -522,7 +516,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
 
     public void addSpot(View view){
-        System.out.println("NEW");
         Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
         intent.putExtra("id", userID);
         intent.putExtra("user", me);

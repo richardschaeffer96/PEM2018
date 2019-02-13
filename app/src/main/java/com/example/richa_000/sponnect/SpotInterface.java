@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -81,12 +82,38 @@ public class SpotInterface extends AppCompatActivity {
     private LocationManager locationManager;
     private static final int REQUEST_LOCATION = 1;
 
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            curLoc = location;
+            //your code here
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
+
     private ArrayList<ParticipantsExample> exampleList;
 
+    private Location curLoc;
     private User me;
     private TextView line1;
     private TextView line2;
     private ImageView profile;
+    private LocationManager mLocationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +134,7 @@ public class SpotInterface extends AppCompatActivity {
 
         userID = getIntent().getStringExtra("id");
         //me = (User) getIntent().getSerializableExtra("user");
-        //System.out.println("User in Spotinterface is: " + me);
+
         //setUserInfo(me);
         getLoggedInUser(userID);
 
@@ -121,6 +148,14 @@ public class SpotInterface extends AppCompatActivity {
         HashMap<String, Integer> spotParticipants = selectedSpot.getParticipants();
         state = spotParticipants.get(userID);
 
+
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1,
+                2, mLocationListener);
+        
+        
+        
         exampleList = new ArrayList<>();
         usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -159,7 +194,7 @@ public class SpotInterface extends AppCompatActivity {
         });
 
         handler = new Handler();
-        //System.out.println("final: " + exampleList);
+
     }
 
     @Override
@@ -184,7 +219,7 @@ public class SpotInterface extends AppCompatActivity {
     private void refresh() {
         //works fine just always gets the same coordinates from function
         //Log.d(TAG, "refresh: HERE! " + state);
-        Location loc = checkCurrentLocation();
+        Location loc = curLoc;//checkCurrentLocation();
         if (state==2 && selectedSpot.getcreator().equals(userID)){
             //double[] creatorLoc = getLocation();
             Log.d(TAG, "refresh: Current Location of Creator: "+loc.getLatitude()+", "+loc.getLongitude());
@@ -275,6 +310,9 @@ public class SpotInterface extends AppCompatActivity {
                                 tooLateButton.setImageResource(R.drawable.toolate);
                                 break;
                         }
+                        checkButton.setBackgroundResource(R.drawable.buttonstylebackground);
+                        tooLateButton.setBackgroundResource(R.drawable.buttonstylebackground);
+                        raiseHandButton.setBackgroundResource(R.drawable.buttonstylebackground);
                         checkButton.setEnabled(true);
                         raiseHandButton.setEnabled(true);
                         closeEnough = true;
@@ -299,7 +337,6 @@ public class SpotInterface extends AppCompatActivity {
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     Spot docSpot = documentSnapshot.toObject(Spot.class);
                     if (selectedSpot.getId().equals(docSpot.getId())) {
-                        //System.out.println("Found Spot!");
                         HashMap<String, Integer> map = docSpot.getParticipants();
                         usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
@@ -308,7 +345,6 @@ public class SpotInterface extends AppCompatActivity {
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots2) {
                                     User user = documentSnapshot.toObject(User.class);
                                     if (map.containsKey(user.getId())) {
-                                        //System.out.println("Found User in Spot!");
                                         exampleList.add(new ParticipantsExample(user.getNickname(), user.getGender(), "" + user.getAge(), user.getImageUri(), map.get(user.getId()), user.getId()));
                                         mRecyclerView.getAdapter().notifyDataSetChanged();
                                     }
@@ -356,7 +392,6 @@ public class SpotInterface extends AppCompatActivity {
                 }
             }
         }
-        //System.out.println("Spot-Interface: Current Location: "+resultLocation.getLatitude()+", "+resultLocation.getLongitude());
         return resultLocation;
     }
 
@@ -408,7 +443,6 @@ public class SpotInterface extends AppCompatActivity {
                         //get Spot with current user as participant
                         if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==3){
-                                //System.out.println("Set to 0");
                                 raiseHandButton.setImageResource(R.drawable.wave);
                                 state=0;
                                 participants.put(userID, 0);
@@ -417,7 +451,6 @@ public class SpotInterface extends AppCompatActivity {
                                 exampleList.clear();
                                 mRecyclerView.getAdapter().notifyDataSetChanged();
                             }else{
-                                //System.out.println("Set to 3");
                                 raiseHandButton.setImageResource(R.drawable.wave_checked);
                                 state=3;
                                 participants.put(userID, 3);
@@ -447,14 +480,12 @@ public class SpotInterface extends AppCompatActivity {
                         //get Spot with current user as participant
                         if(entry.getKey().equals(userID) && spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==1){
-                                //System.out.println("Set to 0");
                                 tooLateButton.setImageResource(R.drawable.toolate);
                                 state=0;
                                 participants.put(userID, 0);
                                 DocumentReference refSpot = spotsRef.document(spot.getId());
                                 refSpot.update("participants", participants);
                             }else{
-                                //System.out.println("Set to 1");
                                 tooLateButton.setImageResource(R.drawable.toolate_checked);
                                 state=1;
                                 participants.put(userID, 1);
@@ -492,7 +523,6 @@ public class SpotInterface extends AppCompatActivity {
                         //get Spot with current user as participant
                         if(entry.getKey().equals(userID)&&spot.getId().equals(selectedSpot.getId())){
                             if(participants.get(entry.getKey())==2){
-                                //System.out.println("Set to 0");
                                 checkButton.setImageResource(R.drawable.there);
                                 raiseHandButton.setImageResource(R.drawable.wave);
                                 tooLateButton.setImageResource(R.drawable.toolate);
@@ -502,7 +532,6 @@ public class SpotInterface extends AppCompatActivity {
                                 refSpot.update("participants", participants);
                             }else{
                                 //Creator is on Location and checked himself in
-                                //System.out.println("Set to 2");
                                 checkButton.setImageResource(R.drawable.there_checked);
                                 raiseHandButton.setImageResource(R.drawable.wave);
                                 tooLateButton.setImageResource(R.drawable.toolate);

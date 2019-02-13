@@ -105,7 +105,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         int count = 0;
         for (Map.Entry<String, ArrayList<String>> e: mContacts.entrySet()) {
-            System.out.println("Contact "+i+ " ID: "+e.getKey());
             if(count==i){
                 viewHolder.fb.setText(e.getValue().get(0));
                 viewHolder.twitter.setText(e.getValue().get(2));
@@ -120,7 +119,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                                 viewHolder.age.setText(""+user.getAge());
                                 viewHolder.gender.setText(user.getGender());
                                 Uri uri = Uri.parse(user.getImageUri());
-                                System.out.println(uri);
                                 Picasso.get().load(uri).into(viewHolder.img);
                             }
                         }

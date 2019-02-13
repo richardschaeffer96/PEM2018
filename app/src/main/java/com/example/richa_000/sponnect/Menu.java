@@ -62,7 +62,6 @@ public class Menu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        System.out.println("INIT");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -107,7 +106,6 @@ public class Menu extends AppCompatActivity {
                             date = format.parse(spotDate);
                             c.setTime(date);
                             c.add(Calendar.DATE, 1);
-                            System.out.println(c.getTime());
                             if(currentTime.before(c.getTime())) {
                                 mySpotList.add(spot);
                             }
@@ -125,8 +123,6 @@ public class Menu extends AppCompatActivity {
                 mRecyclerView.setHasFixedSize(true);
                 mLayoutManager = new LinearLayoutManager(mRecyclerView.getContext());
 
-                System.out.println("User is: " + me);
-                System.out.println("User with nickname for spotadapter: " + me.getNickname());
                 mAdapter = new SpotAdapter(mySpotList, userID, me);
 
                 mRecyclerView.setLayoutManager(mLayoutManager);

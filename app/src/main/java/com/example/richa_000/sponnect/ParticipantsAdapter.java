@@ -76,7 +76,6 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
             share_real.setOnClickListener((v) ->{
                 int position = getAdapterPosition();
                 ParticipantsExample currentItem = mParticipantList.get(position);
-                System.out.println("Clicked of "+ currentItem.getName() + " | "+currentItem.getId());
                 usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -98,7 +97,6 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
                         }
                         if(selectedUser!=null){
                             contacts = new HashMap<String, ArrayList<String>>();
-                            System.out.println(selectedUser.getContacts());
                             if(selectedUser.getId().equals(currentUser.getId())) {
                                 Snackbar.make(v, "Don't share stuff with yourself you moron!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                             }else {
