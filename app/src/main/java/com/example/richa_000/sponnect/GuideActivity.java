@@ -313,7 +313,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             try {
                 date = format.parse(spotDate);
                 System.out.println(date);
-                if(spot.getcreator().equals(userID)){
+                if(spot.getcreator().equals(userID) && !(spot.getInfo().equals(DEL))){
                     if(date.after(currentTime)) {
                         mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle())
                                 .icon(BitmapDescriptorFactory.defaultMarker(hueGreen)));
@@ -321,13 +321,12 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                        // mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueGreen)).alpha(0.2f));
                     }
                 } else{
-                    if(date.after(currentTime)) {
+                    if(date.after(currentTime) && !(spot.getInfo().equals(DEL))) {
                         mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle())
                                 .icon(BitmapDescriptorFactory.defaultMarker(hueBlue)));
                     }else{
                         //mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueBlue)).alpha(0.2f));
                     }
-                    //TODO filter for Deleted spots
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -543,12 +542,13 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                         if (!participantMap.containsKey(userID)) {
                             participantMap.put(userID, 0);
                             refSpot.update("participants", participantMap);
+                            Toast.makeText(GuideActivity.this, "You joined the spot", Toast.LENGTH_SHORT).show();
                         } else{
                             if(selectedSpot.getcreator().equals(userID)){
                                 AlertDialog alertDialog = new AlertDialog.Builder(GuideActivity.this).create();
                                 alertDialog.setTitle("Are your sure?");
                                 alertDialog.setMessage("If you leave your Spot, the Spot will be deleted. Is that okay?");
-                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Yes, Delete!",
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
@@ -559,10 +559,12 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                                 participantMap.remove(userID);
                                 refSpot.update("participants", participantMap);
                                 refSpot.update("info", DEL);
+                                Toast.makeText(GuideActivity.this, "You deleted the spot", Toast.LENGTH_SHORT).show();
                             } else{
                                // Just leave Spot
                                 participantMap.remove(userID);
                                 refSpot.update("participants", participantMap);
+                                Toast.makeText(GuideActivity.this, "You left the spot", Toast.LENGTH_SHORT).show();
                             }
 
                         }
@@ -583,7 +585,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
                             spots.put(selectedSpot.getId(), false);
                             refUser.update("mySpots", spots);
                         } else{
-                            if(selectedSpot.getcreator().equals(userID) || selectedSpot.getInfo().equals(DEL)) {
+                            if(spots.containsKey(selectedSpot.getId()) || selectedSpot.getInfo().equals(DEL)) {
                                 // Just leave Spot
                                 spots.remove(selectedSpot.getId());
                                 refUser.update("mySpots", spots);
@@ -596,7 +598,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        Toast.makeText(this, "You joined the spot", Toast.LENGTH_SHORT).show();
         mapOverlay.hide();
 
     }

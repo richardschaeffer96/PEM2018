@@ -2,12 +2,9 @@ package com.example.richa_000.sponnect;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,8 +17,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.Serializable;
-
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
@@ -29,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextLogInMail;
     private EditText editTextLogInPassword;
 
-    private boolean eMailDoesNotExist = false;
+    private static boolean showMessage = true;
 
     private TextView text_logo;
     private TextView text_email;
@@ -89,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (eMail.equals(LogInMail)){
                         if(password.equals(LogInPassword)){
+                            showMessage = false;
                             String data = "Hello: " + nickname;
                             Log.d(TAG,"Found User: "+nickname);
                             Toast.makeText(LoginActivity.this, data, Toast.LENGTH_LONG).show();
@@ -97,21 +93,21 @@ public class LoginActivity extends AppCompatActivity {
                             mIntent.putExtra("login", "login");
                             startActivity(mIntent);
                             break;
-                        } else{
+                        }else{
+                            showMessage = false;
                             Log.d(TAG, "Wrong Password");
                             Toast.makeText(LoginActivity.this, "Wrong Password! Try again!", Toast.LENGTH_LONG).show();
+                            break;
                         }
-
                     } else{
                         //Not a match
-                        eMailDoesNotExist = true;
+                        Log.d(TAG, "onSuccess: Email: "+ showMessage);
+                        showMessage = true;
                     }
-
                 }
-                //Did not find the mail address
-                //if(eMailDoesNotExist){
-                //    Toast.makeText(LoginActivity.this, "Your Email does not exist. How about signing up?", Toast.LENGTH_LONG).show();
-                //}
+                if(showMessage){
+                    Toast.makeText(LoginActivity.this, "Please enter a valid E-Mail Address. If you have not registered yet, how about signing up?", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
