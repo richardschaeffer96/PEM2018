@@ -129,7 +129,8 @@ public class EditProfile extends AppCompatActivity {
     }
 
     /**
-     * If new Image is uploaded it is cropped
+     * All following methods are copied from SignUp2
+     * to crop, edit and save the new profile picture
      * @param bitmap
      * @param pixels
      * @return
@@ -176,6 +177,71 @@ public class EditProfile extends AppCompatActivity {
         startActivityForResult(gallery, PICK_IMAGE);
     }
 
+    private String getFileExtension(Uri uri){
+        if(oldUri == null){
+            return "png";
+        } else {
+            ContentResolver cR = getContentResolver();
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            return mime.getExtensionFromMimeType(cR.getType(uri));
+        }
+    }
+
+    private void uploadFile(String id, User user, Uri uri){
+
+        profile_picture.setDrawingCacheEnabled(true);
+        profile_picture.buildDrawingCache();
+        Bitmap bitmap = profile_picture.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        //Log.d(TAG, "uploadFile: Ist Bild da? "+data);
+
+        StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(oldUri));
+
+        //mUploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        mUploadTask = fileReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(EditProfile.this, "Success!", Toast.LENGTH_SHORT).show();
+                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Uri dlUri = uri;
+                        //Upload upload = new Upload(id, dlUri.toString());
+                        DocumentReference refUser = usersRef.document(id);
+                        //Log.d(TAG, "URI is " + dlUri);
+                        String uriPicture = dlUri.toString();
+                        refUser.update("imageUri", uriPicture);
+                        user.setImageUri(uriPicture);
+                        Intent mIntent = new Intent(EditProfile.this, Menu.class);
+                        mIntent.putExtra("id", id);
+                        mIntent.putExtra("user", user);
+                        startActivity(mIntent);
+
+                    }
+                });
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(EditProfile.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+            }
+        });
+
+    }
+
+    /**
+     * when the save button is clicked all information is written back into database overriding old data
+     * @param view
+     */
     public void save_new_information(View view){
 
         String Editpassword1 = password1.getText().toString();
@@ -213,70 +279,5 @@ public class EditProfile extends AppCompatActivity {
         }
 
     }
-
-    private String getFileExtension(Uri uri){
-        if(oldUri == null){
-            return "png";
-        } else {
-            ContentResolver cR = getContentResolver();
-            MimeTypeMap mime = MimeTypeMap.getSingleton();
-            return mime.getExtensionFromMimeType(cR.getType(uri));
-        }
-    }
-
-    private void uploadFile(String id, User user, Uri uri){
-
-        profile_picture.setDrawingCacheEnabled(true);
-        profile_picture.buildDrawingCache();
-        Bitmap bitmap = profile_picture.getDrawingCache();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        //Log.d(TAG, "uploadFile: Ist Bild da? "+data);
-
-        StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(oldUri));
-
-
-
-        //mUploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-        mUploadTask = fileReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(EditProfile.this, "Success!", Toast.LENGTH_SHORT).show();
-                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Uri dlUri = uri;
-                        //Upload upload = new Upload(id, dlUri.toString());
-                        DocumentReference refUser = usersRef.document(id);
-                        Log.d(TAG, "URI is " + dlUri);
-                        String uriPicture = dlUri.toString();
-                        refUser.update("imageUri", uriPicture);
-                        user.setImageUri(uriPicture);
-                        Intent mIntent = new Intent(EditProfile.this, Menu.class);
-                        mIntent.putExtra("id", id);
-                        mIntent.putExtra("user", user);
-                        startActivity(mIntent);
-
-                    }
-                });
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(EditProfile.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
-            }
-        });
-
-    }
-
-
-
+    
 }

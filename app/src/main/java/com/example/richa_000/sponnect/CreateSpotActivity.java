@@ -117,6 +117,7 @@ public class CreateSpotActivity extends AppCompatActivity {
 
         date = findViewById(R.id.et_date);
 
+        //init datepacker
         datePicker = new DatePickerDialog.OnDateSetListener(){
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -140,6 +141,7 @@ public class CreateSpotActivity extends AppCompatActivity {
             }
         });
 
+        //init timepicker
         time = findViewById(R.id.et_time);
         time.setOnClickListener(new View.OnClickListener() {
 

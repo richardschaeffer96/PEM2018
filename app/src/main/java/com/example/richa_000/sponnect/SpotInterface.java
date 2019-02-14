@@ -117,7 +117,7 @@ public class SpotInterface extends AppCompatActivity {
     private LocationManager mLocationManager;
 
     /**
-     * 
+     * initializes RecyclerView and Co
      * @param savedInstanceState
      */
     @Override
@@ -218,8 +218,10 @@ public class SpotInterface extends AppCompatActivity {
         super.onStart();
     }
 
+    /**
+     * updates user position to enable geo interaction
+     */
     private void refresh() {
-        //works fine just always gets the same coordinates from function
         //Log.d(TAG, "refresh: HERE! " + state);
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -344,6 +346,9 @@ public class SpotInterface extends AppCompatActivity {
         }
     }
 
+    /**
+     * update the Recycler View with all participants if sth changed in the DB
+     */
     private void updateParticipantsList() {
         exampleList.clear();
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -373,9 +378,11 @@ public class SpotInterface extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * needed to see if the user is close enough to use interaction buttons
+     * @return GPS position of the User
+     */
     private Location checkCurrentLocation() {
-        //TODO Find Stuff here
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Location resultLocation = null;
 
@@ -445,7 +452,11 @@ public class SpotInterface extends AppCompatActivity {
         Toast.makeText(this, "No location tracking enabled", Toast.LENGTH_SHORT).show();
     }
 
-
+    /**
+     * if user cannot find the group he will click RAISE HAND, this is safed into the DB and all other participants see this
+     * the buttons change color to indicate a push
+     * @param view
+     */
     public void raiseHand(View view) {
         //Toast.makeText(this, "Raise Hand", Toast.LENGTH_SHORT).show();
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -483,6 +494,11 @@ public class SpotInterface extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * user is too late - same as above
+     * @param view
+     */
     public void tooLate(View view){
         //Toast.makeText(this, "Too Late", Toast.LENGTH_SHORT).show();
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -526,6 +542,11 @@ public class SpotInterface extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * user is there - same as above
+     * @param view
+     */
     public void checkButton(View view){
         //Toast.makeText(this, "Check", Toast.LENGTH_SHORT).show();
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -565,6 +586,11 @@ public class SpotInterface extends AppCompatActivity {
         });
     }
 
+    /**
+     * toolbar init
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -597,6 +623,10 @@ public class SpotInterface extends AppCompatActivity {
         }
     }
 
+    /**
+     * generate actual User object from given ID
+     * @param userId
+     */
     private void getLoggedInUser(String userId){
 
         final String id = userId;
@@ -641,48 +671,10 @@ public class SpotInterface extends AppCompatActivity {
 
     }
 
-    /*
-    private double[] getLocation() {
-
-        double[] creatorCoords = new double[2];
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps();
-        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-
-            if (ActivityCompat.checkSelfPermission(SpotInterface.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                    (SpotInterface.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                Toast.makeText(this, "No location tracking enabled", Toast.LENGTH_SHORT).show();
-                ActivityCompat.requestPermissions(SpotInterface.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-            } else {
-                Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                Location location2 = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-
-                //mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                //mMap.setMyLocationEnabled(true);
-                if (location != null) {
-                    creatorCoords[0] = location.getLatitude();
-                    creatorCoords[1] = location.getLongitude();
-                } else if (location1 != null) {
-                    creatorCoords[0] = location1.getLatitude();
-                    creatorCoords[1] = location1.getLongitude();
-                } else if (location2 != null) {
-                    creatorCoords[0] = location2.getLatitude();
-                    creatorCoords[1] = location2.getLongitude();
-                } else {
-                    Toast.makeText(this, "Unble to Trace your location\nTry again later", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-        return creatorCoords;
-    }
-    */
-
+    /**
+     * if the copy button is clicked the spot address is copied into the clipboard to paste it into google Maps for example
+     * @param v
+     */
     public void copy(View v){
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("address", selectedSpot.getAddress());
