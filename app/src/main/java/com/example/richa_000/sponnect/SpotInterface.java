@@ -219,10 +219,24 @@ public class SpotInterface extends AppCompatActivity {
     private void refresh() {
         //works fine just always gets the same coordinates from function
         //Log.d(TAG, "refresh: HERE! " + state);
-        Location loc = curLoc;//checkCurrentLocation();
-        if (state==2 && selectedSpot.getcreator().equals(userID)){
-            //double[] creatorLoc = getLocation();
+        spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    Spot docSpot = documentSnapshot.toObject(Spot.class);
+                    if (docSpot.getId().equals(selectedSpot.getId())) {
+                        selectedSpot = docSpot;
+                    }
+                }
+            }
+        });
+        if(curLoc==null){
+            mLocationListener.onLocationChanged(checkCurrentLocation());
+        }
+        Location loc = curLoc;
+        if (state==2 && selectedSpot.getcreator().equals(userID)){;
             Log.d(TAG, "refresh: Current Location of Creator: "+loc.getLatitude()+", "+loc.getLongitude());
+
             spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -277,7 +291,7 @@ public class SpotInterface extends AppCompatActivity {
                     float distance = results[0] / 1000;
                     if (distance > 0.5) {
                         if (state == 2 || state == 3) {
-                            state = 0;
+                            //state = 0;
                         }
                         if (state == 1) {
                             tooLateButton.setImageResource(R.drawable.toolate_checked);
