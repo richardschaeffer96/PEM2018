@@ -24,6 +24,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Class for the recyclerview of the participant-list
+ */
 public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapter.ViewHolder> {
 
     private static Spot selectedSpot;
@@ -41,6 +44,10 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         ImageButton share;
         ImageButton share_real;
 
+        /**
+         * Is setting the information into the recyclerview and activating the buttons inside it
+         * @param itemView
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.text_name);
@@ -58,20 +65,6 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
             name.setTypeface(comfortaa_bold);
             age.setTypeface(comfortaa_regular);
             gender.setTypeface(comfortaa_regular);
-            /*
-            usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        User user = documentSnapshot.toObject(User.class);
-                        if(user.getId().equals(userID)){
-                            share.setEnabled(false);
-                        }else{
-                            share.setEnabled(true);
-                        }
-                    }
-                }
-            });*/
 
             share_real.setOnClickListener((v) ->{
                 int position = getAdapterPosition();
@@ -138,6 +131,12 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         return vh;
     }
 
+    /**
+     * Switch case for different status of the user for each participant (empty, too late, there, wave).
+     * Afterwards the specific picture is shown.
+     * @param viewHolder
+     * @param i
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
@@ -159,6 +158,8 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         }
     }
 
+
+    // Getter & Setter
     @Override
     public int getItemCount() {
         return mParticipantList.size();

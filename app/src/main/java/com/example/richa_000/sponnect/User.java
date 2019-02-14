@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Class for defining a user and his information
+ */
 public class User implements Serializable {
 
     private String eMail;
@@ -35,6 +38,8 @@ public class User implements Serializable {
         this.socialMedia = socialMedia;
 
     }
+
+    // Getter & Setter
 
     public HashMap<String, ArrayList<String>> getContacts() {
         return contacts;
