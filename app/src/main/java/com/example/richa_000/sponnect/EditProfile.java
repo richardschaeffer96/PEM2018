@@ -24,10 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -105,6 +103,7 @@ public class EditProfile extends AppCompatActivity {
 
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
+        //Get all the User-Information to be displayed in the fields for editing
         mail = findViewById(R.id.edit_email_edit);
         mail.setText(me.geteMail());
 
@@ -129,6 +128,12 @@ public class EditProfile extends AppCompatActivity {
 
     }
 
+    /**
+     * If new Image is uploaded it is cropped
+     * @param bitmap
+     * @param pixels
+     * @return
+     */
     public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
         Bitmap result = null;
         try {

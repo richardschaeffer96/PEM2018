@@ -86,9 +86,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     private static final String TAG = "GuideActivity";
     private static final float DEFAULT_ZOOM = 15f;
 
-    //private LinkedList<> spots;
     private ArrayList<Spot> spots = new ArrayList<>();
-
     private Place selectedPlace;
     private Spot selectedSpot;
 
@@ -139,11 +137,11 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                 for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                    //TODO Range Query or Number restriction
+                    //TODO Range Query or Number restriction if too many
                     if(true){
                         Spot spot = documentSnapshot.toObject(Spot.class);
                         spots.add(spot);
-                        Log.d(TAG, "Spots loaded: "+spot.getTitle());
+                        //Log.d(TAG, "Spots loaded: "+spot.getTitle());
                         setAllSpotMarker(spots);
                     }
 
@@ -168,6 +166,12 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         handler = new Handler();
     }
 
+    /**
+     * function to show the map overlay when clicked on a Spot
+     * all information is loaded from the database and the button displays one of the following options:
+     * JOIN, LEAVE and DELETE
+     * @param spot
+     */
     public void showMapOverlay(Spot spot){
         mapOverlay.setContentView(R.layout.map_overlay);
         TextView title = mapOverlay.findViewById(R.id.textView_headline);
@@ -224,7 +228,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
         //get creator
         String creatorID = spot.getcreator();
-
         usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -295,7 +298,7 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     /**
-     * qfunction to create all spot marker in the spots list
+     * function to create all spot marker in the spots list
      * @param spots
      */
     private void setAllSpotMarker(ArrayList<Spot> spots){
@@ -331,11 +334,10 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-    private void onMapClicked(){
-
-    }
-
-
+    /**
+     * convert Google-Places information into address
+     * @param place
+     */
     private void geoLocate(Place place) {
 
         Geocoder geocode = new Geocoder(GuideActivity.this);
@@ -354,52 +356,19 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-
+    /**
+     * init map fragment
+     */
     private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.guide_map);
         mapFragment.getMapAsync(GuideActivity.this);
-        /*
-        CollectionReference spots = db.collection("spots");
-        spots.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                    Spot spot = documentSnapshot.toObject(Spot.class);
-                    LatLng pos = new LatLng(spot.getLatitude(), spot.getLongitude());
-                    Date currentTime = Calendar.getInstance().getTime();
-                    String spotDate = spot.getDate()+"-"+spot.getTime();
-                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy-HH:mm");
-                    Date date = null;
-                    try {
-                        date = format.parse(spotDate);
-                        if(spot.getcreator().equals(userID)){
-                            if(date.after(currentTime)) {
-                                mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle())
-                                        .icon(BitmapDescriptorFactory.defaultMarker(hueGreen)));
-                            }else{
-                                mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueGreen)).alpha(0.2f));
-                            }
-                        } else{
-                            if(date.after(currentTime)) {
-                                mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle())
-                                    .icon(BitmapDescriptorFactory.defaultMarker(hueBlue)));
-                            }else{
-                                mMap.addMarker(new MarkerOptions().position(pos).title(spot.getTitle()).icon(BitmapDescriptorFactory.defaultMarker(hueBlue)).alpha(0.2f));
-                            }
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
 
-
-
-                }
-            }
-        });
-        */
     }
 
+    /**
+     * get location from GPS services of smartphone
+     */
     private void getLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -439,15 +408,20 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-
+    /**
+     * show dialog if GPS is not working
+     */
     private void buildAlertMessageNoGps() {
         Toast.makeText(this, "No location tracking enabled", Toast.LENGTH_SHORT).show();
     }
 
-
+    /**
+     * when map is ready init listener if clicked somewhere
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
         getLocation();
@@ -468,6 +442,10 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         });
     }
 
+    /**
+     * when clicked on a marker, the corresponding overlay with the information and the button to join is shown
+     * @param marker
+     */
     private void markerClicked(Marker marker) {
 
         CollectionReference spots = db.collection("spots");
@@ -485,6 +463,10 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
+    /**
+     * when clicked on the map, the CreateSpot Activity is started with the autocompleted location where the user tabbed.
+     * @param latLng
+     */
     private void onMapClicked(LatLng latLng) {
         geocoder = new Geocoder(this, Locale.getDefault());
         try {
@@ -504,8 +486,13 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
+    /**
+     * when located, map zooms in to the users position
+     * @param latLng
+     * @param zoom
+     */
     private void moveCamera(LatLng latLng, float zoom) {
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
+        //Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
@@ -514,7 +501,10 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-
+    /**
+     * start Activity to add a new Spot
+     * @param view
+     */
     public void addSpot(View view){
         Intent intent = new Intent(GuideActivity.this, CreateSpotActivity.class);
         intent.putExtra("id", userID);
@@ -522,6 +512,13 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         startActivity(intent);
     }
 
+    /**
+     * when the join/leave/delete button is clicked the respected action is performed.
+     * if the spot is not in the user's Spot list, the user can join the Spot, if it is already there, the user can leave
+     * if the user created this spot the Spot will be marked as deleted and will not show on the map anymore until it is deleted from the DB
+     * Joining and leaving includes the modifying of the respective lists in the DB
+     * @param view
+     */
     public void join(View view) {
 
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -595,6 +592,11 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
+    /**
+     * generate toolbar menu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -602,6 +604,11 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         return true;
     }
 
+    /**
+     * method to handle menu input in toolbar
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -627,7 +634,6 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-
     /**
      * sets all needed information from the user to the toolbar layout
      * @param me
@@ -650,12 +656,18 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
+    /**
+     * stop updates when leaving this screen
+     */
     @Override
     protected void onStop() {
         handler.removeCallbacks(runnableCode);
         super.onStop();
     }
 
+    /**
+     * when Activity is started RefreshSpots is called every second
+     */
     @Override
     protected void onStart() {
         runnableCode = new Runnable() {
@@ -669,6 +681,9 @@ public class GuideActivity extends AppCompatActivity implements OnMapReadyCallba
         super.onStart();
     }
 
+    /**
+     * update View to show all Spots in real time
+     */
     private void refreshSpots(){
         Log.d(TAG, "refreshSpots: Updated");
 

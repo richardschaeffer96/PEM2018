@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
         comfortaa_light = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Light.ttf");
 
+        // TextViews init
         text_logo = findViewById(R.id.text_logo);
         text_email = findViewById(R.id.text_email);
         text_password = findViewById(R.id.text_password);
@@ -65,6 +66,12 @@ public class LoginActivity extends AppCompatActivity {
         editTextLogInPassword = findViewById(R.id.edit_password_login);
     }
 
+    /**
+     * if clicked on the LogIn button, DB is checked for user
+     * yes, we know this is pre-implemented...^^
+     * if the EMail address is stored in the database the password is checked and if it was entered correctly the user will be redirected to his dashboard.
+     * @param view
+     */
     public void login(View view){
         final String LogInMail = editTextLogInMail.getText().toString();
         final String LogInPassword = editTextLogInPassword.getText().toString();
@@ -80,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                     String nickname = user.getNickname();
                     String password = user.getPassword();
 
-                    Log.d(TAG, "Tried logging in: "+nickname);
+                    //Log.d(TAG, "Tried logging in: "+nickname);
 
                     if (eMail.equals(LogInMail)){
                         if(password.equals(LogInPassword)){
@@ -113,6 +120,10 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * SignUp Activity is started
+     * @param view
+     */
     public void sign_up(View view){
         Intent mIntent = new Intent(LoginActivity.this, SignUp.class);
         startActivity(mIntent);

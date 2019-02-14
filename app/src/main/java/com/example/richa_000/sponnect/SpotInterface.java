@@ -24,7 +24,6 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -82,7 +81,9 @@ public class SpotInterface extends AppCompatActivity {
     private LocationManager locationManager;
     private static final int REQUEST_LOCATION = 1;
 
-
+    /**
+     * listener to when user changes position this is updated
+     */
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
@@ -115,6 +116,10 @@ public class SpotInterface extends AppCompatActivity {
     private ImageView profile;
     private LocationManager mLocationManager;
 
+    /**
+     * 
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,6 +143,7 @@ public class SpotInterface extends AppCompatActivity {
         //setUserInfo(me);
         getLoggedInUser(userID);
 
+        //is the user in the radius of the spot to activate the geo-location buttons
         closeEnough = false;
 
         selectedSpot = (Spot) getIntent().getSerializableExtra("spot");
@@ -148,14 +154,10 @@ public class SpotInterface extends AppCompatActivity {
         HashMap<String, Integer> spotParticipants = selectedSpot.getParticipants();
         state = spotParticipants.get(userID);
 
-
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1,
                 2, mLocationListener);
-        
-        
-        
+
         exampleList = new ArrayList<>();
         usersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override

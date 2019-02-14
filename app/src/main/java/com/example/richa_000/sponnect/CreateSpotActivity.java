@@ -74,6 +74,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         comfortaa_bold = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Bold.ttf");
         comfortaa_light = Typeface.createFromAsset(this.getAssets(), "Comfortaa-Light.ttf");
 
+        // TextViews init
         TextView text_headline = findViewById(R.id.textView_headline);
         TextView text_address = findViewById(R.id.tv_address);
         TextView text_title = findViewById(R.id.tv_title);
@@ -103,7 +104,6 @@ public class CreateSpotActivity extends AppCompatActivity {
 
             }
         });
-
 
         Bundle extras = intent.getExtras();
         if (extras != null) {
@@ -172,14 +172,21 @@ public class CreateSpotActivity extends AppCompatActivity {
         info = findViewById(R.id.et_info);
     }
 
+    /**
+     * Convert the DatePicker format to mm/dd/yy
+     */
     private void updateLabel() {
         String myFormat = "MM/dd/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         date.setText(sdf.format(myCalendar.getTime()));
     }
 
-
-
+    /**
+     * when SAVE Button clicked, data is safed into the database
+     * Title, Date and Time have to be set to work
+     * afterwards redirect to Map
+     * @param view
+     */
     public void save(View view) {
         if (selectedPlace != null) {
             lat = selectedPlace.getLatLng().latitude;
