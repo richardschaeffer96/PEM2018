@@ -3,6 +3,9 @@ package com.example.richa_000.sponnect;
 import java.io.Serializable;
 import java.util.HashMap;
 
+/**
+ * Class for defining a spot and his information
+ */
 class Spot implements Serializable {
 
     private String info;
@@ -19,7 +22,7 @@ class Spot implements Serializable {
     private HashMap<String, Integer> participants;
 
     public Spot() {
-        //Need to be here for reasons...
+        //Need to be empty
     }
 
     public Spot(String title, String info, String address,String date, String time, String creator, double latitude, double longitude) {
@@ -33,6 +36,8 @@ class Spot implements Serializable {
         this.longitude = longitude;
         this.participants = new HashMap<>();
     }
+
+    // Getter & Setter
 
     public String getId() {
         return id;

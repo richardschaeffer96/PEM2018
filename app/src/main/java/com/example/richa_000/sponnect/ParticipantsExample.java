@@ -1,5 +1,8 @@
 package com.example.richa_000.sponnect;
 
+/**
+ * Class for defining a participant and his information
+ */
 public class ParticipantsExample {
     private String id;
     private String name;
@@ -16,6 +19,8 @@ public class ParticipantsExample {
         this.state = state;
         this.id = id;
     }
+
+    //Getter & Setter
 
     public String getId() {
         return id;

@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class for the contacts screen
+ */
 public class Contacts extends AppCompatActivity {
 
 
@@ -51,6 +54,10 @@ public class Contacts extends AppCompatActivity {
     private Typeface comfortaa_bold;
     private Typeface comfortaa_light;
 
+    /**
+     * creates all objects and sets the adapter to the screen
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +107,11 @@ public class Contacts extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * toolbar buttons are sending all needed information to next intent and start it
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

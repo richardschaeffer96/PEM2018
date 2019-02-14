@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+/**
+ * Class for the sign-up process: First page
+ */
 public class SignUp extends AppCompatActivity {
 
     private static final String TAG = "SignUpActivity";
@@ -81,7 +84,10 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Opens next page of the sign-up process and saves the current information
+     * @param view
+     */
     public void next(View view){
 
         Log.d(TAG, "Next...");

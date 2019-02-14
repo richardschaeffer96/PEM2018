@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class for the recyclerview of the contacts-list
+ */
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
 
     private static HashMap<String,ArrayList<String>> mContacts;
@@ -44,6 +47,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         private ImageView img;
         private ImageButton delete;
 
+        /**
+         * Is setting the information of a contact into the recyclerview and enables the delete button
+         * @param itemView
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             fb = itemView.findViewById(R.id.tv_contact_fb);
@@ -101,6 +108,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         return vh;
     }
 
+    /**
+     * sets information about a contact from database for each contacts entry
+     * @param viewHolder
+     * @param i
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         int count = 0;

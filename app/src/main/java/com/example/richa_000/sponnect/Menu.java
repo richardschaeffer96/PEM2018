@@ -34,6 +34,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Class for the main menu / Dashboard
+ */
 public class Menu extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -86,9 +89,7 @@ public class Menu extends AppCompatActivity {
             me = (User) getIntent().getSerializableExtra("user");
             setUserInfo(me);
         }
-        //getLoggedInUser(userID);
 
-        // Log.d(TAG, "Person logged in:"+me.getNickname());
         spotsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -112,12 +113,8 @@ public class Menu extends AppCompatActivity {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        //Log.d(TAG, "onSuccess: Found Stuff in DB: "+spot.getTitle());
-
                     }
                 }
-
-                //Log.d(TAG, "First List entry: "+mySpotList.toString());
 
                 mRecyclerView = findViewById(R.id.recyclerview);
                 mRecyclerView.setHasFixedSize(true);
@@ -189,6 +186,11 @@ public class Menu extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * toolbar buttons are sending all needed information to next intent and start it
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -214,17 +216,10 @@ public class Menu extends AppCompatActivity {
         }
     }
 
-    /*
-    public void seek(View view){
-
-        if(isServicesOK()){
-            Intent intent = new Intent(Menu.this, MapActivity.class);
-            intent.putExtra("id", userID);
-            startActivity(intent);
-        }
-    }
-    */
-
+    /**
+     * linked to the explore button. Opens the map.
+     * @param view
+     */
     public void guide(View view){
         if(isServicesOK()){
             Intent intent = new Intent(Menu.this, GuideActivity.class);
@@ -234,11 +229,10 @@ public class Menu extends AppCompatActivity {
         }
     }
 
-
-
-
-
-    // Felix Google Maps stuff
+    /**
+     * Is Checking if google services are working
+     * @return
+     */
     public boolean isServicesOK(){
         Log.d(TAG, "isServicesOK: checking google services version");
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(Menu.this);

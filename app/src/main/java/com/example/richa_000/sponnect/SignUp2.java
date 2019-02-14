@@ -38,6 +38,9 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+/**
+ * Class for the sign-up process: First page
+ */
 public class SignUp2 extends AppCompatActivity {
 
     private static final String TAG = "SignUpActivity2";
@@ -105,6 +108,12 @@ public class SignUp2 extends AppCompatActivity {
 
     }
 
+    /**
+     * Creates a round bitmap / circle for the profile pictures out of a rectangle.
+     * @param bitmap
+     * @param pixels
+     * @return
+     */
     public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
         Bitmap result = null;
         try {
@@ -128,6 +137,12 @@ public class SignUp2 extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * Is scaling the picture of the user, so that it fits into the circle.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -142,12 +157,19 @@ public class SignUp2 extends AppCompatActivity {
         }
     }
 
+    /**
+     * by clicking onto the picture it will open the gallery, so that the user can choose a picture for his profile.
+     * @param view
+     */
     public void upload_picture(View view){
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
     }
 
-
+    /**
+     * Is saving the data and uploading it to the database
+     * @param view
+     */
     public void save(View view){
 
         Log.d(TAG, "Saving Data...");
@@ -186,6 +208,11 @@ public class SignUp2 extends AppCompatActivity {
 
     }
 
+    /**
+     * Is checking the data type of a picture and returns its value.
+     * @param uri
+     * @return
+     */
     private String getFileExtension(Uri uri){
         if(imageUri == null){
             return "png";
@@ -196,6 +223,11 @@ public class SignUp2 extends AppCompatActivity {
         }
     }
 
+    /**
+     * Uploads the profile picture of the user to the storage of the database and connects it with it user profile
+     * @param id
+     * @param user
+     */
     private void uploadFile(String id, User user){
 
         profile_picture.setDrawingCacheEnabled(true);

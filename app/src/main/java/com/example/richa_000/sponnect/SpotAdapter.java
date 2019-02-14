@@ -16,6 +16,9 @@ import android.widget.TextView;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/**
+ * Class for the recyclerview of the spot-list
+ */
 public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
 
     private static ArrayList<Spot> mSpotList;
@@ -27,7 +30,10 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
         public TextView spot_date;
         public TextView spot_time;
 
-
+        /**
+         * Is setting the information of a spot into the recyclerview
+         * @param itemView
+         */
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             spot_name = itemView.findViewById(R.id.spot_name);
@@ -71,6 +77,11 @@ public class SpotAdapter extends RecyclerView.Adapter<SpotAdapter.ViewHolder> {
         return vh;
     }
 
+    /**
+     * sets information and checks if the user is the creator of the spots. If so, the color of the spot is changing.
+     * @param viewHolder
+     * @param i
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Spot currentItem = mSpotList.get(i);
